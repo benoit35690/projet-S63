@@ -5,7 +5,7 @@ Table des matières
 ==================
 
    * [introduction](#introduction)
-   * [la mission : to be completed
+   * [l'objectif du projet] (#l'objectif du projet)
    * [mission (im)possible ?](#mission-impossible-)
    * [plus compliqué, le S63](#plus-compliqué-le-s63)
    * [ça se complique encore (et on s'émerveille <g-emoji class="g-emoji" alias="sparkles" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png">✨</g-emoji>) avec le cadran](#ça-se-complique-encore-et-on-sémerveille-sparkles-avec-le-cadran)
@@ -25,19 +25,15 @@ Table des matières
 ## introduction 
 
 De nombreuses réalisations sont disponibles sur le net pour transformer les vieux téléphones à cadran.
-Je m'inspire donc de ce qui existe et j'adapte.
+Mais je n'ai pas trouvé exactement ce que je veux réaliser, je vais donc m'inspirer de ce qui existe et adapter.
 
-***Pourquoi ?***
-
-Pour l'aprentissage, pour utiliser du matériel qui dormait dans un placard, pour le fun...
-
-## la mission : pouvoir utiliser un téléphone Socotel S63 pour passer et recevoir des appels
+## l'objectif du projet : pouvoir utiliser un téléphone Socotel S63 pour passer et recevoir des appels
 
 L'idée est d'utiliser le micro et les haut parleurs du Socotel S63 pour la partie son et de trouver un moyen de réaliser la partie téléphonie.
 
-## mission (im)possible ? 
+## réalisation par étape
 
-Avant toute chose, il faut savoir si le projet est réaliste. 
+Chaque étape me permet d'acquerir de nouvelles compétence et d'arriver à un résultat encourageant.
 De nombreux projets sur github interfacent un raspberry avec un Scotel S63.
 J'ai trouvé un projet qui implémente une pile voix sur IP sur un téléphone vintage d'un autre pays, il faut donc adapter ce projet au S63.
 J'ai également trouvé une implémentation d'une pile téléphonie sur un rasperry, reste plus qu'à recoller tous les morceaux...
@@ -55,14 +51,18 @@ J'ai également trouvé une implémentation d'une pile téléphonie sur un raspe
 - des transistors
 - des resistances
 
+### Premiere étape : interfacer le S63 avec le rasperry 
 
-J'ai sous la main un vieux téléphone à cadran et... Internet ! J'ai longuement cherché de la documentation sur le câblage et le fonctionnement du téléphone (et plus précisément du cadran), mais force est de constater que je n'ai rien trouvé de bien probant. Finalement, c'est bien [revolunet](http://github.com/revolunet/s63) qui est le plus clair et le plus complet dans tout ce que j'ai pu trouver sur le S63.
+Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés complet me donne notament le schéma de cablabe du 63.
+Mais comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
 
-C'est pas mal, ça peut me permettre de démarrer, mais dans le doute j'ai quand même ouvert mon S63, pour le passer au multimètre et me faire mon opinion.
+Petite surprise je ne confirme pas tout à fait les informations de [revolunet](http://github.com/revolunet/s63) : 
+  - si on détecte le décrocher/raccrocher via les connexions 7 et 11 du S63, le signl n'est pas franc
 
-Pas de surprise, et effectivement, je confirme quelques informations capitales de [revolunet](http://github.com/revolunet/s63) : 
-  - on détecte le décrocher/raccrocher via les connexions 7 et 11 du S63
-  - le haut parleur est sur les connexions 3 et 5 (et les 2 et 4 aussi, pour l'écouteur supplémentaire, mais c'est déjà précablé)
+Apres débuggage, je suis obligé de modifier le cablage du S63.
+Je dois sectionner une piste.
+
+
 
 ### ça se complique encore (et on s'émerveille :sparkles:) avec le cadran 
 
