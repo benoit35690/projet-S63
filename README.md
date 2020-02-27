@@ -1,14 +1,12 @@
-# S63_linphone
-Faire fonctionner un Socotel S63 en voix sur IP
+# Faire fonctionner un Socotel S63 en voix sur IP
 # WORK IN PROGRESS
 
 Table des matières
 ==================
 
    * [introduction](#introduction)
-   * [la mission : un téléphone musical qui vous joue un tube de votre année de naissance !](#la-mission--un-téléphone-musical-qui-vous-joue-un-tube-de-votre-année-de-naissance-)
+   * [la mission : to be completed
    * [mission (im)possible ?](#mission-impossible-)
-   * [commençons par le facile : la lecture de fichiers MP3](#commençons-par-le-facile--la-lecture-de-fichiers-mp3)
    * [plus compliqué, le S63](#plus-compliqué-le-s63)
    * [ça se complique encore (et on s'émerveille <g-emoji class="g-emoji" alias="sparkles" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png">✨</g-emoji>) avec le cadran](#ça-se-complique-encore-et-on-sémerveille-sparkles-avec-le-cadran)
 * [des fils, des connexions, un peu de code et la magie prend forme](#des-fils-des-connexions-un-peu-de-code-et-la-magie-prend-forme)
@@ -20,72 +18,43 @@ Table des matières
    * [adaptation à notre cas d'usage](#adaptation-à-notre-cas-dusage)
    * [et les tonalités ?](#et-les-tonalités-)
       * [copyright ?](#copyright-)
-* [c'est bien beau, ça marche, mais c'est pas pratique pour tout mettre dans le S63](#cest-bien-beau-ça-marche-mais-cest-pas-pratique-pour-tout-mettre-dans-le-s63)
-* [un shield ?](#un-shield-)
-   * [comment on fait un shield ?](#comment-on-fait-un-shield-)
-   * [je peux en avoir un ?](#je-peux-en-avoir-un-)
-* [et alors, ça fait quoi à la fin ?](#et-alors-ça-fait-quoi-à-la-fin-)
-   * [et pour le mettre dans le S63 ?](#et-pour-le-mettre-dans-le-s63-)
-* [On va plus loin ? On peut le faire sonner ?](#on-va-plus-loin--on-peut-le-faire-sonner-)
-   * [un solénoïde ?](#un-solénoïde-)
-   * [pilotage du solénoïde avec l'Arduino](#pilotage-du-solénoïde-avec-larduino)
-   * [et du coup, coté shield, ca donne quoi ?](#et-du-coup-coté-shield-ca-donne-quoi-)
-   * [et coté code et comportement attendu ?](#et-coté-code-et-comportement-attendu-)
-   * [donc il faut ajouter une chanson dans la carte SD](#donc-il-faut-ajouter-une-chanson-dans-la-carte-sd)
-* [responsabilités](#responsabilités)
-* [envie d'aller plus loin ?](#envie-daller-plus-loin-)
 * [Remerciements et références](#remerciements-et-références)
 
 
 
 ## introduction 
 
-Commençons par rendre à César...
-
-Ce projet a démarré lorsque j'ai vu un prototype de Socotel S63 que mon ami [Cyril Jovet](https://github.com/sun-exploit "Cyril Jovet") a fait revivre, vraisemblablement grâce au code de [revolunet](http://github.com/revolunet/s63 "@revolunet").
-
-Merci à vous deux ! 
-
-C'est donc en voyant un vieux vieux téléphone revivre avec un Raspberry que je me suis lancé le défi de faire fonctionner un S63 avec un Arduino. 
+De nombreuses réalisations sont disponibles sur le net pour transformer les vieux téléphones à cadran.
+Je m'inspire donc de ce qui existe et j'adapte.
 
 ***Pourquoi ?***
 
-Pour le challenge, pour découvrir plein de choses : faire du son, jouer des mp3, s'interfacer avec du matériel vintage, créer un shield Arduino, et aussi pour avoir une solution "plus simple", moins puissante qu'un Raspberry (luxueux, d'après moi, pour répondre à ce besoin), et pour diviser les couts de matériel/fabrication par 10 ! 
+Pour l'aprentissage, pour utiliser du matériel qui dormait dans un placard, pour le fun...
 
-***Mais encore ?***
+## la mission : pouvoir utiliser un téléphone Socotel S63 pour passer et recevoir des appels
 
-C'est aussi une expérience personnelle de transmission de compétences, de vulgarisation du code, d'initiation aux Arduino et à l'électronique.
-
-C'est pourquoi cette page est particulièrement longue : au delà de l'évident partage Open Source, j'essaie de retracer tout mon parcours, montrer tout ce que j'ai appris et l'émerveillement que cela m'a apporté. Et aussi de permettre à un maximum de personnes de découvrir et comprendre comment ça marche !
-
-
-## la mission : un téléphone musical qui vous joue un tube de votre année de naissance !
-
-L'idée est à la fois géniale et très simple : utiliser un S63 pour numéroter son année de naissance (4 chiffres), et le téléphone joue alors une chanson emblématique de cette année là (et celle là, c'était en 1976, pour l'anecdote :grimacing:)
-
-Une fois encore, ce n'est pas *mon* idée, et je ne sais pas exactement qui l'a eue. Je me suis contenté de produire une solution qui reproduit ce fonctionnement, avec un Arduino. 
-
+L'idée est d'utiliser le micro et les haut parleurs du Socotel S63 pour la partie son et de trouver un moyen de réaliser la partie téléphonie.
 
 ## mission (im)possible ? 
 
-Avant toute chose, il faut savoir si le projet est réaliste. Et pour celà, je vois 3 difficultés :
-  - jouer un MP3 avec un Arduino
-  - capter les impulsions d'un cadran téléphonique
-  - arriver à faire marcher le tout ensemble, Arduino, S63, MP3, décrocher, raccrocher, numéroter, etc...
+Avant toute chose, il faut savoir si le projet est réaliste. 
+De nombreux projets sur github interfacent un raspberry avec un Scotel S63.
+J'ai trouvé un projet qui implémente une pile voix sur IP sur un téléphone vintage d'un autre pays, il faut donc adapter ce projet au S63.
+J'ai également trouvé une implémentation d'une pile téléphonie sur un rasperry, reste plus qu'à recoller tous les morceaux...
 
-### commençons par le facile : la lecture de fichiers MP3
+### Liste du matériel utilisé
 
-Quelques recherches sur Internet, et cela semble assez simple : 
-  - le hardware : https://www.dfrobot.com/wiki/index.php/DFPlayer_Mini_SKU:DFR0299
-  - le software : https://github.com/DFRobot/DFRobotDFPlayerMini/
+- un vieux téléphone Socotel S63 à cadran
+- un raspberry pi B (c'est le modèle qui trainait dans un tiroir et que je recycle)
+- une carte SD (8 Go sont suffisant)
+- une carte son USB
+- un dongle wifi USB
+- un dongle Bluetooth USB
+- des connecteurs jack 2.5mm
+- des solénoides
+- des transistors
+- des resistances
 
-Un peu plus de recherches (histoire de voir que ce module se trouve aussi un peu partout sous le nom de "MP3-TF-16P", une carte bleue qui chauffe (pas beaucoup, moins d'1€ !), et il n'y a plus qu'à attendre la livraison !
-
-Pas de surprise, on cherche le schéma de montage (https://www.dfrobot.com/wiki/index.php/DFPlayer_Mini_SKU:DFR0299#Connection_Diagram). 
-
-On assemble, [on bricole un peu avec la carte micro SD](#la-carte-micro-sd-et-le-module-mp3), et... ça marche :-)
-
-### plus compliqué, le S63
 
 J'ai sous la main un vieux téléphone à cadran et... Internet ! J'ai longuement cherché de la documentation sur le câblage et le fonctionnement du téléphone (et plus précisément du cadran), mais force est de constater que je n'ai rien trouvé de bien probant. Finalement, c'est bien [revolunet](http://github.com/revolunet/s63) qui est le plus clair et le plus complet dans tout ce que j'ai pu trouver sur le S63.
 
