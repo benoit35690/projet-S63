@@ -5,19 +5,13 @@ Table des matières
 ==================
 
    * [introduction](#introduction)
-   * [l'objectif du projet](#l'objectif du projet)
+   * [l'objectif du projet](#objectif du projet)
    * [réalisation par étape](#réalisation par étape)
-   * [plus compliqué, le S63](#plus-compliqué-le-s63)
-   * [ça se complique encore (et on s'émerveille <g-emoji class="g-emoji" alias="sparkles" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png">✨</g-emoji>) avec le cadran](#ça-se-complique-encore-et-on-sémerveille-sparkles-avec-le-cadran)
-* [des fils, des connexions, un peu de code et la magie prend forme](#des-fils-des-connexions-un-peu-de-code-et-la-magie-prend-forme)
-   * [plan de connexion](#plan-de-connexion)
-* [le code, justement](#le-code-justement)
-   * [spécifications / comportement attendu](#spécifications--comportement-attendu)
-   * [plus de détails sur le code ?](#plus-de-détails-sur-le-code-)
-* [la carte micro SD et le module MP3](#la-carte-micro-sd-et-le-module-mp3)
-   * [adaptation à notre cas d'usage](#adaptation-à-notre-cas-dusage)
-   * [et les tonalités ?](#et-les-tonalités-)
-      * [copyright ?](#copyright-)
+       * [étape préliminaire : étude du matériel utilisé](#étape préliminaire : étude du matériel utilisé)
+       * [étape 1 : interfacer le S63 avec le rasperry](#étape 1 : interfacer le S63 avec le rasperry) 
+       * [étape 2 : voix sur IP](#étape 2 : voix sur IP)
+       
+
 * [Remerciements et références](#remerciements-et-références)
 
 
@@ -30,7 +24,8 @@ Mais je n'ai pas trouvé exactement ce que je veux réaliser, je vais donc m'ins
 * [ThomasChappe](https://github.com/ThomasChappe/S63_Arduino) : Socotel S63 interfacé à un arduino
 * [revolunet](http://github.com/revolunet/s63) : Socotel S63 interfacé à Rasperry Pi 3
 
-## l'objectif du projet : pouvoir utiliser un téléphone Socotel S63 pour passer et recevoir des appels
+## objectif du projet
+Pouvoir utiliser un téléphone Socotel S63 pour passer et recevoir des appels
 
 L'idée est d'utiliser le micro et les haut parleurs du Socotel S63 pour la partie son et de trouver un moyen de réaliser la partie téléphonie.
 
@@ -51,6 +46,14 @@ J'ai également trouvé une implémentation d'une pile téléphonie sur un raspe
 ### étape préliminaire : étude du matériel utilisé 
 
 #### Socotel S63
+
+INSERER PHOTO du Socotel S63
+
+Une description complète de ce téléphone est disponible sur le site d'[Alain Levasseur](#http://alain.levasseur.pagesperso-orange.fr/page22.htm)
+
+Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés complet donne notamment le schéma électrique du S63.
+
+INSERER PHOTO du Socotel S63
 
 #### raspberry pi B et ses accessoires
 
@@ -74,14 +77,14 @@ J'ai également trouvé une implémentation d'une pile téléphonie sur un raspe
 
 ### étape 1 : interfacer le S63 avec le rasperry 
 
-#### Objectif :
+Objectifs :
 * valider le schéma de cablage
 * obtenir un premier code python qui
     * gere l'interface Raspberry - S63
     * gestion du décrocher/raccrocher
     * gestion de la numérotation avec le cadran
     
-Pour cette première étape le site [revolunet](http://github.com/revolunet/s63) trés clair et trés complet me donne notament le schéma de cablabe du S63. Mais comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
+P Mais comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
 
 INSERER PHOTO du schema initial du S63
 
@@ -95,7 +98,7 @@ INSERER PHOTO du schema modifié du S63
 
 INSERER PHOTO de la carte du S63
 
-
+### étape 2 : voix sur IP 
 
 ### ça se complique encore (et on s'émerveille :sparkles:) avec le cadran 
 
