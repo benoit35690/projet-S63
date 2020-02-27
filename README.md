@@ -5,8 +5,8 @@ Table des matières
 ==================
 
    * [introduction](#introduction)
-   * [l'objectif du projet] (#l'objectif du projet)
-   * [mission (im)possible ?](#mission-impossible-)
+   * [l'objectif du projet](#l'objectif du projet)
+   * [réalisation par étape](#réalisation par étape)
    * [plus compliqué, le S63](#plus-compliqué-le-s63)
    * [ça se complique encore (et on s'émerveille <g-emoji class="g-emoji" alias="sparkles" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2728.png">✨</g-emoji>) avec le cadran](#ça-se-complique-encore-et-on-sémerveille-sparkles-avec-le-cadran)
 * [des fils, des connexions, un peu de code et la magie prend forme](#des-fils-des-connexions-un-peu-de-code-et-la-magie-prend-forme)
@@ -26,41 +26,74 @@ Table des matières
 
 De nombreuses réalisations sont disponibles sur le net pour transformer les vieux téléphones à cadran.
 Mais je n'ai pas trouvé exactement ce que je veux réaliser, je vais donc m'inspirer de ce qui existe et adapter.
+* [hnesland](https://github.com/hnesland/aselektriskbureau) : utilisation d'une pile voix sur IP sur un téléphone à cadran AS Elektrisk Bureau
+* [ThomasChappe](https://github.com/ThomasChappe/S63_Arduino) : Socotel S63 interfacé à un arduino
+* [revolunet](http://github.com/revolunet/s63) : Socotel S63 interfacé à Rasperry Pi 3
 
 ## l'objectif du projet : pouvoir utiliser un téléphone Socotel S63 pour passer et recevoir des appels
 
 L'idée est d'utiliser le micro et les haut parleurs du Socotel S63 pour la partie son et de trouver un moyen de réaliser la partie téléphonie.
 
+Les spécifications sont :
+* décrocher/raccrocher du combiné fonctionnel
+* émission des tonalités France Télécom d'époque
+* utilisation du micro et haut parleur du combiné + écouteur
+* utilisation du cadran rotatif pour composer le numéro
+* sonerie d'origine fonctionnelle
+
 ## réalisation par étape
 
 Chaque étape me permet d'acquerir de nouvelles compétence et d'arriver à un résultat encourageant.
-De nombreux projets sur github interfacent un raspberry avec un Scotel S63.
+De nombreux projets sur github interfacent un raspberry avec un Socotel S63.
 J'ai trouvé un projet qui implémente une pile voix sur IP sur un téléphone vintage d'un autre pays, il faut donc adapter ce projet au S63.
 J'ai également trouvé une implémentation d'une pile téléphonie sur un rasperry, reste plus qu'à recoller tous les morceaux...
 
-### Liste du matériel utilisé
+### étape préliminaire : étude du matériel utilisé 
 
-- un vieux téléphone Socotel S63 à cadran
-- un raspberry pi B (c'est le modèle qui trainait dans un tiroir et que je recycle)
-- une carte SD (8 Go sont suffisant)
-- une carte son USB
-- un dongle wifi USB
-- un dongle Bluetooth USB
-- des connecteurs jack 2.5mm
-- des solénoides
-- des transistors
-- des resistances
+#### Socotel S63
 
-### Premiere étape : interfacer le S63 avec le rasperry 
+#### raspberry pi B et ses accessoires
 
-Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés complet me donne notament le schéma de cablabe du 63.
-Mais comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
+* une carte SD (8 Go sont suffisant)
+* une carte son USB
+* un dongle wifi USB
+* un dongle Bluetooth USB
+
+#### connectique 
+
+* des connecteurs jack 2.5mm
+
+#### composants électroniques
+
+* des solénoides
+* des transistors
+* des resistances
+
+#### liste de courses
+
+
+### étape 1 : interfacer le S63 avec le rasperry 
+
+#### Objectif :
+* valider le schéma de cablage
+* obtenir un premier code python qui
+    * gere l'interface Raspberry - S63
+    * gestion du décrocher/raccrocher
+    * gestion de la numérotation avec le cadran
+    
+Pour cette première étape le site [revolunet](http://github.com/revolunet/s63) trés clair et trés complet me donne notament le schéma de cablabe du S63. Mais comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
+
+INSERER PHOTO du schema initial du S63
 
 Petite surprise je ne confirme pas tout à fait les informations de [revolunet](http://github.com/revolunet/s63) : 
-  - si on détecte le décrocher/raccrocher via les connexions 7 et 11 du S63, le signl n'est pas franc
+  - si on détecte le décrocher/raccrocher via les connexions 7 et 11 du S63, le signal n'est pas franc
 
 Apres débuggage, je suis obligé de modifier le cablage du S63.
-Je dois sectionner une piste.
+Je dois sectionner une piste pour isoler la PIN 7 du reste des composants su S63.
+
+INSERER PHOTO du schema modifié du S63
+
+INSERER PHOTO de la carte du S63
 
 
 
