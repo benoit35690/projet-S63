@@ -112,6 +112,10 @@ Je dois sectionner une piste pour isoler la PIN 7 du reste des composants su S63
 
 ![piste sectionnée sur la carte du S63](assets/pictures/modified_board.jpg)
 
+Il faut aussi adapter les PIN connectées du Raspberry et tenant compte des différences entres les projets dont je m'inspire et ma configuration.
+* le pinout du Raspberry Pi 1 est [ici](https://projets-ima.plil.fr/mediawiki/index.php?title=Fichier:PFE_P13_Raspberry-pi-gpio.jpg)
+* le code python de [hnesland](https://github.com/hnesland/aselektriskbureau) utilise les GPIO 3 et 4
+
 Le cablage de cette étape est le suivant :
 Raspberry Physical Pin | GPIO | S63 | Signal
 :----:|:----:|:----:|-----
@@ -121,51 +125,6 @@ Raspberry Physical Pin | GPIO | S63 | Signal
 25 | Ground | S63 PIN 11 | interrupteur décroché Masse
 
 ### étape 2 : voix sur IP 
-
-### ça se complique encore (et on s'émerveille :sparkles:) avec le cadran 
-
-Le S63 est une merveille d'ingénierie, et son cadran l'est encore plus.
-
-Je fais ici un petit aparté : 
-
-*En tant qu'ingénieur travaillant chez Orange, j'avais un peu l'impression, en inspectant ce téléphone,
-de passer sur les traces de mes pairs, et j'avoue que j'ai senti une grande fierté de faire partie
-de la grande famille de l'ingénierie chez l'opérateur historique. Je souhaite ici rendre 
-hommage à mes illustres prédécesseurs : La qualité de fabrication du S63 (sa longévité en témoigne) sa
-simplicité d'utilisation et l'ingéniosité des mécanismes (en particulier le cadran) forcent le respect.*
-
-Le cadran est, donc, une merveille. Hélas, 4 fils en sortent et il y en a un dont je n'ai pas réussi à percer le mystère.
-
-Mais avec mon multimètre (et l'aide de http://jla.1313-blog.overblog.com/2017/09/convertisseur-dc/dtmf.html) voici comment fonctionnent les 3 autres :
-  - **I   : les impulsions téléphoniques (66ms toutes les 100ms, désolé, je retrouve plus ma source :cry: )**
-  - **II  : la masse**
-  - **III : interrupteur ouvert lorsqu'un chiffre est en cours de composition (lorsqu'on tourne le cadran).**
-  
-NB : oui le S63 propose un marquage en chiffres romains pour les fils du cadran, pour se démarquer et éviter de confondre avec l'autre bornier. Cela va me causer quelques soucis plus tard, car il est facile de confondre 11 et II (j'y reviendrai).
-
-Autre petit aparté : 
-
-*le cadran fonctionne avec un ressort. Comment faire pour que lorsqu'on compose un 0
-le cadran aille à la même vitesse (et envoie donc les impulsions de même durée) que lorsqu'on compose un 1, 
-alors que le ressort sera beaucoup plus remonté ?*
-
-*Les ingénieurs ont pensé à un mécanisme très simple mais incroyablement efficace, un régulateur de vitesse !
-Je vous laisse lire et voir les photos ici : http://jla.1313-blog.overblog.com/s-63-a-cadran-sur-freebox*
-
-Reste à voir si mon Arduino va réussir à détecter correctement les impulsions.
-
-
-## des fils, des connexions, un peu de code et la magie prend forme 
-
-Une fois les fils correctement identifiés, la connexion est plutôt simple. 
-
-On va se servir des [pullup](https://www.arduino.cc/en/Tutorial/DigitalPins "résistances de pullup des Arduino") pour nous simplifier la vie sur la détection du "décrocher/raccrocher" et du "numérotation en cours". 
-
-Pour les impulsions du cadran, on va brancher le fil concerné (le I donc) sur la patte 2, qui permet de gérer les [interruptions](https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/ "interruptions"), ce qui est nécessaire pour éviter de louper une impulsion. En résumé, une interruption intervient chaque fois qu'une impulsion est détectée, et déclenche un morceau de code (appelé "callback"), qui va incrémenter un compteur.
-
-Pour le haut parleur, on connecte les pattes SPK1 et SPK2 du player MP3 aux bornes 3 et 5 du S63.
-
-Une petite subtilité : pour le "décrocher/raccrocher", une partie du circuit électrique du S63 est reliée au cadran. J'ai constaté que cela posait problème si la borne 7 n'était pas connectée à la masse. Dont acte, c'est donc la borne 11 qui transmettra le signal "décrocher/raccrocher".
 
 ### plan de connexion
 
