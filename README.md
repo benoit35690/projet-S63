@@ -5,8 +5,8 @@ Table des matières
 ==================
 
    * [introduction](#introduction)
-   * [objectif du projet](#objectif du projet)
-   * [réalisation par étape](#réalisation par étape)
+   * [objectif du projet](#objectif-du-projet)
+   * [réalisation par étape](#réalisation-par-étape)
        * [étape préliminaire : étude du matériel utilisé](#étape préliminaire : étude du matériel utilisé)
        * [étape 1 : interfacer le S63 avec le rasperry](#étape 1 : interfacer le S63 avec le rasperry) 
        * [étape 2 : voix sur IP](#étape 2 : voix sur IP)
