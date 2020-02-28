@@ -49,7 +49,7 @@ J'ai également trouvé une implémentation d'une pile téléphonie sur un raspe
 
 ![](assets/pictures/telephoneS63.jpg)
 
-Une description complète de ce téléphone est disponible sur le site d' [Alain Levasseur](#http://alain.levasseur.pagesperso-orange.fr/page22.htm)
+Une description complète de ce téléphone est disponible sur le site d'[alain.levasseur](#http://alain.levasseur.pagesperso-orange.fr/page22.htm)
 
 Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés complet donne notamment le schéma électrique du S63.
 
@@ -57,37 +57,50 @@ Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés comple
 
 #### raspberry pi B et ses accessoires
 
-Il existe de nombreux modèles de rapberry Pi, le [site suivant](https://socialcompare.com/fr/comparison/raspberrypi-models-comparison) permet une vue synthètique des différences entre modèles
+Il existe de nombreux modèles de rapberry Pi, le [site suivant](https://socialcompare.com/fr/comparison/raspberrypi-models-comparison) permet une vue synthètique des différences entre modèles.
+La puissance CPU et la quantité de RAM ne sont pas des critères pertinents car le raspberry sera utilisé sans interface graphique avec peu de paquets installés.
+Par la suite du projet on aura besoin de :
+* interface ethernet (c'est plus facile pour commencer)
+* interface wifi (c'est plus pratique que le cable ethernet)
+* une entrée microphone
 
+Comme aucun modèle de raspberry ne permet de connecter un microphone, nous serons obligé de passer par une carte son externe en USB.
 
-* une carte SD (8 Go sont suffisant)
+Je dispose de vieux Rasperry Pi B, ils feront très bien l'affaire pour commencer.
+Les Rasperry Pi 3 et Rasperry Zero W sont aussi de candidats pour ce projet.
+Il faudra prévoir le matériel suivant
+* une carte SD par Rasperry (8 Go sont suffisant)
 * une carte son USB
 * un dongle wifi USB
 * un dongle Bluetooth USB
 
 #### connectique 
 
-* des connecteurs jack 2.5mm
+Le combiné du Socotel S63 et l'écouteur seront connectés à la carte son USB.
+Il faut donc prévoir des des connecteurs jack 3.5mm.
 
 #### composants électroniques
 
+Je souhaite rendre fonctionnel la sonnerie d'origine.
+Le site [ThomasChappe](https://github.com/ThomasChappe/S63_Arduino#on-va-plus-loin--on-peut-le-faire-sonner-) détail tout le matériel nécessaire. Je commande donc
 * des solénoides
 * des transistors
 * des resistances
-
-#### liste de courses
-
 
 ### étape 1 : interfacer le S63 avec le rasperry 
 
 Objectifs :
 * valider le schéma de cablage
+* faire tourner un Rasperry Pi interfacé avec les Socotel S63
 * obtenir un premier code python qui
     * gere l'interface Raspberry - S63
     * gestion du décrocher/raccrocher
     * gestion de la numérotation avec le cadran
-    
-Mais comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
+
+Le Rasperry Pi B connecté en Ethernet permet de commencer le projet en douceur.
+L'installation du Rasperry est décrite [ici](https://raspberry-pi.fr/raspberry-pi-sans-ecran-sans-clavier/).
+
+Comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
 
 Petite surprise je ne confirme pas tout à fait les informations de [revolunet](http://github.com/revolunet/s63) : 
   - si on détecte le décrocher/raccrocher via les connexions 7 et 11 du S63, le signal n'est pas franc
@@ -98,6 +111,14 @@ Je dois sectionner une piste pour isoler la PIN 7 du reste des composants su S63
 ![schéma éléctrique modifié](assets/diagrams/modified_diagram.jpg)
 
 ![piste sectionnée sur la carte du S63](assets/pictures/modified_board.jpg)
+
+Le cablage de cette étape est le suivant :
+Raspberry Physical Pin | GPIO | S63 | Signal
+:----:|:----:|:----:|-----
+7  | GPIO04 | cadran rotatif fil rouge | pulsation du cadran
+9 | Ground | cadran rotatif fil blanc/rouge | pulsation du cadran Masse
+5 | GPIO03 | S63 PIN 7 | interrupteur décroché
+25 | Ground | S63 PIN 11 | interrupteur décroché Masse
 
 ### étape 2 : voix sur IP 
 
