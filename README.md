@@ -5,7 +5,7 @@ Table des matières
 ==================
 
    * [introduction](#introduction)
-   * [l'objectif du projet](#objectif du projet)
+   * [objectif du projet](#objectif du projet)
    * [réalisation par étape](#réalisation par étape)
        * [étape préliminaire : étude du matériel utilisé](#étape préliminaire : étude du matériel utilisé)
        * [étape 1 : interfacer le S63 avec le rasperry](#étape 1 : interfacer le S63 avec le rasperry) 
@@ -47,6 +47,7 @@ J'ai également trouvé une implémentation d'une pile téléphonie sur un raspe
 
 #### Socotel S63
 
+![Socotel S63](assets/pictures/telephoneS63.jpg)
 INSERER PHOTO du Socotel S63
 
 Une description complète de ce téléphone est disponible sur le site d'[Alain Levasseur](#http://alain.levasseur.pagesperso-orange.fr/page22.htm)
