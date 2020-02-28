@@ -47,14 +47,13 @@ J'ai également trouvé une implémentation d'une pile téléphonie sur un raspe
 
 #### Socotel S63
 
-![Socotel S63](assets/pictures/telephoneS63.jpg)
-INSERER PHOTO du Socotel S63
+![](assets/pictures/telephoneS63.jpg)
 
 Une description complète de ce téléphone est disponible sur le site d'[Alain Levasseur](#http://alain.levasseur.pagesperso-orange.fr/page22.htm)
 
 Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés complet donne notamment le schéma électrique du S63.
 
-INSERER PHOTO du Socotel S63
+![](assets/diagrams/S63_electric_diagram.jpg)
 
 #### raspberry pi B et ses accessoires
 
@@ -85,9 +84,7 @@ Objectifs :
     * gestion du décrocher/raccrocher
     * gestion de la numérotation avec le cadran
     
-P Mais comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
-
-INSERER PHOTO du schema initial du S63
+Mais comme je suis plus à l'aise en python, le site [hnesland](https://github.com/hnesland/aselektriskbureau) me donne les premières base du code source.
 
 Petite surprise je ne confirme pas tout à fait les informations de [revolunet](http://github.com/revolunet/s63) : 
   - si on détecte le décrocher/raccrocher via les connexions 7 et 11 du S63, le signal n'est pas franc
@@ -95,9 +92,9 @@ Petite surprise je ne confirme pas tout à fait les informations de [revolunet](
 Apres débuggage, je suis obligé de modifier le cablage du S63.
 Je dois sectionner une piste pour isoler la PIN 7 du reste des composants su S63.
 
-INSERER PHOTO du schema modifié du S63
+![schéma éléctrique modifié](assets/diagrams/modified_diagram.jpg)
 
-INSERER PHOTO de la carte du S63
+![piste sectionnée sur la carte du S63](assets/pictures/modified_board.jpg)
 
 ### étape 2 : voix sur IP 
 
