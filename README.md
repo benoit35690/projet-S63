@@ -57,6 +57,9 @@ Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés comple
 
 #### raspberry pi B et ses accessoires
 
+Il existe de nombreux modèles de rapberry Pi, le [site suivant](https://socialcompare.com/fr/comparison/raspberrypi-models-comparison) permet une vue synthètique des différences entre modèles
+
+
 * une carte SD (8 Go sont suffisant)
 * une carte son USB
 * un dongle wifi USB
