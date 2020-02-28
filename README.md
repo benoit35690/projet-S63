@@ -7,9 +7,9 @@ Table des matières
    * [introduction](#introduction)
    * [objectif du projet](#objectif-du-projet)
    * [réalisation par étape](#réalisation-par-étape)
-       * [étape préliminaire : étude du matériel utilisé](#étape préliminaire : étude du matériel utilisé)
-       * [étape 1 : interfacer le S63 avec le rasperry](#étape 1 : interfacer le S63 avec le rasperry) 
-       * [étape 2 : voix sur IP](#étape 2 : voix sur IP)
+       * [étape préliminaire : étude du matériel utilisé](#étape-préliminaire-:-étude-du-matériel-utilisé)
+       * [étape 1 : interfacer le S63 avec le rasperry](#étape-1-:-interfacer-le-S63-avec-le-rasperry) 
+       * [étape 2 : voix sur IP](#étape-2-:-voix-sur-IP)
        
 
 * [Remerciements et références](#remerciements-et-références)
@@ -49,7 +49,7 @@ J'ai également trouvé une implémentation d'une pile téléphonie sur un raspe
 
 ![](assets/pictures/telephoneS63.jpg)
 
-Une description complète de ce téléphone est disponible sur le site d'[Alain Levasseur](#http://alain.levasseur.pagesperso-orange.fr/page22.htm)
+Une description complète de ce téléphone est disponible sur le site d' [Alain Levasseur](#http://alain.levasseur.pagesperso-orange.fr/page22.htm)
 
 Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés complet donne notamment le schéma électrique du S63.
 
