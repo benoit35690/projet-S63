@@ -117,235 +117,61 @@ Il faut aussi adapter les PIN connectées du Raspberry et tenant compte des diff
 * le code python de [hnesland](https://github.com/hnesland/aselektriskbureau) utilise les GPIO 3 et 4
 
 Le cablage de cette étape est le suivant :
-Raspberry Physical Pin | GPIO | S63 | Signal
-:----:|:----:|:----:|-----
-7  | GPIO04 | cadran rotatif fil rouge | pulsation du cadran
-9 | Ground | cadran rotatif fil blanc/rouge | pulsation du cadran Masse
-5 | GPIO03 | S63 PIN 7 | interrupteur décroché
-25 | Ground | S63 PIN 11 | interrupteur décroché Masse
+
+|Raspberry |    PIN   |              S63               |    Signal
+|----------|----------|--------------------------------|----------
+| 7        | GPIO04   | cadran rotatif fil rouge       | pulsation du cadran
+| 9        | Ground   | cadran rotatif fil blanc/rouge | pulsation du cadran Masse
+| 5        | GPIO03   | S63 PIN 7                      | interrupteur décroché
+| 25       | Ground   | S63 PIN 11                     | interrupteur décroché Masse
 
 ### étape 2 : voix sur IP 
 
-### plan de connexion
-
-:exclamation: NB : comme déjà évoqué précédemment, il est très facile de confondre 11 et II, soyez vigilants dans vos montages !  
-
-|Arduino |    S63   |    MP3
-|--------|----------|----------
-| 2      |    I     |
-| 4      |   III    |
-| 5      |    11    |
-| 10     |          |   TX
-| 11     |          |   RX (+1k&ohm; resistor en serie)
-| +5V    |          |   VCC
-| GND    |  II / 7  |   GND
-|        |    3     |   SPK1
-|        |    5     |   SPK2
-
-
-On peut même imaginer/anticiper un bornier sur la breadboard (*spoil : ou anticiper la fabrication un circuit imprimé !*), ainsi :
-
-| breadboard |    S63   |
-|------------|----------|
-| 1  (gauche)|    11    |
-| 2          |    III   |
-| 3          |     I    |
-| 4          |     3    |
-| 5          |     7    |
-| 6          |     5    |
-| 7 (droite) |     II   |
-
-
-Et un schéma associé (merci [Fritzing](https://fritzing.org "Fritzing"))
-
-![schéma de montage](docs/wiring.png)
-
-
-Et voilà ! La magie opère, avec mon petit code de test, j'entends bien un MP3 dans le combiné ! :heart_eyes:
-
-Et pareil en testant le décrocher/raccrocher, le cadran qui numérote, et ... les chiffres / impulsions ! Le code avec les interruptions fonctionne à merveille !
-
-
-## le code, justement
-
-C'est bien beau, on a un code de test, on arrive à détecter les actions physiques sur le téléphone, et à jouer un (unique) morceau de musique dans le combiné.
-
-### spécifications / comportement attendu 
-
-Nous allons donc maintenant nous lancer dans la partie "faire revivre" le téléphone. Il va donc falloir coder le fonctionnement suivant :
-  - lorsque le téléphone est raccroché, rien ne se passe, et cela le remet dans son état initial
-  - lorsqu'on décroche, on entend la tonalité pendant 10 secondes
-    - si au bout de ces 10 secondes, aucun chiffre n'est composé, on joue la tonalité d'occupation puis on attend indéfiniment (il faut donc raccrocher)
-    - si un chiffre est composé pendant les 10 secondes, alors :
-      - on arrête la tonalité
-      - on mémorise ce chiffre 
-      - on attend 10 secondes avant de lancer l'appel (pour permettre de numéroter un autre chiffre)
-    - si on a saisi 4 chiffres alors on réduit fortement le délai d'attente pour lancer rapidement l'appel, car on a là une année de naissance, à priori. Donc plus besoin d'attendre un nouveau chiffre numéroté.
-  - on vérifie que l'appel va aboutir :
-    - est-ce que la date de naissance est valide ?
-    - est-ce que sur la carte mémoire, nous avons un dossier contenant des mp3 pour cette année ?
-    - en cas de réponse négative à l'une des deux questions, on joue la tonalité d'erreur et on arrête tout (il faut alors raccrocher)
-  - on lance l'appel :
-    - on simule un appel longue distance, on joue donc la tonalité d'acheminement pendant 3 secondes
-    - on joue ensuite la tonalité de sonnerie pendant 6 secondes
-    - puis... on décroche et on joue une chanson aléatoire parmi celles qui sont disponibles dans le dossier correspondant à l'année composée.
-
-
-***Simple, non ?***
-
-En fait, pas tant que cela, vu qu'on utilise un micro-contrôleur, et donc que le code est dans une boucle infinie. 
-J'ai donc opté pour une "machine à état". Je mémorise l'état dans lequel le téléphone est actuellement, et je teste cet état afin de jouer le bon morceau de code en fonction de la situation.
-
-### plus de détails sur le code ? 
-
-"La vérité est dans le code" comme on dit souvent :smiley: (en tout cas, chez moi on le dit :grimacing:)
-
-Si vous voulez en savoir davantage, le code implémente exactement le fonctionnel vu ci-dessus, est massivement documenté et j'espère qu'il est lisible ! Je suis preneur de tout commentaire, retour, amélioration, évidemment !
-
-Et le code, évidemment, il est là : [socotel](./socotel/socotel.ino)
-
-
-## la carte micro SD et le module MP3
-
-[Le module MP3](#commen%C3%A7ons-par-le-facile--la-lecture-de-fichiers-mp3) est formidable (pour son prix) ! Il inclut :
-- un lecteur de carte micro SD
-- un décodeur MP3
-- un convertisseur analogique (DAC)
-- un égaliseur (equalizer)
-
-Hélas, il a quelques limitations, qui nous obligent à quelques contorsions dans le code. Les voici :
-  - les dossier doivent être **exclusivement** composés de 2 chiffres  (01-99)
-  - les fichiers doivent être **exclusivement** composés de 3 chiffres (001-255)
-  - il y a un cas particulier pour les 10 premiers dossiers, qui peuvent prendre des fichiers dans l'intervalle 0001-1000 (avec un appel à une fonction différente, hélas)
-  - il y a deux dossiers spéciaux "MP3" et "ADVERT", qui acceptent des fichiers dans l'intervalle 0000-65535, qui utilisent une fonction différente des dossiers standard pour y accéder. Et dans le cas de "ADVERT", la musique précédant l'appel reprend après la fin du son joué (c'est manifestement une fonction utilisée dans les commerces pour faire de la pub, puis reprendre la chanson là ou elle était...).
-
-### adaptation à notre cas d'usage
-
-Dans notre cas, nous voilà bien embêtés, car il est impossible de stocker les années simplement. Nous allons donc nous donner 100 ans glissants, et choisir à quel moment on change de siècle entre les dossiers 01 et 99. 
-
-Dans le code, j'ai opté pour une plage de fonctionnement entre 1940 et 2017 inclus. En conséquence, le dossier 01 est pour 2001, le 17 pour 2017, le 40 est pour 1940, le 99 pour 1999.
-
-Reste le cas de l'an 2000, vu que le module n'accepte pas le dossier "00". (tiens, ça faisait longtemps qu'on avait pas eu un bug de l'an 2000 ! :grimacing:)
-
-Qu'à cela ne tienne, vu qu'entre 2017 et 1940 j'ai 32 dossiers libres, je vais en utiliser un, disons 1940-1 => 39 comme dossier pour l'an 2000... 
-Oui, c'est très moche, j'ai honte :sweat:, tout ça... mais c'est surement le moins compliqué à implémenter dans le code.
-
-Pour le reste, ça devient simple, un dossier par année, des fichiers numérotés pour chaque dossier et c'est parti :
-```
-  40/001.mp3
-  40/002.mp3
-  40/003.mp3
-  41/001.mp3
-  41/002.mp3
-  ...
-```
-**cela va sans dire...** : mais pour des raisons évidentes de droits d'auteur, je ne fournis évidemment aucun fichier mp3 relatif aux chansons et années. A vous de déposer vos fichiers préférés dans les dossiers correspondants (et avec les numéros ad-hoc). 
-
-**Petit bonus** : le code que je fournis gère de lui même le nombre de fichiers dans les dossiers et en choisit un au hasard au moment de jouer la musique. Pas la peine d'avoir le même nombre de chansons dans chaque dossier, donc.
-
-### et les tonalités ?
-
-Les tonalités sont dans le dossier spécial ["MP3"](./microSD_content/MP3).
-- 0001.mp3 => tonalité d'accueil (le son continu lorsqu'on décroche, avant de numéroter)
-- 0002.mp3 => tonalité d'occupation
-- 0003.mp3 => tonalité d'acheminement
-- 0004.mp3 => tonalité de sonnerie
-- 0005.mp3 => tonalité d'erreur d'acheminement.
-
-Vous retrouverez tous ces fichiers et l'arborescence décrite ci-dessus dans le dossier [microSD_content](./microSD_content/) de ce dépôt.
-
-#### copyright ?
-
-Mais d'où viennent ces MP3 de tonalités ? 
-
-Là, je tiens à remercier https://www.orange.com/fr/content/download/3635/33162/version/1/file/STI03-ed4_0505.pdf, qui décrit toutes les spécifications des tonalités de l'époque !
-
-A partir de ces spécifications, j'ai moi même reproduit ces sons grâce à l'excellent [Audacity](https://www.audacityteam.org), avec lequel c'est d'une simplicité incroyable de générer des sons lorsqu'on connait les durées et les fréquences. :thumbsup:
-
-Du coup... ces MP3 sont les miens. Je les mets à disposition de ce programme, et sous licence GPL, évidemment. :sunglasses:
-
-
-Nouvel aparté : 
-
-*la tonalité d'accueil du téléphone (le fichier [0001.mp3](./microSD_content/MP3/0001.mp3)) est un "La 3" comme l'appellent les musiciens. C'est un signal sonore de fréquence 440Hz. Sa particularité ? C'est **LE** "La", celui qu'on entend au diapason, celui qu'on utilise pour accorder un instrument !*
-*Eh oui, en cas de besoin, on pouvait se servir d'un téléphone pour s'accorder ! Quel heureux hasard ! Ou plutôt, merci à ceux qui l'ont conçu comme cela !*
-
- 
-## c'est bien beau, ça marche, mais c'est pas pratique pour tout mettre dans le S63
-
-Oui... à ce stade du projet, on a un montage qui fonctionne, du code qui reproduit le fonctionnement de l'époque et une carte mémoire avec tout ce qu'il faut.
-
-Souci, ça fait des fils partout, c'est pas super pratique, ça va se débrancher et ça va pas rentrer dans le S63.
-
-Du coup, c'est là qu'on va parler des [shields](https://www.arduino.cc/en/Main/arduinoShields) !
-
-
-## un shield ?
-
-Un shield c'est un circuit imprimé qui est exactement de la taille de l'Arduino, avec les mêmes connexions et qui vient se brancher au dessus de lui. 
-
-Cela permet, notamment, d'inclure des circuits, connexions et autres sur un circuit imprimé, qui va se fixer sur les pattes de l'Arduino, et donc éviter d'avoir plein de fils volants, et mieux, d'éviter d'avoir quoi que ce soit à câbler ! 
-
-On prend le shield, on le fixe et... ça marche !
-
-Bon... dans notre cas, il va falloir quand même souder les connexions au S63. Mais toutes les connexions au lecteur MP3 vont être intégrées.
-
-L'avantage c'est qu'on évite les plaques à essais, les fils volants et qu'on gagne de la place !
-
-L'autre avantage, c'est qu'on ne peut plus se tromper dans le câblage (ou presque ... [rappelez vous du 11 vs II !](#plan-de-connexion) )
-
-Concrètement, le shield pour notre projet, cela ressemble à ça : 
-
-![shield recto](./docs/PCB_v1.1.0_front.png) 
-
-et à ça : 
-
-![shield verso](./docs/PCB_v1.1.0_back.png) 
-
-
-### comment on fait un shield ?
-
-Concrètement, j'ai documenté mon montage dans [Fritzing](https://fritzing.org "Fritzing") (voir [plan de connexion](#plan-de-connexion), et grâce au même outil, j'ai ensuite conçu le schéma du shield et son routage électrique.
-
-J'ai alors exporté le résultat dans un format exploitable par les professionnels du circuits imprimé (le format "gerber") que j'ai ensuite fait imprimer/fabriquer. 
-
-
-### je peux en avoir un ?
-
-Si vous voulez vous faire votre shield, vous trouverez tout ce qu'il faut pour l'imprimer (format gerber, donc) dans le dossier [shield](./shield). Vous trouverez facilement sur internet des sites pour imprimer des circuits (cherchez "PCB maker").
-
-Si vous préférez, j'ai un peu de stock et je peux vous faire parvenir un shield (nu évidemment, à vous de vous procurer et souder les composants), moyennant le remboursement des frais de transport et de fabrication. [Contactez-moi si besoin](https://twitter.com/thomas_chappe)
-
-Concernant les pièces à ajouter / souder, il vous faudra : 
-  - [un lecteur MP3](#commen%C3%A7ons-par-le-facile--la-lecture-de-fichiers-mp3), évidemment.
-  - une résistance de 1k&ohm;
-  - des connecteurs pour shield [de ce genre là (par exemple)](https://snootlab.com/connecteurs/170-kit-connecteurs-empilables-arduino-1.html)
-  - des fils électriques de base (j'ai une préférence pour les fils multicolores "Dupont") pour connecter le S63 au shield.
-  - optionnellement, des "cosses fourche" pour se brancher proprement coté S63.
-
-
-## et alors, ça fait quoi à la fin ?
-
-A la fin, ça ressemble à ça (ancienne version du shield mais même principe) : 
-
-![shield_front](./docs/shield_front.jpg)
-
-et lorsqu'on l'empile sur un Arduino :
-
-![shield_stacked](./docs/shield_stacked.jpg)
-
-
-
-### et pour le mettre dans le S63 ?
-
-Pensez à acheter un adaptateur 230v-9v pour Arduino, afin de l'alimenter directement sur une prise secteur. Il n'y a alors qu'un petit fil à faire sortir du S63 pour qu'il fonctionne.
-
-Et mettez votre montage (Arduino + shield) dans un emballage antistatique (en général les Arduino sont vendus emballés dedans) afin de ne pas faire de court-circuit avec l'intérieur du S63.
-
+### étape 3 : gestion de l'audio
+
+### étape 4 : automate d'état
+
+### étape 5 : connexion bluetooth
+
+1er essai : un raspberry Pi 1 + un dongle Bluetooth USB
+ECHEC
+* module bluetooth peut etre non compatible raspbian (probleme de driver)
+* implémentation en mode CLI peut etre buggé
+
+2em essai : un raspberry Pi 3 A+
+SUCCES
+* installation d'une raspbian avec interface graphique
+* configuration du wifi avec l'interface graphique
+* activation de SSH et configuration du boot sans interface graphique
+* suivi du [tuto](https://scribles.net/hfp-on-raspberry-pi/) dans cet ordre
+   * vérification hciconfig
+   * installation de oFono
+   * démarrage du service ofono
+   * installation de pulseaudio et pulseaudio-module-bluetooth 
+   * configuration de pulseaudio
+   * démarrage de pulseaudio
+   * connexion bluetooth du téléphone avec bluetoothctl
+   * essai avec les scripts de test python ofono
+   
+Reste à faire
+* démarage automatique au boot
+   * démarrage de pulseaudio
+   * connexion bluetooth
+* intégration de ofono dans l'automate d'état
+   * détecter un appel entrant
+   * initialisation d'un appel sortant
+   * détection d'un appel en échec
+   * détection d'un raccrocher distant
+   * terminaison d'un appel sortant
+   * gestion d'un 2em appel entrant si on est déja en communication
+* implémenter la procédure d'appairage d'un nouveau téléphone   
+   
 
 
 
 ## On va plus loin ? On peut le faire sonner ?
+
+LA SUITE DOIT ETRE ADAPTE EN PYTHON
 
 Oui ! :smiley:
 
