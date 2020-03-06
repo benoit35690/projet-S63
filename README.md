@@ -55,37 +55,46 @@ Le site [revolunet](http://github.com/revolunet/s63) trés clair et trés comple
 
 ![](assets/diagrams/S63_electric_diagram.jpg)
 
-#### raspberry pi B et ses accessoires
+#### raspberry pi et ses accessoires
 
 Il existe de nombreux modèles de rapberry Pi, le [site suivant](https://socialcompare.com/fr/comparison/raspberrypi-models-comparison) permet une vue synthètique des différences entre modèles.
 La puissance CPU et la quantité de RAM ne sont pas des critères pertinents car le raspberry sera utilisé sans interface graphique avec peu de paquets installés.
-Par la suite du projet on aura besoin de :
-* interface ethernet (c'est plus facile pour commencer)
-* interface wifi (c'est plus pratique que le cable ethernet)
-* une entrée microphone
+Quelque soit le modèle choisi, voici les fonctionnalités dont nous aurons besoin
+* interface réseau
+    * ethernet (c'est plus facile pour commencer)
+    * wifi (c'est plus pratique que le cable ethernet)
+* sortie audio
+* entrée microphone
+* connexion bluetooth
 
 Comme aucun modèle de raspberry ne permet de connecter un microphone, nous serons obligé de passer par une carte son externe en USB.
 
 Je dispose de vieux Rasperry Pi B, ils feront très bien l'affaire pour commencer.
-Les Rasperry Pi 3 et Rasperry Zero W sont aussi de candidats pour ce projet.
-Il faudra prévoir le matériel suivant
-* une carte SD par Rasperry (8 Go sont suffisant)
-* une carte son USB
-* un dongle wifi USB
-* un dongle Bluetooth USB
+Par la suite pour les connexion wifi et bluetooth, il faudra soit
+* un Rasperry Pi intégrant ces fonctions (raspberry Pi 3 ou Rasperry Zero W)
+* des dongles USB Wifi et Bluetooth
+
+voici le matériel que je commande
+* [2 cartes SD 32Go](https://www.amazon.fr/gp/product/B00MSQYX8Y/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1) (8Go pourrait suffire)
+* une [carte son USB](https://www.ebay.fr/itm/USB-2-0-Virtual-7-1-Channel-Audio-Sound-Card-Adapter-For-Laptop-PC-MAC-New/142306561110?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2060353.m2749.l2649)
+* une [clé wifi USB](https://www.ebay.fr/itm/150Mbps-Speed-Usb-Wireless-Wifi-802-11N-Lan-Adapter-Dongle-For-Raspberry-Pi/352895785136?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2060353.m2749.l2649)
+* une [clé Bluetooth USB](https://www.ebay.fr/itm/Bluetooth-4-0-USB-2-0-Dongle-Adapter-for-Raspberry-Pi-CSR-4-0/112759618905?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2060353.m2749.l2649)
+Compte tenu du prix, je prend le risque d'avoir du matériel qui soit mal supporté par raspbian, quitte a recommander ultérieurement du matériel plus cher mais qui a été testé par d'autres utilisateurs.
 
 #### connectique 
 
 Le combiné du Socotel S63 et l'écouteur seront connectés à la carte son USB.
-Il faut donc prévoir des des connecteurs jack 3.5mm.
+Il faut donc prévoir des des connecteurs jack 3.5mm et un slitter.
+* [connecteur jack à souder](https://www.ebay.fr/itm/1pc-3-5mm-3-Pole-Headphone-Replacement-Audio-Jack-Male-Plug-Solder-Connector/142869621639?ssPageName=STRK%3AMEBIDX%3AIT&var=441859923249&_trksid=p2060353.m2749.l2649)
+* [slitter jack](https://www.ebay.fr/itm/3-5mm-Stereo-Y-Splitter-Audio-Adapter-1-8-Male-Plug-to-2-Dual-Female-Jacks-XC/233228336729?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2060353.m2749.l2649
 
 #### composants électroniques
 
 Je souhaite rendre fonctionnel la sonnerie d'origine.
 Le site [ThomasChappe](https://github.com/ThomasChappe/S63_Arduino#on-va-plus-loin--on-peut-le-faire-sonner-) détail tout le matériel nécessaire. Je commande donc
-* des solénoides
-* des transistors
-* des resistances
+* des [solénoides](https://fr.aliexpress.com/item/32801392552.html)
+* des [transistors](https://www.ebay.fr/itm/10pcs-TIP102-NPN-SILICON-POWER-DARLINGTONS-TO-220/181089170269?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2060353.m2749.l2649)
+* des [resistances](https://www.ebay.fr/itm/10-20-ou-50-Diode-de-redressement-1N4004-1A-400V-DO-41-DIY-Arduino-PI/322431805132?ssPageName=STRK%3AMEBIDX%3AIT&var=511405892757&_trksid=p2060353.m2749.l2649)
 
 ### étape 1 : interfacer le S63 avec le rasperry 
 
@@ -127,7 +136,38 @@ Le cablage de cette étape est le suivant :
 
 ### étape 2 : voix sur IP 
 
+Lors de cette étape j'investigue la piste menée par le projet[hnesland](https://github.com/hnesland/aselektriskbureau)
+J'ai besoin d'un compte SIP me permettant de configuer la pile voix sur IP linphone.
+Je souhaite évidement trouver quelque chose de gratuit.
+Le resultat de mes recherche est
+* [ippi](https://www.ippi.com/)
+    * compte gratuit mais très limité
+    * compte payant permettant l'attribution d'un numéro de téléphone virtuel
+* [OVH](https://www.ovhtelecom.fr/telephonie/voip/decouverte.xml)
+    * abonnement payant permettant l'attribution d'un numéro de téléphone virtuel
+    * facturation à l'usage
+    
+Je créé donc 2 comptes de test gratuit chez ippi.
+Je configure le code python du raspberry avec le 1er compte.
+Je configure le 2em compte sur un client [linphone](http://www.linphone.org/technical-corner/linphone?qt-technical_corner=2#qt-technical_corner) installé sur un PC
+
+Résultat :
+Le Socotel S63 peut passer un [appel](https://www.youtube.com/watch?v=EgIuGd-Waik) voix sur IP.
+La partie audio n'est pas encore gérée.
+
 ### étape 3 : gestion de l'audio
+
+#### matériel
+Pour cette partie, nous avons besoin de composants supplémentaires :
+* [carte son USB](https://www.ebay.fr/itm/USB-2-0-Virtual-7-1-Channel-Audio-Sound-Card-Adapter-For-Laptop-PC-MAC-New/142306561110?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2060353.m2749.l2649)
+* des connecteurs jack à souder pour connecter le combiné du téléphone et l'écouteur.
+
+#### tonalités
+Je souhaite que le téléphone diffuse les tonalités d'époque.
+Je les trouve sur le site de [Claude RIZZO](https://telecommunications.monsite-orange.fr/page-57573c36a13b9.html). Merci à lui pour son travail d'archive et d'information.
+
+#### configuration logicielle
+A FAIRE
 
 ### étape 4 : automate d'état
 
