@@ -1,4 +1,4 @@
-# Faire fonctionner un Socotel S63 en voix sur IP
+# Passer des appels et en recevoir avec un Socotel S63
 # WORK IN PROGRESS
 
 Table des matières
