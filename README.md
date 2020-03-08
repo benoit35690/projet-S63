@@ -166,6 +166,29 @@ Pour cette partie, nous avons besoin de composants supplémentaires :
 Je souhaite que le téléphone diffuse les tonalités d'époque.
 Je les trouve sur le site de [Claude RIZZO](https://telecommunications.monsite-orange.fr/page-57573c36a13b9.html). Merci à lui pour son travail d'archive et d'information.
 
+En 1963, la [numérotation](https://fr.wikipedia.org/wiki/Plan_de_num%C3%A9rotation_en_France#Plan_automatique_national_tout_num%C3%A9rique_(1953-1963)) est bien différente de celle que nous connaissons aujourd'hui.
+Les usagers du téléphone disposent de numéros courts associés aux services suivants :
+
+| numéro | Service                           |
+|--------|-----------------------------------|
+|   00   | international                     |
+|   11   | annuaire                          |
+|   12   | renseignements                    |
+|   13   | dérangements                      |
+|   14   | PTT                               |
+|   15   | Samu                              |
+|   16   | préfixe pour appeler la province  |
+|   17   | police                            |
+|   18   | pompiers                          |
+
+Les numéros verts sont apparus un peu plus tard, ils sont identifiés par les préfixes 0800 et 0805
+
+Les numéro mobiles sont apparus en le 1er juillet 1992 avec le lancement de la commercialisation de Itinéris le premier réseau de téléphonie mobile de deuxième génération (2G) par France Télécom. Le 06 est resté l'unique préfixe utilisé pour identifier un numéro mobile jusqu'au 3 mai 2010, date à laquelle les opérateurs Orange et Bouygues Telecom débutent l'attribution de numéros mobiles commençant par 07.
+
+Par la suite on ne considerera, qu'en dehors des précédents, un numéro est complet
+* le numéro commence par 01, 02, 03, 04 ou 05
+* le numéro comporte 10 chiffres
+
 #### configuration logicielle
 A FAIRE
 
@@ -173,13 +196,32 @@ A FAIRE
 
 Pour modéliser le comportement du téléphone, rien de mieux qu'un automate d'état
 
-|  Etat          | Combiné   |           Description                    | Action
-|----------------|-----------|--------------------------------|----------
-| REPOS          | raccroché |, aucun appel entrant    | Aucun
-| APPEL_ENTRANT  | raccroché |, sonnerie               | Activer sonnerie
-| DECROCHE_REPOS | décroché, aucun appel entrant     | Emettre tonalité ?
-| NUMEROTATION   | décroché,
-
+|  Etat          | Combiné   |                 Description                 | Action
+|----------------|-----------|---------------------------------------------|----------
+| REPOS          | raccroché | aucune activité                             | terminer toutes les actions en cours (appel, tonalité, message..)  
+| SONNERIE       | raccroché | reception d'une notification d'appel entrant| Activer la sonnerie
+| APPEL_ENTRANT  | décroché  | décroché lors d'un appel entrant            | terminer sonnerie, établir connection appel
+| DECROCHE_REPOS | décroché  | aucun appel en cours                        | Emettre tonalité d'invitation à numéroter, armer timer
+| DECROCHE_OUBLIE| décroché  | le timer d'oublie est échu                  | Emettre tonalité d'oublie
+| NUMEROTATION   | décroché  | reception d'impulsion de numérotation       | Attendre un numéro complet
+| APPEL_ANNUAIRE | décroché  | le numéro de l'annuaire est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal annuaire
+| APPEL_RENSEIGNE| décroché  | le numéro des renseignements est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal renseignements
+| APPEL_DERANGEMT| décroché  | le numéro des dérangements est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal dérangements
+| APPEL_PTT      | décroché  | le numéro des PTT est reconnu	           | Emettre tonalité d'acheminement pendant 5 s puis message vocal PTT
+| APPEL_SAMU     | décroché  | le numéro du SAMU est reconnu	           | Emettre tonalité d'acheminement pendant 5 s puis message vocal SAMU
+| APPEL_POLICE   | décroché  | le numéro de la police est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal police
+| APPEL_POMPIER   | décroché  | le numéro des pompiers est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal pompier
+| APPEL_INTER_1  | décroché  | l'indicatif international est reconnu	   | attendre numéro de l'indicatif pays
+| APPEL_INTER_2  | décroché  | l'indicatif pays est erroné      	   | Emettre message vocal erreur numerotation international
+| APPEL_INTER_3  | décroché  | le numéro international est complet         | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant
+| APPEL_VERT_1   | décroché  | l'indicatif numéro vert est reconnu	   | attendre suite des chiffres du numéro vert
+| APPEL_VERT_2   | décroché  | le numéro vert est complet       	   | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro vert
+| APPEL_VERT_3   | décroché  | echec de numérotation numéro vert       	   | Emettre message vocal erreur numerotation numéro vert
+| APPEL_MOBILE_1 | décroché  | l'indicatif numéro mobile est reconnu	   | attendre suite des chiffres du numéro mobile
+| APPEL_MOBILE_2 | décroché  | le numéro mobile est complet       	   | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro mobile
+| APPEL_MOBILE_3 | décroché  | echec de numérotation numéro mobile         | Emettre message vocal erreur numerotation itinéris
+| APPEL_1        | décroché  | le numéro est complet       	           | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro
+| APPEL_2        | décroché  | echec de numérotation numéro                | Emettre message vocal erreur numerotation
 
 ### étape 5 : connexion bluetooth
 
