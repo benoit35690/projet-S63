@@ -171,6 +171,16 @@ A FAIRE
 
 ### étape 4 : automate d'état
 
+Pour modéliser le comportement du téléphone, rien de mieux qu'un automate d'état
+
+|  Etat          | Combiné   |           Description                    | Action
+|----------------|-----------|--------------------------------|----------
+| REPOS          | raccroché |, aucun appel entrant    | Aucun
+| APPEL_ENTRANT  | raccroché |, sonnerie               | Activer sonnerie
+| DECROCHE_REPOS | décroché, aucun appel entrant     | Emettre tonalité ?
+| NUMEROTATION   | décroché,
+
+
 ### étape 5 : connexion bluetooth
 
 1er essai : un raspberry Pi 1 + un dongle Bluetooth USB
