@@ -198,30 +198,38 @@ Pour modéliser le comportement du téléphone, rien de mieux qu'un automate d'�
 
 |  Etat          | Combiné   |                 Description                 | Action
 |----------------|-----------|---------------------------------------------|----------
-| REPOS          | raccroché | aucune activité                             | terminer toutes les actions en cours (appel, tonalité, message..)  
-| SONNERIE       | raccroché | reception d'une notification d'appel entrant| Activer la sonnerie
-| APPEL_ENTRANT  | décroché  | décroché lors d'un appel entrant            | terminer sonnerie, établir connection appel
-| DECROCHE_REPOS | décroché  | aucun appel en cours                        | Emettre tonalité d'invitation à numéroter, armer timer
-| DECROCHE_OUBLIE| décroché  | le timer d'oublie est échu                  | Emettre tonalité d'oublie
-| NUMEROTATION   | décroché  | reception d'impulsion de numérotation       | Attendre un numéro complet
-| APPEL_ANNUAIRE | décroché  | le numéro de l'annuaire est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal annuaire
-| APPEL_RENSEIGNE| décroché  | le numéro des renseignements est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal renseignements
-| APPEL_DERANGEMT| décroché  | le numéro des dérangements est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal dérangements
-| APPEL_PTT      | décroché  | le numéro des PTT est reconnu	           | Emettre tonalité d'acheminement pendant 5 s puis message vocal PTT
-| APPEL_SAMU     | décroché  | le numéro du SAMU est reconnu	           | Emettre tonalité d'acheminement pendant 5 s puis message vocal SAMU
-| APPEL_POLICE   | décroché  | le numéro de la police est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal police
-| APPEL_POMPIER   | décroché  | le numéro des pompiers est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal pompier
-| APPEL_INTER_1  | décroché  | l'indicatif international est reconnu	   | attendre numéro de l'indicatif pays
-| APPEL_INTER_2  | décroché  | l'indicatif pays est erroné      	   | Emettre message vocal erreur numerotation international
-| APPEL_INTER_3  | décroché  | le numéro international est complet         | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant
-| APPEL_VERT_1   | décroché  | l'indicatif numéro vert est reconnu	   | attendre suite des chiffres du numéro vert
-| APPEL_VERT_2   | décroché  | le numéro vert est complet       	   | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro vert
-| APPEL_VERT_3   | décroché  | echec de numérotation numéro vert       	   | Emettre message vocal erreur numerotation numéro vert
-| APPEL_MOBILE_1 | décroché  | l'indicatif numéro mobile est reconnu	   | attendre suite des chiffres du numéro mobile
-| APPEL_MOBILE_2 | décroché  | le numéro mobile est complet       	   | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro mobile
-| APPEL_MOBILE_3 | décroché  | echec de numérotation numéro mobile         | Emettre message vocal erreur numerotation itinéris
-| APPEL_1        | décroché  | le numéro est complet       	           | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro
-| APPEL_2        | décroché  | echec de numérotation numéro                | Emettre message vocal erreur numerotation
+| ETAT_REPOS          | raccroché | aucune activité                             | terminer toutes les actions en cours (appel, tonalité, message..)  
+| ETAT_SONNERIE       | raccroché | reception d'une notification d'appel entrant| Activer la sonnerie
+| ETAT_APPEL_ENTRANT  | décroché  | décroché lors d'un appel entrant            | terminer sonnerie, établir connection appel
+| ETAT_DECROCHE_REPOS | décroché  | aucun appel en cours                        | Emettre tonalité d'invitation à numéroter, armer timer
+| ETAT_DECROCHE_OUBLIE| décroché  | le timer d'oublie est échu                  | Emettre tonalité d'oublie
+| ETAT_NUMEROTATION   | décroché  | reception d'impulsion de numérotation       | Attendre un numéro complet
+| ETAT_APPEL_ANNUAIRE | décroché  | le numéro de l'annuaire est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal annuaire
+| ETAT_APPEL_RENSEIGNE| décroché  | le numéro des renseignements est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal renseignements
+| ETAT_APPEL_DERANGEMT| décroché  | le numéro des dérangements est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal dérangements
+| ETAT_APPEL_PTT      | décroché  | le numéro des PTT est reconnu	           | Emettre tonalité d'acheminement pendant 5 s puis message vocal PTT
+| ETAT_APPEL_SAMU     | décroché  | le numéro du SAMU est reconnu	           | Emettre tonalité d'acheminement pendant 5 s puis message vocal SAMU
+| ETAT_APPEL_POLICE   | décroché  | le numéro de la police est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal police
+| ETAT_APPEL_POMPIER   | décroché  | le numéro des pompiers est reconnu	   | Emettre tonalité d'acheminement pendant 5 s puis message vocal pompier
+| ETAT_APPEL_INTER_1  | décroché  | l'indicatif international est reconnu	   | attendre numéro de l'indicatif pays
+| ETAT_APPEL_INTER_2  | décroché  | l'indicatif pays est erroné      	   | Emettre message vocal erreur numerotation international
+| ETAT_APPEL_INTER_3  | décroché  | le numéro international est complet         | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant
+| ETAT_APPEL_VERT_1   | décroché  | l'indicatif numéro vert est reconnu	   | attendre suite des chiffres du numéro vert
+| ETAT_APPEL_VERT_2   | décroché  | le numéro vert est complet       	   | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro vert
+| ETAT_APPEL_VERT_3   | décroché  | echec de numérotation numéro vert       	   | Emettre message vocal erreur numerotation numéro vert
+| ETAT_APPEL_MOBILE_1 | décroché  | l'indicatif numéro mobile est reconnu	   | attendre suite des chiffres du numéro mobile
+| ETAT_APPEL_MOBILE_2 | décroché  | le numéro mobile est complet       	   | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro mobile
+| ETAT_APPEL_MOBILE_3 | décroché  | echec de numérotation numéro mobile         | Emettre message vocal erreur numerotation itinéris
+| ETAT_APPEL_1        | décroché  | le numéro est complet       	           | Emettre tonalité d'acheminement pendant 5 s puis initier un appel sortant vers le numéro
+| ETAT_APPEL_2        | décroché  | echec de numérotation numéro                | Emettre message vocal erreur numerotation
+
+Les transitions suivantes font passer l'automate d'un état à un autre
+
+|  Transition    | Etat de départ  | Condition | Etat d'arrivé 
+|----------------|-----------------|-----------|-----------------
+| INITIALISATION | TOUS            | aucune    | ETAT_REPOS                       
+| APPEL_ENTRANT  | ETAT_REPOS      | aucune    | ETAT_SONNERIE  
+
 
 ### étape 5 : connexion bluetooth
 
