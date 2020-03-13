@@ -144,7 +144,7 @@ class TelephoneDaemon:
         sys.exit(0)
 
 def main():
-    print "[main]""
+    print "[main]"
     TDaemon = TelephoneDaemon()
 
 if __name__ == "__main__":
