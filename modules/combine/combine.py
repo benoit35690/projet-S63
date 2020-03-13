@@ -8,7 +8,7 @@
 
 import Constantes
 # from threading import Timer
-# import time
+import time
 if Constantes.IS_RASPBERRY_PI:
     import RPi.GPIO as GPIO
 
@@ -37,12 +37,15 @@ class Combine:
             GPIO.setup(Constantes.PIN_COMBINE, GPIO.IN,
                        pull_up_down=GPIO.PUD_UP)
             try:
+                GPIO.add_event_detect(Constantes.PIN_COMBINE, GPIO.BOTH,
+                                      callback=self.EvenementDecroche,
+                                      bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
                 while self.detection_combine:
-                    GPIO.add_event_detect(Constantes.PIN_COMBINE, GPIO.BOTH,
-                                          callback=self.EvenementDecroche,
-                                          bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
+                    time.sleep(0.1)
             except KeyboardInterrupt:
                 print("Keyboard Interrupt")
+            finally:
+                GPIO.cleanup()
 
         # on arme un timer qui va vérifier périodiquement l'état du combiné
         # self.timer_combine = Timer(Constantes.TIMER_COMBINE,

@@ -12,7 +12,7 @@
 """
 
 import Constantes
-from threading import Timer
+#from threading import Timer
 import time
 if Constantes.IS_RASPBERRY_PI:
     import RPi.GPIO as GPIO
@@ -45,11 +45,14 @@ class Cadran:
             GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
                        pull_up_down=GPIO.PUD_UP)
             try:
-                #while self.detection_impulsions:
-                    GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
-                                          callback=self.CompteImpulsions)
+                GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
+                                      callback=self.CompteImpulsions)
+                while self.detection_impulsions:
+                    time.sleep(0.1)
             except KeyboardInterrupt:
                 print("Keyboard Interrupt")
+            finally:
+                GPIO.cleanup()
 
     def ArretDetectionImpulsions(self):
         """
