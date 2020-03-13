@@ -20,14 +20,14 @@ class Automate:
         """
         signal.signal(signal.SIGINT, self.OnSignal)
 
-        self.Cadran = Cadran()
-        self.Combine = Combine()
+#        self.Cadran = Cadran()
+#        self.Combine = Combine()
 
-        self.Cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
-        self.Combine.RegisterCallback(
-            NotificationDecroche=self.ReceptionDecroche,
-            NotificationRaccroche=self.ReceptionRaccroche,
-            NotificationVerifDecroche=self.ReceptionVerifDecroche)
+#        self.Cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
+#        self.Combine.RegisterCallback(
+#            NotificationDecroche=self.ReceptionDecroche,
+#            NotificationRaccroche=self.ReceptionRaccroche,
+#            NotificationVerifDecroche=self.ReceptionVerifDecroche)
 
     def ReceptionChiffre(self, chiffre):
         print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
