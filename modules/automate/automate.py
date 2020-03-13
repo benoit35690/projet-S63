@@ -24,8 +24,8 @@ class Automate:
             NotificationDecroche=self.ReceptionDecroche,
             NotificationRaccroche=self.ReceptionRaccroche)
 
-        while self.automate_actif:
-            time.sleep(0.1)
+        #while self.automate_actif:
+        #    time.sleep(0.1)
 
     def ArretAutomate(self):
         print "[Automate Exit]"
