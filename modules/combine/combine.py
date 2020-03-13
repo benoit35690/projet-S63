@@ -35,9 +35,12 @@ class Combine:
         if Constantes.IS_RASPBERRY_PI:
             GPIO.setup(Constantes.PIN_COMBINE, GPIO.IN,
                        pull_up_down=GPIO.PUD_UP)
-            GPIO.add_event_detect(Constantes.PIN_COMBINE, GPIO.BOTH,
-                                  callback=self.EvenementDecroche,
-                                  bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
+            try:
+                GPIO.add_event_detect(Constantes.PIN_COMBINE, GPIO.BOTH,
+                                      callback=self.EvenementDecroche,
+                                      bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
+            except KeyboardInterrupt:
+                print("Keyboard Interrupt")
 
         # on arme un timer qui va vérifier périodiquement l'état du combiné
         self.timer_combine = Timer(Constantes.TIMER_COMBINE,

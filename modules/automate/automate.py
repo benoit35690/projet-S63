@@ -33,13 +33,13 @@ class Automate:
         print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
 
     def ReceptionDecroche(self):
-        print ("[Automate ReceptionDecroche] Chiffre recu = ")
+        print ("[Automate ReceptionDecroche]")
 
     def ReceptionRaccroche(self):
-        print ("[Automate ReceptionRaccroche] Chiffre recu = ")
+        print ("[Automate ReceptionRaccroche]")
 
     def ReceptionVerifDecroche(self, etat):
-        print ("[Automate ReceptionVerifDecroche] Chiffre recu = ", etat)
+        print ("[Automate ReceptionVerifDecroche]", etat)
 
     def OnSignal(self, signal, frame):
         print "[Automate SIGNAL] Shutting down on %s" % signal

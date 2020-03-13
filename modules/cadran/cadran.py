@@ -43,8 +43,11 @@ class Cadran:
         if Constantes.IS_RASPBERRY_PI:
             GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
                        pull_up_down=GPIO.PUD_UP)
-            GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
-                                  callback=self.CompteImpulsions)
+            try:
+                GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
+                                      callback=self.CompteImpulsions)
+            except KeyboardInterrupt:
+                print("Keyboard Interrupt")
 
     # Enregistrement des callbacks
     def RegisterCallback(self, NotificationChiffre):
