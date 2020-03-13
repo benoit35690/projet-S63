@@ -29,8 +29,8 @@ class Automate:
             NotificationRaccroche=self.ReceptionRaccroche,
             NotificationVerifDecroche=self.ReceptionVerifDecroche)
 
-    def NotificationChiffre(self, chiffre):
-        print ("[Automate NotificationChiffre] Chiffre recu = ", chiffre)
+    def ReceptionChiffre(self, chiffre):
+        print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
 
     def ReceptionDecroche(self):
         print ("[Automate ReceptionDecroche] Chiffre recu = ")
