@@ -18,7 +18,7 @@ class Automate:
         """
             Initialisation de la PIN du Raspberry reliée au cadran du S63
         """
-#        signal.signal(signal.SIGINT, self.OnSignal)
+        signal.signal(signal.SIGINT, self.OnSignal)
 
         self.Cadran = Cadran()
         self.Combine = Combine()
@@ -41,6 +41,6 @@ class Automate:
     def ReceptionVerifDecroche(self, etat):
         print ("[Automate ReceptionVerifDecroche] Chiffre recu = ", etat)
 
-#    def OnSignal(self, signal, frame):
-#        print "[SIGNAL] Shutting down on %s" % signal
-#        sys.exit(0)
+    def OnSignal(self, signal, frame):
+        print "[Automate SIGNAL] Shutting down on %s" % signal
+        sys.exit(0)
