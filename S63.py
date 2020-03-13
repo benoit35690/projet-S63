@@ -13,6 +13,8 @@ class S63:
 
         self.automate = Automate()
 
+        raw_input("Waiting.\n")
+
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
         # self.automate.ArretAutomate()
