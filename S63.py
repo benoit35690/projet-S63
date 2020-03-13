@@ -4,18 +4,18 @@ import sys
 
 
 class S63:
-    Automate = None
+    automate = None
 
     def __init__(self):
         print ("[STARTUP]")
 
         signal.signal(signal.SIGINT, self.OnSignal)
 
-        self.Automate = Automate()
+        self.automate = Automate()
 
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
-        self.Automate.ArretAutomate()
+        self.automate.ArretAutomate()
         sys.exit(0)
 
 
