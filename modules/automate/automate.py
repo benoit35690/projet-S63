@@ -3,12 +3,14 @@
 """
 
 """
-import sys
+# from threading import Timer
+import time
 from modules.cadran.cadran import Cadran
 from modules.combine.combine import Combine
 
 
 class Automate:
+    automate_actif = True
     Cadran  = None
     Combine = None
 
@@ -22,11 +24,15 @@ class Automate:
             NotificationDecroche=self.ReceptionDecroche,
             NotificationRaccroche=self.ReceptionRaccroche)
 
+        while self.automate_actif:
+            time.sleep(0.1)
+
     def ArretAutomate(self):
         print "[Automate Exit]"
         self.Cadran.ArretDetectionImpulsions()
         self.Combine.ArretVerificationDecroche()
-        sys.exit(0)
+        self.automate_actif = False
+        #sys.exit(0)
 
     def ReceptionChiffre(self, chiffre):
         print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)

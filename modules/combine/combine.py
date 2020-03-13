@@ -41,8 +41,8 @@ class Combine:
                 GPIO.add_event_detect(Constantes.PIN_COMBINE, GPIO.BOTH,
                                       callback=self.EvenementDecroche,
                                       bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
-                while self.detection_combine:
-                    time.sleep(0.1)
+                #while self.detection_combine:
+                #    time.sleep(0.1)
             except KeyboardInterrupt:
                 print("Keyboard Interrupt")
             finally:
