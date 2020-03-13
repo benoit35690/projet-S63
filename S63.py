@@ -1,16 +1,17 @@
-from modules.automate.automate import Automate
+#from modules.automate.automate import Automate
 import signal
 import sys
 
 
-class TelephoneDaemon0:
-    Automate = None
+class S63:
+#    Automate = None
 
     def __init__(self):
         print ("[STARTUP]")
+
         signal.signal(signal.SIGINT, self.OnSignal)
 
-        self.Automate = Automate()
+#        self.Automate = Automate()
 
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
@@ -18,7 +19,8 @@ class TelephoneDaemon0:
 
 
 def main():
-    TDaemon = TelephoneDaemon0()
+    print "[main]"
+    TDaemon = S63()
 
 
 if __name__ == "__main__":
