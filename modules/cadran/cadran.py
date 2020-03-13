@@ -45,7 +45,7 @@ class Cadran:
             GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
                        pull_up_down=GPIO.PUD_UP)
             try:
-                while self.detection_impulsions:
+                #while self.detection_impulsions:
                     GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
                                           callback=self.CompteImpulsions)
             except KeyboardInterrupt:
