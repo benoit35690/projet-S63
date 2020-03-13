@@ -3,6 +3,7 @@
 """
 
 """
+import sys
 from modules.cadran.cadran import Cadran
 from modules.combine.combine import Combine
 
@@ -24,6 +25,7 @@ class Automate:
         print "[Automate Exit]"
         self.Cadran.ArretDetectionImpulsions()
         self.Combine.ArretVerificationDecroche()
+        sys.exit(0)
 
     def ReceptionChiffre(self, chiffre):
         print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)

@@ -16,7 +16,7 @@ class S63:
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
         self.automate.ArretAutomate()
-        sys.exit(0)
+        #sys.exit(0)
 
 def main():
     print "[main]"
