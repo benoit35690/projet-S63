@@ -13,6 +13,7 @@ class Automate:
     Combine = None
 
     def __init__(self):
+        print "[Automate __init__]"
         self.Cadran = Cadran()
         self.Combine = Combine()
 

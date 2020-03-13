@@ -23,6 +23,7 @@ class Combine:
         """
             Initialisation de la PIN du Raspberry reliée au combiné du S63
         """
+        print "[Combine __init__]"
         # Set GPIO mode to Broadcom SOC numbering
         if Constantes.IS_RASPBERRY_PI:
             GPIO.setmode(GPIO.BCM)
