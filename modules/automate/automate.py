@@ -39,7 +39,7 @@ class Automate:
     def ReceptionVerifDecroche(self, etat):
         print ("[Automate ReceptionVerifDecroche]", etat)
 
-    def Exit(self):
+    def ArretAutomate(self):
         print "[Automate Exit]"
         self.Cadran.ArretDetectionImpulsions()
         self.Combine.ArretVerificationDecroche()

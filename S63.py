@@ -15,7 +15,7 @@ class S63:
 
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
-        self.Automate.Exit()
+        self.Automate.ArretAutomate()
         sys.exit(0)
 
 
