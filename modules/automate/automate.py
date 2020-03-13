@@ -41,6 +41,10 @@ class Automate:
     def ReceptionVerifDecroche(self, etat):
         print ("[Automate ReceptionVerifDecroche]", etat)
 
+    def Exit(self):
+        print "[Automate Exit]"
+        self.Combine.ArretVerificationDecroche()
+
     def OnSignal(self, signal, frame):
         print "[Automate SIGNAL] Shutting down on %s" % signal
         sys.exit(0)
