@@ -32,9 +32,9 @@ class TelephoneDaemon:
     config = None
 
     def __init__(self):
-        print "[STARTUP]"
+        print ("[STARTUP]")
 
-        self.config = yaml.load(file("configuration.yml",'r'))
+        self.config = yaml.load(file("configuration.yml", 'r'))
 
         signal.signal(signal.SIGINT, self.OnSignal)
 

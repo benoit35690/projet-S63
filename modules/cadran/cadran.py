@@ -16,8 +16,6 @@ from threading import Timer
 import time
 if Constantes.IS_RASPBERRY_PI:
     import RPi.GPIO as GPIO
-else:
-    from modules.test.RPi import GPIO
 
 
 class Cadran:
@@ -35,15 +33,18 @@ class Cadran:
             Initialisation de la PIN du Raspberry reliée au cadran du S63
         """
         # Set GPIO mode to Broadcom SOC numbering
-        GPIO.setmode(GPIO.BCM)
+        if Constantes.IS_RASPBERRY_PI:
+            GPIO.setmode(GPIO.BCM)
 
         # Configuration du GPIO pour écouter les mouvements du cadran
         # On utilise un "pull up" pour forcer l'état haut quand le circuit
         # du cadran est ouvert
         # A chaque changement d'état la callback CompteImpulsions est appelée
-        GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
-                              callback=self.CompteImpulsions)
+        if Constantes.IS_RASPBERRY_PI:
+            GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
+                       pull_up_down=GPIO.PUD_UP)
+            GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
+                                  callback=self.CompteImpulsions)
 
     # Enregistrement des callbacks
     def RegisterCallback(self, NotificationChiffre):
@@ -60,7 +61,8 @@ class Cadran:
             La fonction de callback est executée dans un thread séparé
             instancié par RPi.GPIO
         """
-        input = GPIO.input(Constantes.PIN_CADRAN)
+        if Constantes.IS_RASPBERRY_PI:
+            input = GPIO.input(Constantes.PIN_CADRAN)
         if input and not self.last_input:
             self.compteur_pulsations += 1
 
