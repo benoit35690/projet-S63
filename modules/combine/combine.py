@@ -68,12 +68,12 @@ class Combine:
         self.NotificationDecroche = NotificationDecroche
         self.NotificationRaccroche = NotificationRaccroche
 #        self.NotificationVerifDecroche = NotificationVerifDecroche
-        if Constantes.IS_RASPBERRY_PI:
-            input = GPIO.input(Constantes.PIN_COMBINE)
-        if input:
-            self.NotificationDecroche()
-        else:
-            self.NotificationRaccroche()
+#        if Constantes.IS_RASPBERRY_PI:
+#            input = GPIO.input(Constantes.PIN_COMBINE)
+#        if input:
+#            self.NotificationDecroche()
+#        else:
+#            self.NotificationRaccroche()
 
     def ArretVerificationDecroche(self):
         self.verification_combine_active = False
