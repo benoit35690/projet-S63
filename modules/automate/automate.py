@@ -11,8 +11,8 @@ from modules.combine.combine import Combine
 
 class Automate:
 
-#    Cadran  = None
-#    Combine = None
+    Cadran  = None
+    Combine = None
 
     def __init__(self):
         """
@@ -20,8 +20,26 @@ class Automate:
         """
 #        signal.signal(signal.SIGINT, self.OnSignal)
 
-#        self.Cadran = Cadran()
-#        self.Combine = Combine()
+        self.Cadran = Cadran()
+        self.Combine = Combine()
+
+        self.Cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
+        self.Combine.RegisterCallback(
+            NotificationDecroche=self.ReceptionDecroche,
+            NotificationRaccroche=self.ReceptionRaccroche,
+            NotificationVerifDecroche=self.ReceptionVerifDecroche)
+
+    def NotificationChiffre(self, chiffre):
+        print ("[Automate NotificationChiffre] Chiffre recu = ", chiffre)
+
+    def ReceptionDecroche(self):
+        print ("[Automate ReceptionDecroche] Chiffre recu = ")
+
+    def ReceptionRaccroche(self):
+        print ("[Automate ReceptionRaccroche] Chiffre recu = ")
+
+    def ReceptionVerifDecroche(self, etat):
+        print ("[Automate ReceptionVerifDecroche] Chiffre recu = ", etat)
 
 #    def OnSignal(self, signal, frame):
 #        print "[SIGNAL] Shutting down on %s" % signal
