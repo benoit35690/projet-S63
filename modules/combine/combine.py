@@ -7,13 +7,14 @@
 """
 
 import Constantes
-from threading import Timer
-import time
+# from threading import Timer
+# import time
 if Constantes.IS_RASPBERRY_PI:
     import RPi.GPIO as GPIO
 
 
 class Combine:
+    detection_combine = True
     # Timer pour vérifier l'état du combiné
     timer_combine = None
     verification_combine_active = True
@@ -36,27 +37,34 @@ class Combine:
             GPIO.setup(Constantes.PIN_COMBINE, GPIO.IN,
                        pull_up_down=GPIO.PUD_UP)
             try:
-                GPIO.add_event_detect(Constantes.PIN_COMBINE, GPIO.BOTH,
-                                      callback=self.EvenementDecroche,
-                                      bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
+                while self.detection_combine:
+                    GPIO.add_event_detect(Constantes.PIN_COMBINE, GPIO.BOTH,
+                                          callback=self.EvenementDecroche,
+                                          bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
             except KeyboardInterrupt:
                 print("Keyboard Interrupt")
 
         # on arme un timer qui va vérifier périodiquement l'état du combiné
-        self.timer_combine = Timer(Constantes.TIMER_COMBINE,
-                                   self.VerifieCombine)
-        #self.timer_combine.start()
+        # self.timer_combine = Timer(Constantes.TIMER_COMBINE,
+        #                           self.VerifieCombine)
+        # self.timer_combine.start()
+
+    def ArretDetectionCombine(self):
+        """
+            Stop le mecanisme de detection des impulsions
+        """
+        self.detection_combine = False
 
     # Enregistrement des callbacks
-    def RegisterCallback(self, NotificationDecroche, NotificationRaccroche,
-                         NotificationVerifDecroche):
+    def RegisterCallback(self, NotificationDecroche, NotificationRaccroche):
+    #                     NotificationVerifDecroche):
         """
             Enregistrement de la callbacks utilisée pour notifier quand
             l'état du combiné change
         """
         self.NotificationDecroche = NotificationDecroche
         self.NotificationRaccroche = NotificationRaccroche
-        self.NotificationVerifDecroche = NotificationVerifDecroche
+#        self.NotificationVerifDecroche = NotificationVerifDecroche
         if Constantes.IS_RASPBERRY_PI:
             input = GPIO.input(Constantes.PIN_COMBINE)
         if input:
@@ -67,13 +75,13 @@ class Combine:
     def ArretVerificationDecroche(self):
         self.verification_combine_active = False
 
-    def VerifieCombine(self):
-        while self.verification_combine_active:
-            state = 0
-            if Constantes.IS_RASPBERRY_PI:
-                state = GPIO.input(Constantes.PIN_COMBINE)
-            self.NotificationVerifDecroche(state)
-            time.sleep(Constantes.TIMEOUT_VERIF_COMBINE)
+#    def VerifieCombine(self):
+#        while self.verification_combine_active:
+#            state = 0
+#            if Constantes.IS_RASPBERRY_PI:
+#                state = GPIO.input(Constantes.PIN_COMBINE)
+#            self.NotificationVerifDecroche(state)
+#            time.sleep(Constantes.TIMEOUT_VERIF_COMBINE)
 
     def EvenementDecroche(self, channel):
         if channel == Constantes.PIN_COMBINE:
