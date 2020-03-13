@@ -33,6 +33,8 @@ class Combine:
         # un temps d'anti-rebond de 100 ms
         # A chaque changement d'état la callback EvenementDecroche est appelée
         if Constantes.IS_RASPBERRY_PI:
+            GPIO.setup(Constantes.PIN_COMBINE, GPIO.IN,
+                       pull_up_down=GPIO.PUD_UP)
             GPIO.add_event_detect(Constantes.PIN_COMBINE, GPIO.BOTH,
                                   callback=self.EvenementDecroche,
                                   bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
