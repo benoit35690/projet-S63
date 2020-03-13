@@ -54,26 +54,29 @@ class Cadran:
         """
         self.NotificationChiffre = NotificationChiffre
 
-    def CompteImpulsions(self):
+    def CompteImpulsions(self, channel):
         """
             Compte les impulsions reçues et arme un timer de fin
             Une impulsion est définie par une transition sur l'entrée PIN
             La fonction de callback est executée dans un thread séparé
             instancié par RPi.GPIO
         """
-        if Constantes.IS_RASPBERRY_PI:
-            input = GPIO.input(Constantes.PIN_CADRAN)
-        if input and not self.last_input:
-            self.compteur_pulsations += 1
+        if channel == Constantes.PIN_CADRAN:
+            if Constantes.IS_RASPBERRY_PI:
+                input = GPIO.input(Constantes.PIN_CADRAN)
+            if input and not self.last_input:
+                self.compteur_pulsations += 1
 
-            if self.timer_chiffre is not None:
-                self.timer_chiffre.cancel()
+                if self.timer_chiffre is not None:
+                    self.timer_chiffre.cancel()
 
-            self.timer_chiffre = Timer(Constantes.TIMOUT_CHIFFRE_CADRAN,
-                                       self.FinNumerotationChiffre)
-            self.timer_chiffre.start()
-        self.last_input = input
-        time.sleep(Constantes.TEMPO_ENTRE_IMPULSIONS)
+                self.timer_chiffre = Timer(Constantes.TIMOUT_CHIFFRE_CADRAN,
+                                           self.FinNumerotationChiffre)
+                self.timer_chiffre.start()
+            self.last_input = input
+            time.sleep(Constantes.TEMPO_ENTRE_IMPULSIONS)
+        else:
+            print ("[Cadran CompteImpulsions] channel incorect = ", channel)
 
     # Quand la numérotation d'un chiffre est terminée
     def FinNumerotationChiffre(self):

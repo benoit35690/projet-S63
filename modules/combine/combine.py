@@ -72,12 +72,15 @@ class Combine:
             #self.NotificationVerifDecroche(state)
             time.sleep(Constantes.TIMEOUT_VERIF_COMBINE)
 
-    def EvenementDecroche(self):
-        if Constantes.IS_RASPBERRY_PI:
-            input = GPIO.input(Constantes.PIN_COMBINE)
-        if input:
-            self.EtatDecroche = 1
-            self.NotificationRaccroche()
+    def EvenementDecroche(self, channel):
+        if channel == Constantes.PIN_COMBINE:
+            if Constantes.IS_RASPBERRY_PI:
+                input = GPIO.input(Constantes.PIN_COMBINE)
+            if input:
+                self.EtatDecroche = 1
+                self.NotificationRaccroche()
+            else:
+                self.EtatDecroche = 0
+                self.NotificationDecroche()
         else:
-            self.EtatDecroche = 0
-            self.NotificationDecroche()
+            print ("[Combine EvenementDecroche] channel incorect = ", channel)
