@@ -72,7 +72,7 @@ class Combine:
             state = 0
             if Constantes.IS_RASPBERRY_PI:
                 state = GPIO.input(Constantes.PIN_COMBINE)
-            #self.NotificationVerifDecroche(state)
+            self.NotificationVerifDecroche(state)
             time.sleep(Constantes.TIMEOUT_VERIF_COMBINE)
 
     def EvenementDecroche(self, channel):
