@@ -19,6 +19,7 @@ if Constantes.IS_RASPBERRY_PI:
 
 
 class Cadran:
+    detection_impulsions = True
     compteur_pulsations = 0
     numero_compose = ""
 
@@ -44,10 +45,17 @@ class Cadran:
             GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
                        pull_up_down=GPIO.PUD_UP)
             try:
-                GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
-                                      callback=self.CompteImpulsions)
+                while self.detection_impulsions:
+                    GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
+                                          callback=self.CompteImpulsions)
             except KeyboardInterrupt:
                 print("Keyboard Interrupt")
+
+    def ArretDetectionImpulsions(self):
+        """
+            Stop le mecanisme de detection des impulsions
+        """
+        self.detection_impulsionn = False
 
     # Enregistrement des callbacks
     def RegisterCallback(self, NotificationChiffre):

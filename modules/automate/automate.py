@@ -43,6 +43,7 @@ class Automate:
 
     def Exit(self):
         print "[Automate Exit]"
+        self.Cadran.ArretDetectionImpulsions()
         self.Combine.ArretVerificationDecroche()
 
     def OnSignal(self, signal, frame):
