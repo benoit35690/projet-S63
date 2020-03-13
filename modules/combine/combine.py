@@ -45,7 +45,7 @@ class Combine:
         # on arme un timer qui va vérifier périodiquement l'état du combiné
         self.timer_combine = Timer(Constantes.TIMER_COMBINE,
                                    self.VerifieCombine)
-        self.timer_combine.start()
+        #self.timer_combine.start()
 
     # Enregistrement des callbacks
     def RegisterCallback(self, NotificationDecroche, NotificationRaccroche,
