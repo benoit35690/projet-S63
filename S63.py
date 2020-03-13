@@ -18,7 +18,6 @@ class S63:
         self.automate.ArretAutomate()
         sys.exit(0)
 
-
 def main():
     print "[main]"
     TDaemon = S63()

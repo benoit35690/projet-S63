@@ -3,14 +3,11 @@
 """
 
 """
-import sys
-import signal
 from modules.cadran.cadran import Cadran
 from modules.combine.combine import Combine
 
 
 class Automate:
-
     Cadran  = None
     Combine = None
 
@@ -23,6 +20,11 @@ class Automate:
             NotificationDecroche=self.ReceptionDecroche,
             NotificationRaccroche=self.ReceptionRaccroche)
 
+    def ArretAutomate(self):
+        print "[Automate Exit]"
+        self.Cadran.ArretDetectionImpulsions()
+        self.Combine.ArretVerificationDecroche()
+
     def ReceptionChiffre(self, chiffre):
         print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
 
@@ -34,12 +36,3 @@ class Automate:
 
     def ReceptionVerifDecroche(self, etat):
         print ("[Automate ReceptionVerifDecroche]", etat)
-
-    def ArretAutomate(self):
-        print "[Automate Exit]"
-        self.Cadran.ArretDetectionImpulsions()
-        self.Combine.ArretVerificationDecroche()
-
-    def OnSignal(self, signal, frame):
-        print "[Automate SIGNAL] Shutting down on %s" % signal
-        sys.exit(0)
