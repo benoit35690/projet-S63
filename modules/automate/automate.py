@@ -11,18 +11,18 @@ from modules.combine.combine import Combine
 
 class Automate:
 
-    Cadran  = None
-    Combine = None
+#    Cadran  = None
+#    Combine = None
 
     def __init__(self):
         """
             Initialisation de la PIN du Raspberry reliée au cadran du S63
         """
-        signal.signal(signal.SIGINT, self.OnSignal)
+#        signal.signal(signal.SIGINT, self.OnSignal)
 
-        self.Cadran = Cadran()
-        self.Combine = Combine()
+#        self.Cadran = Cadran()
+#        self.Combine = Combine()
 
-    def OnSignal(self, signal, frame):
-        print "[SIGNAL] Shutting down on %s" % signal
-        sys.exit(0)
+#    def OnSignal(self, signal, frame):
+#        print "[SIGNAL] Shutting down on %s" % signal
+#        sys.exit(0)
