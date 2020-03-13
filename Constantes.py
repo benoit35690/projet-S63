@@ -24,4 +24,4 @@ TIMEOUT_VERIF_COMBINE  = 1
 # liste des transitions de l'automate
 
 # True si la machine est un Raspberry Pi
-IS_RASPBERRY_PI = False
+IS_RASPBERRY_PI = True
