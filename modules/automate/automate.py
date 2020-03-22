@@ -36,7 +36,7 @@ class Automate:
         """
         print "[Automate __init__]"
         # creation de la queue de messages
-        self.message_queue = Queue.Queue(maxsize=0)
+        #self.message_queue = Queue.Queue(maxsize=0)
 
         # demarre le thread de la class Automate
         #self.worker = Thread(target=self.FonctionWorkerThread)
@@ -52,16 +52,17 @@ class Automate:
             NotificationDecroche=self.ReceptionDecroche,
             NotificationRaccroche=self.ReceptionRaccroche)
 
-        while self.automate_actif:
-            print "[Automate __init__ wait for a message]"
-            try:
-                message = self.message_queue.get(True,
+        #while self.automate_actif:
+            #print "[Automate __init__ wait for a message]"
+            #try:
+            #    message = self.message_queue.get(True,
                                                  Constantes.TIMEOUT_AUTOMATE)
-                if message is not None:
-                    self.TraiteMessage(message)
-            except Queue.Empty:
-                print("Automate __init__ message_queue empty")
-        print "[Automate __init__] sortie de la boucle"
+            #    if message is not None:
+            #        self.TraiteMessage(message)
+            #except Queue.Empty:
+            #    print("Automate __init__ message_queue empty")
+        #print "[Automate __init__] sortie de la boucle"
+        raw_input("Waiting.\n")
 
     def FonctionWorkerThread(self):
         """
@@ -95,17 +96,17 @@ class Automate:
         print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
         message = Message(message_type=Constantes.MESSAGE_CHIFFRE,
                           chiffre=chiffre)
-        self.message_queue.put(message)
+        #self.message_queue.put(message)
 
     def ReceptionDecroche(self):
         print ("[Automate ReceptionDecroche]")
         message = Message(message_type=Constantes.MESSAGE_DECROCHE, chiffre=0)
-        self.message_queue.put(message)
+        #self.message_queue.put(message)
 
     def ReceptionRaccroche(self):
         print ("[Automate ReceptionRaccroche]")
         message = Message(message_type=Constantes.MESSAGE_RACCROCHE, chiffre=0)
-        self.message_queue.put(message)
+        #self.message_queue.put(message)
 
     def ReceptionVerifDecroche(self, etat):
         print ("[Automate ReceptionVerifDecroche]", etat)
