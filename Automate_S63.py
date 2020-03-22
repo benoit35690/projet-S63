@@ -100,6 +100,7 @@ class Automate_S63:
                     self.TraiteMessage(message)
             except Queue.Empty:
                 # print("Automate FonctionWorkerThread message_queue empty")
+                continue
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
     def TraiteMessage(self, message):
