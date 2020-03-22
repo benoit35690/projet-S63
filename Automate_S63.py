@@ -3,7 +3,7 @@ import Queue
 import threading
 import signal
 import sys
-import yaml
+import RPi.GPIO as GPIO
 
 from threading import Timer
 from modules.Cadran import Cadran
@@ -49,6 +49,10 @@ class Automate_S63:
 
     def ReceptionVerifDecroche(self, etat):
         print ("[Automate ReceptionVerifDecroche]", etat)
+        if etat == GPIO.HIGH:
+            print("[Combine VerifieCombine] HIGH -> Raccroche")
+        else:
+            print("[Combine VerifieCombine] LOW -> Decroche")
 
     def TraiteMessage(self, message):
         print ("[Automate TraiteMessage] message_type=",

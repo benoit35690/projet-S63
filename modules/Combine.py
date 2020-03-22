@@ -47,13 +47,13 @@ class Combine:
         self.timer_combine.start()
 
     def EvenementDecroche(self, channel):
-        input = GPIO.input(Constantes.PIN_COMBINE)
-        print ("[Combine EvenementDecroche input= ]", input)
-        if input:
-            self.etat_decroche = 1
+        etat = GPIO.input(Constantes.PIN_COMBINE)
+        print ("[Combine EvenementDecroche input= ]", etat)
+        if etat == GPIO.HIGH:
+            print("[Combine VerifieCombine] HIGH")
             self.NotificationRaccroche()
         else:
-            self.etat_decroche = 0
+            print("[Combine VerifieCombine] LOW")
             self.NotificationDecroche()
 
     def ArretVerificationDecroche(self):
@@ -63,12 +63,8 @@ class Combine:
     def VerifieCombine(self):
         print ("[Combine VerifieCombine]")
         while self.verification_combine_active:
-            state = GPIO.input(Constantes.PIN_COMBINE)
-            if state == GPIO.HIGH:
-                print("[Combine VerifieCombine] HIGH")
-            else:
-                print("[Combine VerifieCombine] LOW")
-            self.NotificationVerifDecroche(state)
+            etat = GPIO.input(Constantes.PIN_COMBINE)
+            self.NotificationVerifDecroche(etat)
             time.sleep(Constantes.TIMEOUT_VERIF_COMBINE)
 
     # Enregistrement des callbacks
