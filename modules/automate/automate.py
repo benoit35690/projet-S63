@@ -56,7 +56,7 @@ class Automate:
             #print "[Automate __init__ wait for a message]"
             #try:
             #    message = self.message_queue.get(True,
-                                                 Constantes.TIMEOUT_AUTOMATE)
+            #                                     Constantes.TIMEOUT_AUTOMATE)
             #    if message is not None:
             #        self.TraiteMessage(message)
             #except Queue.Empty:
