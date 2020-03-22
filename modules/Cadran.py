@@ -61,8 +61,8 @@ class Cadran:
                                        self.FinNumerotationChiffre)
             self.timer_chiffre.start()
         self.last_input = input
-        #time.sleep(Constantes.TEMPO_ENTRE_IMPULSIONS)
-        time.sleep(0.002)
+        time.sleep(Constantes.TEMPO_ENTRE_IMPULSIONS)
+        #time.sleep(0.002)
 
     # Quand la numérotation d'un chiffre est terminée
     def FinNumerotationChiffre(self):
