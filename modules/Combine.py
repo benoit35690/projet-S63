@@ -23,7 +23,7 @@ class Combine:
         """
             Initialisation de la PIN du Raspberry reliée au combiné du S63
         """
-        print ("[Combine __init__]")
+        #print ("[Combine __init__]")
 
         # Set GPIO mode to Broadcom SOC numbering
         GPIO.setmode(GPIO.BCM)
@@ -48,21 +48,21 @@ class Combine:
 
     def EvenementDecroche(self, channel):
         etat = GPIO.input(Constantes.PIN_COMBINE)
-        print ("[Combine EvenementDecroche input= ]", etat)
+        #print ("[Combine EvenementDecroche input= ]", etat)
         if etat == GPIO.HIGH:
-            print("[Combine VerifieCombine] HIGH")
+            #print("[Combine VerifieCombine] HIGH")
             self.NotificationRaccroche()
         else:
-            print("[Combine VerifieCombine] LOW")
+            #print("[Combine VerifieCombine] LOW")
             self.NotificationDecroche()
 
     def ArretVerificationDecroche(self):
-        print ("[Combine ArretVerificationDecroche]")
+        #print ("[Combine ArretVerificationDecroche]")
         self.verification_combine_active = False
         self.timer_combine.cancel()
 
     def VerifieCombine(self):
-        print ("[Combine VerifieCombine]")
+        #print ("[Combine VerifieCombine]")
         while self.verification_combine_active:
             etat = GPIO.input(Constantes.PIN_COMBINE)
             self.NotificationVerifDecroche(etat)
@@ -75,7 +75,7 @@ class Combine:
             Enregistrement de la callbacks utilisée pour notifier quand
             l'état du combiné change
         """
-        print ("[Combine RegisterCallback]")
+        #print ("[Combine RegisterCallback]")
         self.NotificationDecroche = NotificationDecroche
         self.NotificationRaccroche = NotificationRaccroche
         self.NotificationVerifDecroche = NotificationVerifDecroche

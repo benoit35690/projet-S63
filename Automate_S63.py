@@ -74,10 +74,10 @@ class Automate_S63:
         message = Message()
         message.chiffre = 0
         if etat == GPIO.HIGH:
-            print("[Combine VerifieCombine] HIGH -> Raccroche")
+            #print("[Combine VerifieCombine] HIGH -> Raccroche")
             message.message_type = Constantes.MESSAGE_RACCROCHE
         else:
-            print("[Combine VerifieCombine] LOW -> Decroche")
+            #print("[Combine VerifieCombine] LOW -> Decroche")
             message.message_type = Constantes.MESSAGE_DECROCHE
         self.message_queue.put(message)
 
@@ -92,14 +92,14 @@ class Automate_S63:
         """
         print "[Automate FonctionWorkerThread start]"
         while self.automate_actif:
-            print "[Automate FonctionWorkerThread wait for a message]"
+            #print "[Automate FonctionWorkerThread wait for a message]"
             try:
                 message = self.message_queue.get(True,
                                                  Constantes.TIMEOUT_AUTOMATE)
                 if message is not None:
                     self.TraiteMessage(message)
             except Queue.Empty:
-                print("Automate FonctionWorkerThread message_queue empty")
+                #print("Automate FonctionWorkerThread message_queue empty")
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
     def TraiteMessage(self, message):
