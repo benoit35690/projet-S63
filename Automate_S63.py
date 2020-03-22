@@ -50,28 +50,35 @@ class Automate_S63:
 
     def ReceptionChiffre(self, chiffre):
         #print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
-        message = Message(message_type=Constantes.MESSAGE_CHIFFRE,
-                          chiffre=chiffre)
+        message = Message()
+        message.message_type = Constantes.MESSAGE_CHIFFRE
+        message.chiffre = chiffre
         self.message_queue.put(message)
 
     def ReceptionDecroche(self):
         #print ("[Automate ReceptionDecroche]")
-        message = Message(message_type=Constantes.MESSAGE_DECROCHE, chiffre=0)
+        message = Message()
+        message.message_type = Constantes.MESSAGE_DECROCHE
+        message.chiffre = 0
         self.message_queue.put(message)
 
     def ReceptionRaccroche(self):
         #print ("[Automate ReceptionRaccroche]")
-        message = Message(message_type=Constantes.MESSAGE_RACCROCHE, chiffre=0)
+        message = Message()
+        message.message_type = Constantes.MESSAGE_RACCROCHE
+        message.chiffre = 0
         self.message_queue.put(message)
 
     def ReceptionVerifDecroche(self, etat):
         #print ("[Automate ReceptionVerifDecroche]", etat)
+        message = Message()
+        message.chiffre = 0
         if etat == GPIO.HIGH:
             print("[Combine VerifieCombine] HIGH -> Raccroche")
-            message = Message(message_type=Constantes.MESSAGE_RACCROCHE)
+            message.message_type = Constantes.MESSAGE_RACCROCHE
         else:
             print("[Combine VerifieCombine] LOW -> Decroche")
-            message = Message(message_type=Constantes.MESSAGE_RACCROCHE)
+            message.message_type = Constantes.MESSAGE_DECROCHE
         self.message_queue.put(message)
 
     def FonctionWorkerThread(self):
