@@ -64,7 +64,7 @@ class Automate_S63:
     def OnHook(self):
         print "Daemon OnHook [PHONE] On hook"
         self.offHook = False
-        self.Ringtone.stophandset()
+        #self.Ringtone.stophandset()
         # Hang up calls
 #        if self.SipClient is not None:
 #            self.SipClient.SipHangup()
