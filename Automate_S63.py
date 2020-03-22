@@ -7,8 +7,6 @@ import sys
 import RPi.GPIO as GPIO
 import Constantes
 # from threading import Timer
-from modules.Ringtone import Ringtone
-from modules.RotaryDial import RotaryDial
 from modules.Cadran import Cadran
 from modules.Combine import Combine
 
