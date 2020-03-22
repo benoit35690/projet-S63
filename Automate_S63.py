@@ -26,11 +26,11 @@ class Automate_S63:
         #self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
 
         self.RotaryDial = RotaryDial()
-        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit,
-                                         OffHookCallback = self.OffHook,
-                                         OnHookCallback = self.OnHook,
-                                         OnVerifyHook = self.OnVerifyHook)
-
+#        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit,
+#                                         OffHookCallback = self.OffHook,
+#                                         OnHookCallback = self.OnHook,
+#                                         OnVerifyHook = self.OnVerifyHook)
+        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit)
         raw_input("Waiting.\n")
 
     # def ReceptionChiffre(self, chiffre):
@@ -39,29 +39,29 @@ class Automate_S63:
     #                      chiffre=chiffre)
     #    self.message_queue.put(message)
 
-    def OnHook(self):
-        print "Daemon OnHook [PHONE] On hook"
-        self.offHook = False
+#    def OnHook(self):
+#        print "Daemon OnHook [PHONE] On hook"
+#        self.offHook = False
 
-    def OffHook(self):
-        print "Daemon OffHook [PHONE] Off hook"
-        self.offHook = True
-        self.dial_number = ""
+#    def OffHook(self):
+#        print "Daemon OffHook [PHONE] Off hook"
+#        self.offHook = True
+#        self.dial_number = ""
 
-        self.offHookTimeoutTimer = Timer(5, self.OnOffHookTimeout)
-        self.offHookTimeoutTimer.start()
+#        self.offHookTimeoutTimer = Timer(5, self.OnOffHookTimeout)
+#        self.offHookTimeoutTimer.start()
 
-    def OnVerifyHook(self, state):
-        #print("[Daemon OnVerifyHook %s]" % state)
-        #if not state:
-            #self.Ringtone.stophandset()
-        if state == 1:
-            self.offHook = False
-        else:
-            self.offHook = True
+#    def OnVerifyHook(self, state):
+#        #print("[Daemon OnVerifyHook %s]" % state)
+#        #if not state:
+#            #self.Ringtone.stophandset()
+#        if state == 1:
+#            self.offHook = False
+#        else:
+#            self.offHook = True
 
-    def OnIncomingCall(self):
-        print "[Daemon OnIncomingCall]"
+#    def OnIncomingCall(self):
+#        print "[Daemon OnIncomingCall]"
 
     def OnOutgoingCall(self):
         print "[Daemon OnOutgoingCall] "
