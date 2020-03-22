@@ -1,12 +1,12 @@
-# import os
+import os
 import Queue
 from threading import Thread
-# import threading
+import threading
 import signal
 import sys
 import RPi.GPIO as GPIO
 import Constantes
-# from threading import Timer
+from threading import Timer
 from modules.Cadran import Cadran
 from modules.Combine import Combine
 
