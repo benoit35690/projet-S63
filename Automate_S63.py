@@ -106,40 +106,40 @@ class Automate_S63:
 
     def TraiteMessage(self, message):
         print ("[Automate TraiteMessage] message_type=",
-               message.message_type)
-        if message == Constantes.TRANSITION_RACCROCHE:
+               message.transition_automate)
+        if message.transition_automate == Constantes.TRANSITION_RACCROCHE:
             self.TraiteTransitionRaccroche(message)
-        elif message == Constantes.TRANSITION_DECROCHE:
+        elif message.transition_automate == Constantes.TRANSITION_DECROCHE:
             self.TraiteTransitionDecroche(message)
-        elif message == Constantes.TRANSITION_APPEL_ENTRANT:
+        elif message.transition_automate == Constantes.TRANSITION_APPEL_ENTRANT:
             self.TraiteTransitionAppelEntrant(message)
-        elif message == Constantes.TRANSITION_FIN_APPEL:
+        elif message.transition_automate == Constantes.TRANSITION_FIN_APPEL:
             self.TraiteTransitionFinAppel(message)
-        elif message == Constantes.TRANSITION_TIMER_OUBLIE:
+        elif message.transition_automate == Constantes.TRANSITION_TIMER_OUBLIE:
             self.TraiteTransitionTimerOublie(message)
-        elif message == Constantes.TRANSITION_ECHEC_NUM:
+        elif message.transition_automate == Constantes.TRANSITION_ECHEC_NUM:
             self.TraiteTransitionEchecNumerotation(message)
-        elif message == Constantes.TRANSITION_CHIFFRE_COMP:
+        elif message.transition_automate == Constantes.TRANSITION_CHIFFRE_COMP:
             self.TraiteTransitionChiffreCompose(message)
-        elif message == Constantes.TRANSITION_NUMERO_VALIDE:
+        elif message.transition_automate == Constantes.TRANSITION_NUMERO_VALIDE:
             self.TraiteTransitionNumeroValide(message)
-        elif message == Constantes.TRANSITION_TIMER_SORTANT:
+        elif message.transition_automate == Constantes.TRANSITION_TIMER_SORTANT:
             self.TraiteTransitionTimerSortant(message)
-        elif message == Constantes.TRANSITION_TIMER_NUMEROT:
+        elif message.transition_automate == Constantes.TRANSITION_TIMER_NUMEROT:
             self.TraiteTransitionTimerNumerotation(message)
-        elif message == Constantes.TRANSITION_FIN_TON_ECHEC:
+        elif message.transition_automate == Constantes.TRANSITION_FIN_TON_ECHEC:
             self.TraiteTransitionFinTonaliteEchec(message)
-        elif message == Constantes.TRANSITION_TIMER_CONNEX:
+        elif message.transition_automate == Constantes.TRANSITION_TIMER_CONNEX:
             self.TraiteTransitionTimerConnection(message)
-        elif message == Constantes.TRANSITION_APPEL_SORTANT:
+        elif message.transition_automate == Constantes.TRANSITION_APPEL_SORTANT:
             self.TraiteTransitionAppelSortant()
         else:
-            print ("[Automate TraiteMessage] MESSAGE INCONNU message_type=",
-                   message.message_type)
+            print ("[Automate TraiteMessage] MESSAGE INCONNU transition=",
+                   message.transition_automate)
 
     def TraiteTransitionRaccroche(self, message):
-        print ("[Automate TraiteTransitionRaccroche] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionRaccroche] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_INIT OR\
            self.etat_automate == Constantes.ETAT_DECROCHE_REPOS OR\
            self.etat_automate == Constantes.ETAT_DECROCHE_OUBLIE OR\
@@ -155,8 +155,8 @@ class Automate_S63:
                    "etat= ", self.etat_automate)
 
     def TraiteTransitionDecroche(self, message):
-        print ("[Automate TraiteTransitionDecroche] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionDecroche] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_INIT OR\
            self.etat_automate == Constantes.ETAT_REPOS:
             self.ChangerEtat_DecrocheRepos()
@@ -167,8 +167,8 @@ class Automate_S63:
                    "etat= ", self.etat_automate)
 
     def TraiteTransitionAppelEntrant(self, message):
-        print ("[Automate TraiteTransitionAppelEntrant] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionAppelEntrant] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_REPOS:
             self.ChangerEtat_Sonnerie()
         else:
@@ -176,8 +176,8 @@ class Automate_S63:
                    "etat= ", self.etat_automate)
 
     def TraiteTransitionFinAppel(self, message):
-        print ("[Automate TraiteTransitionFinAppel] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionFinAppel] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_SONNERIE:
             self.ChangerEtat_Repos()
         else if self.etat_automate == Constantes.ETAT_APPEL_ENTRANT OR\
@@ -188,8 +188,8 @@ class Automate_S63:
                    "etat= ", self.etat_automate)
 
     def TraiteTransitionTimerOublie(self, message):
-        print ("[Automate TraiteTransitionTimerOublie] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionTimerOublie] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS:
             self.ChangerEtat_DecrocheOublie()
         else:
@@ -197,8 +197,8 @@ class Automate_S63:
                    "etat= ", self.etat_automate)
 
     def TraiteTransitionEchecNumerotation(self, message):
-        print ("[Automate TraiteTransitionEchecNumerotation] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionEchecNumerotation] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT:
             self.ChangerEtat_EchecAppelSortant()
         else:
@@ -206,8 +206,8 @@ class Automate_S63:
                    " TRANSITION etat= ", self.etat_automate)
 
     def TraiteTransitionChiffreCompose(self, message):
-        print ("[Automate TraiteTransitionChiffreCompose] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionChiffreCompose] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS OR\
            self.etat_automate == Constantes.ETAT_NUMEROTATION:
             self.ChangerEtat_Numerotation()
@@ -216,8 +216,8 @@ class Automate_S63:
                    " TRANSITION etat= ", self.etat_automate)
 
     def TraiteTransitionNumeroValide(self, message):
-        print ("[Automate TraiteTransitionNumeroValide] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionNumeroValide] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_NUMEROTATION:
             self.ChangerEtat_TonaliteSortante()
         else:
@@ -225,8 +225,8 @@ class Automate_S63:
                    " TRANSITION etat= ", self.etat_automate)
 
     def TraiteTransitionTimerSortant(self, message):
-        print ("[Automate TraiteTransitionTimerSortant] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionTimerSortant] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_TONALITE_SORTANT:
             self.ChangerEtat_InitialisationAppelSortant()
         else:
@@ -234,8 +234,8 @@ class Automate_S63:
                    " TRANSITION etat= ", self.etat_automate)
 
     def TraiteTransitionTimerNumerotation(self, message):
-        print ("[Automate TraiteTransitionTimerNumerotation] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionTimerNumerotation] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_NUMEROTATION:
             self.ChangerEtat_DecrocheOublie()
         else:
@@ -243,8 +243,8 @@ class Automate_S63:
                    " TRANSITION etat= ", self.etat_automate)
 
     def TraiteTransitionFinTonaliteEchec(self, message):
-        print ("[Automate TraiteTransitionFinTonaliteEchec] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionFinTonaliteEchec] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_ECHEC_APPEL_SORTANT:
             self.ChangerEtat_DecrocheRepos()
         else:
@@ -252,8 +252,8 @@ class Automate_S63:
                    " TRANSITION etat= ", self.etat_automate)
 
     def TraiteTransitionTimerConnection(self, message):
-        print ("[Automate TraiteTransitionTimerConnection] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionTimerConnection] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT:
             self.ChangerEtat_EchecAppelSortant()
         else:
@@ -261,8 +261,8 @@ class Automate_S63:
                    " TRANSITION etat= ", self.etat_automate)
 
     def TraiteTransitionAppelSortant(self, message):
-        print ("[Automate TraiteTransitionAppelSortant] message_type=",
-               message.message_type)
+        print ("[Automate TraiteTransitionAppelSortant] transition=",
+               message.transition_automate)
         if self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT:
             self.ChangerEtat_AppelSortant()
         else:
