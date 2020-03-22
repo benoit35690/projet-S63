@@ -5,15 +5,22 @@ import threading
 import signal
 import sys
 import RPi.GPIO as GPIO
-
+import Constantes
 from threading import Timer
 from modules.Cadran import Cadran
 from modules.Combine import Combine
 
 callback_queue = Queue.Queue()
 
+
+class Message:
+    message_type = 0
+    chiffre = 0
+
+
 class Automate_S63:
     dial_number = ""
+    automate_actif = True
     offHook = False
     offHookTimeoutTimer = None
 
@@ -42,34 +49,30 @@ class Automate_S63:
         raw_input("Waiting.\n")
 
     def ReceptionChiffre(self, chiffre):
-        print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
-#        message = Message(message_type=Constantes.MESSAGE_CHIFFRE,
-#                          chiffre=chiffre)
-#        self.message_queue.put(message)
+        #print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
+        message = Message(message_type=Constantes.MESSAGE_CHIFFRE,
+                          chiffre=chiffre)
+        self.message_queue.put(message)
 
     def ReceptionDecroche(self):
-        print ("[Automate ReceptionDecroche]")
-        #message = Message(message_type=Constantes.MESSAGE_DECROCHE, chiffre=0)
-        #self.message_queue.put(message)
+        #print ("[Automate ReceptionDecroche]")
+        message = Message(message_type=Constantes.MESSAGE_DECROCHE, chiffre=0)
+        self.message_queue.put(message)
 
     def ReceptionRaccroche(self):
-        print ("[Automate ReceptionRaccroche]")
-        #message = Message(message_type=Constantes.MESSAGE_RACCROCHE, chiffre=0)
-        #self.message_queue.put(message)
+        #print ("[Automate ReceptionRaccroche]")
+        message = Message(message_type=Constantes.MESSAGE_RACCROCHE, chiffre=0)
+        self.message_queue.put(message)
 
     def ReceptionVerifDecroche(self, etat):
-        print ("[Automate ReceptionVerifDecroche]", etat)
+        #print ("[Automate ReceptionVerifDecroche]", etat)
         if etat == GPIO.HIGH:
             print("[Combine VerifieCombine] HIGH -> Raccroche")
+            message = Message(message_type=Constantes.MESSAGE_RACCROCHE)
         else:
             print("[Combine VerifieCombine] LOW -> Decroche")
-
-    def TraiteMessage(self, message):
-        print ("[Automate TraiteMessage] message_type=",
-               message.message_type)
-
-    def OnOffHookTimeout(self):
-        print "[Daemon OFFHOOK TIMEOUT]"
+            message = Message(message_type=Constantes.MESSAGE_RACCROCHE)
+        self.message_queue.put(message)
 
     def FonctionWorkerThread(self):
         """
@@ -92,14 +95,21 @@ class Automate_S63:
                 print("Automate FonctionWorkerThread message_queue empty")
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
+    def TraiteMessage(self, message):
+        print ("[Automate TraiteMessage] message_type=",
+               message.message_type)
+
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
         self.combine.ArretVerificationDecroche()
+        self.automate_actif = False
         sys.exit(0)
+
 
 def main():
     print "[main]"
     TDaemon = Automate_S63()
+
 
 if __name__ == "__main__":
     main()
