@@ -6,8 +6,8 @@ import sys
 import yaml
 
 from threading import Timer
-from modules.RotaryDial import RotaryDial
-#from modules.Cadran import Cadran
+#from modules.RotaryDial import RotaryDial
+from modules.Cadran import Cadran
 
 callback_queue = Queue.Queue()
 
