@@ -19,6 +19,13 @@ TEMPO_ENTRE_IMPULSIONS = 0.002
 TIMER_COMBINE          = 2
 TIMEOUT_VERIF_COMBINE  = 1
 
+TIMEOUT_AUTOMATE       = 0.5
+
+# liste des type de message de la queue de messages
+MESSAGE_DECROCHE       = 1
+MESSAGE_RACCROCHE      = 2
+MESSAGE_CHIFFRE        = 3
+
 # liste des états de l'automate
 
 # liste des transitions de l'automate

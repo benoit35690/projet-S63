@@ -35,30 +35,29 @@ class Cadran:
         """
         print "[Cadran __init__]"
         # Set GPIO mode to Broadcom SOC numbering
-        if Constantes.IS_RASPBERRY_PI:
-            GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BCM)
 
         # Configuration du GPIO pour écouter les mouvements du cadran
         # On utilise un "pull up" pour forcer l'état haut quand le circuit
         # du cadran est ouvert
         # A chaque changement d'état la callback CompteImpulsions est appelée
-        if Constantes.IS_RASPBERRY_PI:
-            GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
-                       pull_up_down=GPIO.PUD_UP)
-            try:
-                GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
-                                      callback=self.CompteImpulsions)
-                #while self.detection_impulsions:
-                #    time.sleep(0.1)
-            except KeyboardInterrupt:
-                print("Keyboard Interrupt")
-            finally:
-                GPIO.cleanup()
+        GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
+                   pull_up_down=GPIO.PUD_UP)
+        try:
+            GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
+                                  callback=self.CompteImpulsions)
+            #while self.detection_impulsions:
+            #    time.sleep(0.1)
+        except KeyboardInterrupt:
+            print("Keyboard Interrupt")
+        finally:
+            GPIO.cleanup()
 
     def ArretDetectionImpulsions(self):
         """
             Stop le mecanisme de detection des impulsions
         """
+        print ("[Cadran ArretDetectionImpulsions]")
         self.detection_impulsionn = False
 
     # Enregistrement des callbacks
@@ -67,6 +66,7 @@ class Cadran:
             Enregistrement de la callbacks utilisée pour notifier quand
             un chiffre est composé sur le cadran
         """
+        print ("[Cadran RegisterCallback]")
         self.NotificationChiffre = NotificationChiffre
 
     def CompteImpulsions(self, channel):
@@ -76,9 +76,9 @@ class Cadran:
             La fonction de callback est executée dans un thread séparé
             instancié par RPi.GPIO
         """
+        print ("[Cadran CompteImpulsions]")
         if channel == Constantes.PIN_CADRAN:
-            if Constantes.IS_RASPBERRY_PI:
-                input = GPIO.input(Constantes.PIN_CADRAN)
+            input = GPIO.input(Constantes.PIN_CADRAN)
             if input and not self.last_input:
                 self.compteur_pulsations += 1
 
@@ -99,6 +99,7 @@ class Cadran:
             Appelé par le timer quand la numérotation d'un chiffre est finie
             Envoie une notification avec le chiffre composé
         """
+        print ("[Cadran FinNumerotationChiffre]")
         if self.compteur_pulsations == 10:
             self.compteur_pulsations = 0
         self.numero_compose += str(self.compteur_pulsations)
