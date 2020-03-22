@@ -11,7 +11,7 @@
 # from threading import Timer
 import Constantes
 import Queue
-from threading import Thread
+# from threading import Thread
 from modules.cadran.cadran import Cadran
 from modules.combine.combine import Combine
 
@@ -39,9 +39,9 @@ class Automate:
         self.message_queue = Queue.Queue(maxsize=0)
 
         # demarre le thread de la class Automate
-        self.worker = Thread(target=self.FonctionWorkerThread)
-        self.worker.setDaemon(True)
-        self.worker.start()
+        #self.worker = Thread(target=self.FonctionWorkerThread)
+        #self.worker.setDaemon(True)
+        #self.worker.start()
 
         self.cadran = Cadran()
         self.combine = Combine()
@@ -51,6 +51,17 @@ class Automate:
         self.combine.RegisterCallback(
             NotificationDecroche=self.ReceptionDecroche,
             NotificationRaccroche=self.ReceptionRaccroche)
+
+        while self.automate_actif:
+            #print "[Automate FonctionWorkerThread wait for a message]"
+            try:
+                message = self.message_queue.get(True,
+                                                 Constantes.TIMEOUT_AUTOMATE)
+                if message is not None:
+                    self.TraiteMessage(message)
+            except Queue.Empty:
+                #print("Automate FonctionWorkerThread message_queue empty")
+        print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
     def FonctionWorkerThread(self):
         """

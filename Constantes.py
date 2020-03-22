@@ -29,6 +29,3 @@ MESSAGE_CHIFFRE        = 3
 # liste des états de l'automate
 
 # liste des transitions de l'automate
-
-# True si la machine est un Raspberry Pi
-IS_RASPBERRY_PI = True
