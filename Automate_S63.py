@@ -27,12 +27,12 @@ class Automate_S63:
 #        self.cadran.RegisterCallback(NotificationChiffre=self.GotDigit)
 
 #        self.RotaryDial = RotaryDial()
-        self.RotaryDial = Cadran()
+        self.cadran = Cadran()
 #        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit,
 #                                         OffHookCallback = self.OffHook,
 #                                         OnHookCallback = self.OnHook,
 #                                         OnVerifyHook = self.OnVerifyHook)
-        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit)
+        self.cadran.RegisterCallback(NumberCallback = self.GotDigit)
         raw_input("Waiting.\n")
 
     def ReceptionChiffre(self, chiffre):
@@ -94,7 +94,6 @@ class Automate_S63:
 
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
-        self.RotaryDial.StopVerifyHook()
         sys.exit(0)
 
 def main():
