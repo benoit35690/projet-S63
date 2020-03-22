@@ -14,7 +14,8 @@ import Queue
 # from threading import Thread
 from modules.cadran.cadran import Cadran
 from modules.combine.combine import Combine
-
+import signal
+import sys
 
 class Message:
     message_type = 0
@@ -114,3 +115,12 @@ class Automate:
     def TraiteMessage(self, message):
         print ("[Automate TraiteMessage] message_type=",
                message.message_type)
+
+    def OnSignal(self, signal, frame):
+        print "[SIGNAL] Shutting down on %s" % signal
+        # self.automate.ArretAutomate()
+        sys.exit(0)
+
+def main():
+    print "[main]"
+    TDaemon = Automate()
