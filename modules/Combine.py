@@ -8,7 +8,7 @@ import RPi.GPIO as GPIO
 from threading import Timer
 import time
 
-class RotaryDial:
+class Combine:
 
     # We'll be reading on/off hook events from BCM GPIO 3
     pin_onhook = 3
