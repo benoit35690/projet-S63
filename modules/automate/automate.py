@@ -36,7 +36,7 @@ class Automate:
         """
         print "[Automate __init__]"
         # creation de la queue de messages
-        self.message_queue = Queue(maxsize=0)
+        self.message_queue = Queue.Queue(maxsize=0)
 
         # demarre le thread de la class Automate
         self.worker = Thread(target=self.FonctionWorkerThread)
