@@ -10,8 +10,7 @@
 """
 # from threading import Timer
 import Constantes
-import time
-from Queue import Queue
+import Queue
 from threading import Thread
 from modules.cadran.cadran import Cadran
 from modules.combine.combine import Combine
@@ -20,6 +19,7 @@ from modules.combine.combine import Combine
 class Message:
     message_type = 0
     chiffre = 0
+
 
 class Automate:
     automate_actif = True
@@ -36,7 +36,7 @@ class Automate:
         """
         print "[Automate __init__]"
         # creation de la queue de messages
-        self.message_queue = Queue.SimpleQueue()
+        self.message_queue = Queue()
 
         # demarre le thread de la class Automate
         self.worker = Thread(target=self.FonctionWorkerThread)
@@ -51,7 +51,6 @@ class Automate:
         self.combine.RegisterCallback(
             NotificationDecroche=self.ReceptionDecroche,
             NotificationRaccroche=self.ReceptionRaccroche)
-
 
     def FonctionWorkerThread(self):
         """
