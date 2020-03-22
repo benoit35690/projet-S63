@@ -26,7 +26,8 @@ class Automate_S63:
 #        self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
 #        self.cadran.RegisterCallback(NotificationChiffre=self.GotDigit)
 
-        self.RotaryDial = RotaryDial()
+#        self.RotaryDial = RotaryDial()
+        self.RotaryDial = Cadran()
 #        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit,
 #                                         OffHookCallback = self.OffHook,
 #                                         OnHookCallback = self.OnHook,
