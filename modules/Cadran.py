@@ -29,7 +29,7 @@ class Cadran:
         """
             Initialisation de la PIN du Raspberry reliée au cadran du S63
         """
-        #print "[Cadran __init__]"
+# print "[Cadran __init__]"
         # Set GPIO mode to Broadcom SOC numbering
         GPIO.setmode(GPIO.BCM)
 
