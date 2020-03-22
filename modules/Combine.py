@@ -59,7 +59,7 @@ class Combine:
     def ArretVerificationDecroche(self):
         print ("[Combine ArretVerificationDecroche]")
         self.verification_combine_active = False
-        self.timer_combine.stop()
+        self.timer_combine.cancel()
 
     def VerifieCombine(self):
         print ("[Combine VerifieCombine]")
