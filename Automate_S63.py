@@ -1,5 +1,6 @@
 import os
 import Queue
+from threading import Thread
 import threading
 import signal
 import sys
@@ -20,6 +21,14 @@ class Automate_S63:
         print ("[Automate_S63 __init__]")
 
         signal.signal(signal.SIGINT, self.OnSignal)
+
+        # creation de la queue de messages
+        self.message_queue = Queue.Queue(maxsize=0)
+
+        # demarre le thread de la class Automate
+        self.worker = Thread(target=self.FonctionWorkerThread)
+        self.worker.setDaemon(True)
+        self.worker.start()
 
         self.cadran = Cadran()
         self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
@@ -61,6 +70,27 @@ class Automate_S63:
 
     def OnOffHookTimeout(self):
         print "[Daemon OFFHOOK TIMEOUT]"
+
+    def FonctionWorkerThread(self):
+        """
+        Fonction Worker Thread
+        S'execute en parallele des autres taches
+        Boucle infinie (tant que l'automate est actif)
+            - Extrait un message de la queue de message
+            - Traite le message
+        On attend un message au plus TIMEOUT_AUTOMATE
+        """
+        print "[Automate FonctionWorkerThread start]"
+        while self.automate_actif:
+            print "[Automate FonctionWorkerThread wait for a message]"
+            try:
+                message = self.message_queue.get(True,
+                                                 Constantes.TIMEOUT_AUTOMATE)
+                if message is not None:
+                    self.TraiteMessage(message)
+            except Queue.Empty:
+                print("Automate FonctionWorkerThread message_queue empty")
+        print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
