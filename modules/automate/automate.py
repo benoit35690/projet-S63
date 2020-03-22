@@ -64,8 +64,11 @@ class Automate:
         print "[Automate FonctionWorkerThread start]"
         while self.automate_actif:
             print "[Automate FonctionWorkerThread wait for a message]"
-            message = self.message_queue.get(True,
-                                             Constantes.TIMEOUT_AUTOMATE)
+            try:
+                message = self.message_queue.get(True,
+                                                 Constantes.TIMEOUT_AUTOMATE)
+            except Queue.Empty:
+                print("message_queue empty")
             if message is not None:
                 self.TraiteMessage(message)
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
