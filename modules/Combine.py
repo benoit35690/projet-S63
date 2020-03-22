@@ -13,6 +13,8 @@ import time
 
 
 class Combine:
+    verification_combine_active = True
+
     # Timer to ensure we're on hook
     onhook_timer = None
     should_verify_hook = True
