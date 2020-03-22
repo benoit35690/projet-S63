@@ -160,7 +160,7 @@ class Automate_S63:
         if self.etat_automate == Constantes.ETAT_INIT or \
            self.etat_automate == Constantes.ETAT_REPOS:
             self.ChangerEtat_DecrocheRepos()
-        else if self.etat_automate == Constantes.ETAT_SONNERIE:
+        elif self.etat_automate == Constantes.ETAT_SONNERIE:
             self.ChangerEtat_AppelEntrant()
         else:
             print ("[Automate TraiteTransitionDecroche] ERREUR TRANSITION"
@@ -180,7 +180,7 @@ class Automate_S63:
                message.transition_automate)
         if self.etat_automate == Constantes.ETAT_SONNERIE:
             self.ChangerEtat_Repos()
-        else if self.etat_automate == Constantes.ETAT_APPEL_ENTRANT or \
+        elif self.etat_automate == Constantes.ETAT_APPEL_ENTRANT or \
                 self.etat_automate == Constantes.ETAT_APPEL_SORTANT:
             self.ChangerEtat_DecrocheRepos()
         else:
@@ -280,7 +280,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_Repos] etat origine=",
                self.etat_automate)
-        self.etat_automate = ETAT_REPOS
+        self.etat_automate = Constantes.ETAT_REPOS
 
     def ChangerEtat_DecrocheRepos(self):
         """
@@ -291,7 +291,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_DecrocheRepos] etat origine=",
                self.etat_automate)
-        self.etat_automate = ETAT_DECROCHE_REPOS
+        self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
 
     def ChangerEtat_DecrocheOublie(self):
         """
@@ -303,7 +303,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_DecrocheOublie] etat origine=",
                self.etat_automate)
-        self.etat_automate = ETAT_DECROCHE_OUBLIE
+        self.etat_automate = Constantes.ETAT_DECROCHE_OUBLIE
 
     def ChangerEtat_Sonnerie(self):
         """
@@ -313,7 +313,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_Sonnerie] etat origine=",
                self.etat_automate)
-        self.etat_automate = ETAT_SONNERIE
+        self.etat_automate = Constantes.ETAT_SONNERIE
 
     def ChangerEtat_AppelEntrant(self):
         """
@@ -324,7 +324,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_AppelEntrant] etat origine=",
                self.etat_automate)
-        self.etat_automate = ETAT_APPEL_ENTRANT
+        self.etat_automate = Constantes.ETAT_APPEL_ENTRANT
 
     def ChangerEtat_Numerotation(self):
         """
@@ -336,7 +336,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_Numerotation] etat origine=",
                self.etat_automate)
-        self.etat_automate = ETAT_NUMEROTATION
+        self.etat_automate = Constantes.ETAT_NUMEROTATION
 
         def ChangerEtat_TonaliteSortante(self):
             """
@@ -347,7 +347,7 @@ class Automate_S63:
             """
             print ("[Automate ChangerEtat_TonaliteSortante] etat origine=",
                    self.etat_automate)
-            self.etat_automate = ETAT_TONALITE_SORTANT
+            self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
 
         def ChangerEtat_InitialisationAppelSortant(self):
             """
@@ -357,7 +357,7 @@ class Automate_S63:
             """
             print ("[Automate ChangerEtat_InitialisationAppelSortant] etat"
                    " origine=", self.etat_automate)
-            self.etat_automate = ETAT_INIT_APPEL_SORTANT
+            self.etat_automate = Constantes.ETAT_INIT_APPEL_SORTANT
 
         def ChangerEtat_EchecAppelSortant(self):
             """
@@ -370,7 +370,7 @@ class Automate_S63:
             """
             print ("[Automate ChangerEtat_EchecAppelSortant] etat"
                    " origine=", self.etat_automate)
-            self.etat_automate = ETAT_ECHEC_APPEL_SORTANT
+            self.etat_automate = Constantes.ETAT_ECHEC_APPEL_SORTANT
 
         def ChangerEtat_AppelSortant(self):
             """
@@ -380,7 +380,7 @@ class Automate_S63:
             """
             print ("[Automate ChangerEtat_AppelSortant] etat"
                    " origine=", self.etat_automate)
-            self.etat_automate = ETAT_APPEL_SORTANT
+            self.etat_automate = Constantes.ETAT_APPEL_SORTANT
 
 def main():
     print "[main]"
