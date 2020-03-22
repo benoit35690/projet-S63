@@ -52,6 +52,7 @@ class Automate:
             NotificationDecroche=self.ReceptionDecroche,
             NotificationRaccroche=self.ReceptionRaccroche)
 
+
     def FonctionWorkerThread(self):
         """
         Fonction Worker Thread
