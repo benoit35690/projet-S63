@@ -6,8 +6,8 @@ import sys
 import yaml
 
 from threading import Timer
-#from modules.RotaryDial import RotaryDial
-from modules.cadran.cadran import Cadran
+from modules.RotaryDial import RotaryDial
+#from modules.Cadran import Cadran
 
 callback_queue = Queue.Queue()
 
@@ -22,16 +22,16 @@ class Automate_S63:
 
         signal.signal(signal.SIGINT, self.OnSignal)
 
-        self.cadran = Cadran()
+#        self.cadran = Cadran()
 #        self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
-        self.cadran.RegisterCallback(NotificationChiffre=self.GotDigit)
+#        self.cadran.RegisterCallback(NotificationChiffre=self.GotDigit)
 
-#        self.RotaryDial = RotaryDial()
+        self.RotaryDial = RotaryDial()
 #        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit,
 #                                         OffHookCallback = self.OffHook,
 #                                         OnHookCallback = self.OnHook,
 #                                         OnVerifyHook = self.OnVerifyHook)
-#        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit)
+        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit)
         raw_input("Waiting.\n")
 
     def ReceptionChiffre(self, chiffre):
