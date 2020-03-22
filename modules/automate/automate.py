@@ -67,10 +67,10 @@ class Automate:
             try:
                 message = self.message_queue.get(True,
                                                  Constantes.TIMEOUT_AUTOMATE)
+                if message is not None:
+                    self.TraiteMessage(message)
             except Queue.Empty:
-                print("message_queue empty")
-            if message is not None:
-                self.TraiteMessage(message)
+                print("Automate FonctionWorkerThread message_queue empty")
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
     def ArretAutomate(self):
