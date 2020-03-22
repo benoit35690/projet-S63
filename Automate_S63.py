@@ -121,8 +121,18 @@ class Automate_S63:
             self.TraiteTransitionEchecNumerotation(message)
         elif message == Constantes.TRANSITION_CHIFFRE_COMP:
             self.TraiteTransitionChiffreCompose(message)
-        elif message == Constantes.TRANSITION_NUMERO:
-            self.TraiteTransitionNumeroCompose(message)
+        elif message == Constantes.TRANSITION_NUMERO_VALIDE:
+            self.TraiteTransitionNumeroValide(message)
+        elif message == Constantes.TRANSITION_TIMER_SORTANT:
+            self.TraiteTransitionTimerSortant(message)
+        elif message == Constantes.TRANSITION_TIMER_NUMEROT:
+            self.TraiteTransitionTimerNumerotation(message)
+        elif message == Constantes.TRANSITION_FIN_TON_ECHEC:
+            self.TraiteTransitionFinTonaliteEchec(message)
+        elif message == Constantes.TRANSITION_TIMER_CONNEX:
+            self.TraiteTransitionTimerConnection(message)
+        elif message == Constantes.TRANSITION_APPEL_SORTANT:
+            self.TraiteTransitionAppelSortant()
         else:
             print ("[Automate TraiteMessage] MESSAGE INCONNU message_type=",
                    message.message_type)
@@ -130,43 +140,247 @@ class Automate_S63:
     def TraiteTransitionRaccroche(self, message):
         print ("[Automate TraiteTransitionRaccroche] message_type=",
                message.message_type)
-
-
+        if self.etat_automate == Constantes.ETAT_INIT OR\
+           self.etat_automate == Constantes.ETAT_DECROCHE_REPOS OR\
+           self.etat_automate == Constantes.ETAT_DECROCHE_OUBLIE OR\
+           self.etat_automate == Constantes.ETAT_NUMEROTATION OR\
+           self.etat_automate == Constantes.ETAT_APPEL_ENTRANT OR\
+           self.etat_automate == Constantes.ETAT_TONALITE_SORTANT OR\
+           self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT OR\
+           self.etat_automate == Constantes.ETAT_ECHEC_APPEL_SORTANT OR\
+           self.etat_automate == Constantes.ETAT_APPEL_SORTANT:
+            self.ChangerEtat_Repos()
+        else:
+            print ("[Automate TraiteTransitionRaccroche] ERREUR TRANSITION"
+                   "etat= ", self.etat_automate)
 
     def TraiteTransitionDecroche(self, message):
         print ("[Automate TraiteTransitionDecroche] message_type=",
                message.message_type)
+        if self.etat_automate == Constantes.ETAT_INIT OR\
+           self.etat_automate == Constantes.ETAT_REPOS:
+            self.ChangerEtat_DecrocheRepos()
+        else if self.etat_automate == Constantes.ETAT_SONNERIE:
+            self.ChangerEtat_AppelEntrant()
+        else:
+            print ("[Automate TraiteTransitionDecroche] ERREUR TRANSITION"
+                   "etat= ", self.etat_automate)
 
     def TraiteTransitionAppelEntrant(self, message):
         print ("[Automate TraiteTransitionAppelEntrant] message_type=",
                message.message_type)
+        if self.etat_automate == Constantes.ETAT_REPOS:
+            self.ChangerEtat_Sonnerie()
+        else:
+            print ("[Automate TraiteTransitionAppelEntrant] ERREUR TRANSITION"
+                   "etat= ", self.etat_automate)
 
     def TraiteTransitionFinAppel(self, message):
         print ("[Automate TraiteTransitionFinAppel] message_type=",
                message.message_type)
+        if self.etat_automate == Constantes.ETAT_SONNERIE:
+            self.ChangerEtat_Repos()
+        else if self.etat_automate == Constantes.ETAT_APPEL_ENTRANT OR\
+                self.etat_automate == Constantes.ETAT_APPEL_SORTANT:
+            self.ChangerEtat_DecrocheRepos()
+        else:
+            print ("[Automate TraiteTransitionFinAppel] ERREUR TRANSITION"
+                   "etat= ", self.etat_automate)
 
     def TraiteTransitionTimerOublie(self, message):
         print ("[Automate TraiteTransitionTimerOublie] message_type=",
                message.message_type)
+        if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS:
+            self.ChangerEtat_DecrocheOublie()
+        else:
+            print ("[Automate TraiteTransitionTimerOublie] ERREUR TRANSITION"
+                   "etat= ", self.etat_automate)
 
     def TraiteTransitionEchecNumerotation(self, message):
         print ("[Automate TraiteTransitionEchecNumerotation] message_type=",
                message.message_type)
+        if self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT:
+            self.ChangerEtat_EchecAppelSortant()
+        else:
+            print ("[Automate TraiteTransitionEchecNumerotation] ERREUR"
+                   " TRANSITION etat= ", self.etat_automate)
 
     def TraiteTransitionChiffreCompose(self, message):
         print ("[Automate TraiteTransitionChiffreCompose] message_type=",
                message.message_type)
+        if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS OR\
+           self.etat_automate == Constantes.ETAT_NUMEROTATION:
+            self.ChangerEtat_Numerotation()
+        else:
+            print ("[Automate TraiteTransitionChiffreCompose] ERREUR"
+                   " TRANSITION etat= ", self.etat_automate)
 
-    def TraiteTransitionNumeroCompose(self, message):
-        print ("[Automate TraiteTransitionNumeroCompose] message_type=",
+    def TraiteTransitionNumeroValide(self, message):
+        print ("[Automate TraiteTransitionNumeroValide] message_type=",
                message.message_type)
+        if self.etat_automate == Constantes.ETAT_NUMEROTATION:
+            self.ChangerEtat_TonaliteSortante()
+        else:
+            print ("[Automate TraiteTransitionNumeroValide] ERREUR"
+                   " TRANSITION etat= ", self.etat_automate)
 
-    def OnSignal(self, signal, frame):
-        print "[SIGNAL] Shutting down on %s" % signal
-        self.combine.ArretVerificationDecroche()
-        self.automate_actif = False
-        sys.exit(0)
+    def TraiteTransitionTimerSortant(self, message):
+        print ("[Automate TraiteTransitionTimerSortant] message_type=",
+               message.message_type)
+        if self.etat_automate == Constantes.ETAT_TONALITE_SORTANT:
+            self.ChangerEtat_InitialisationAppelSortant()
+        else:
+            print ("[Automate TraiteTransitionTimerSortant] ERREUR"
+                   " TRANSITION etat= ", self.etat_automate)
 
+    def TraiteTransitionTimerNumerotation(self, message):
+        print ("[Automate TraiteTransitionTimerNumerotation] message_type=",
+               message.message_type)
+        if self.etat_automate == Constantes.ETAT_NUMEROTATION:
+            self.ChangerEtat_DecrocheOublie()
+        else:
+            print ("[Automate TraiteTransitionTimerNumerotation] ERREUR"
+                   " TRANSITION etat= ", self.etat_automate)
+
+    def TraiteTransitionFinTonaliteEchec(self, message):
+        print ("[Automate TraiteTransitionFinTonaliteEchec] message_type=",
+               message.message_type)
+        if self.etat_automate == Constantes.ETAT_ECHEC_APPEL_SORTANT:
+            self.ChangerEtat_DecrocheRepos()
+        else:
+            print ("[Automate TraiteTransitionFinTonaliteEchec] ERREUR"
+                   " TRANSITION etat= ", self.etat_automate)
+
+    def TraiteTransitionTimerConnection(self, message):
+        print ("[Automate TraiteTransitionTimerConnection] message_type=",
+               message.message_type)
+        if self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT:
+            self.ChangerEtat_EchecAppelSortant()
+        else:
+            print ("[Automate TraiteTransitionTimerConnection] ERREUR"
+                   " TRANSITION etat= ", self.etat_automate)
+
+    def TraiteTransitionAppelSortant(self, message):
+        print ("[Automate TraiteTransitionAppelSortant] message_type=",
+               message.message_type)
+        if self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT:
+            self.ChangerEtat_AppelSortant()
+        else:
+            print ("[Automate TraiteTransitionAppelSortant] ERREUR"
+                   " TRANSITION etat= ", self.etat_automate)
+
+    def ChangerEtat_Repos(self):
+        """
+            Transition vers l'état ETAT_REPOS
+            Liste des actions à faire si besoin
+                terminer appel sortant
+                terminer appel entrant
+                terminer lecture tonalité
+                reinitialisé numero composé
+        """
+        print ("[Automate ChangerEtat_Repos] etat origine=",
+               self.etat_automate)
+        self.etat_automate = ETAT_REPOS
+
+    def ChangerEtat_DecrocheRepos(self):
+        """
+            Transition vers l'état ETAT_DECROCHE_REPOS
+            Liste des actions à faire si besoin
+                appel terminé à l'initiative du corespondant -> terminer
+                lecture tonalité décroché
+        """
+        print ("[Automate ChangerEtat_DecrocheRepos] etat origine=",
+               self.etat_automate)
+        self.etat_automate = ETAT_DECROCHE_REPOS
+
+    def ChangerEtat_DecrocheOublie(self):
+        """
+            Transition vers l'état ETAT_DECROCHE_OUBLIE
+            Liste des actions à faire si besoin
+                terminer lecture tonalité décroché
+                lecture tonalité décroché
+                reinitialisé numero composé
+        """
+        print ("[Automate ChangerEtat_DecrocheOublie] etat origine=",
+               self.etat_automate)
+        self.etat_automate = ETAT_DECROCHE_OUBLIE
+
+    def ChangerEtat_Sonnerie(self):
+        """
+            Transition vers l'état ETAT_SONNERIE
+            Liste des actions à faire si besoin
+                demarrer sonnerie
+        """
+        print ("[Automate ChangerEtat_Sonnerie] etat origine=",
+               self.etat_automate)
+        self.etat_automate = ETAT_SONNERIE
+
+    def ChangerEtat_AppelEntrant(self):
+        """
+            Transition vers l'état ETAT_APPEL_ENTRANT
+            Liste des actions à faire si besoin
+                terminer sonnerie
+                activer communication micro + haut parleur
+        """
+        print ("[Automate ChangerEtat_AppelEntrant] etat origine=",
+               self.etat_automate)
+        self.etat_automate = ETAT_APPEL_ENTRANT
+
+    def ChangerEtat_Numerotation(self):
+        """
+            Transition vers l'état ETAT_NUMEROTATION
+            Liste des actions à faire si besoin
+                calculer numero composé
+                identifier numéro valide
+                appeler transition vers Appel1
+        """
+        print ("[Automate ChangerEtat_Numerotation] etat origine=",
+               self.etat_automate)
+        self.etat_automate = ETAT_NUMEROTATION
+
+        def ChangerEtat_TonaliteSortante(self):
+            """
+                Transition vers l'état ETAT_TONALITE_SORTANT
+                Liste des actions à faire si besoin
+                    lecture tonalité mise en relation
+                    armer timer
+            """
+            print ("[Automate ChangerEtat_TonaliteSortante] etat origine=",
+                   self.etat_automate)
+            self.etat_automate = ETAT_TONALITE_SORTANT
+
+        def ChangerEtat_InitialisationAppelSortant(self):
+            """
+                Transition vers l'état ETAT_INIT_APPEL_SORTANT
+                Liste des actions à faire si besoin
+                    etablissement connexion appel sortant
+            """
+            print ("[Automate ChangerEtat_InitialisationAppelSortant] etat"
+                   " origine=", self.etat_automate)
+            self.etat_automate = ETAT_INIT_APPEL_SORTANT
+
+        def ChangerEtat_EchecAppelSortant(self):
+            """
+                Transition vers l'état ETAT_ECHEC_APPEL_SORTANT
+                Liste des actions à faire si besoin
+                    terminer lecture tonalite etablissement connexion
+                    reinitialiser numero composé
+                    lecture tonalié erreur connexion
+                    armer timer
+            """
+            print ("[Automate ChangerEtat_EchecAppelSortant] etat"
+                   " origine=", self.etat_automate)
+            self.etat_automate = ETAT_ECHEC_APPEL_SORTANT
+
+        def ChangerEtat_AppelSortant(self):
+            """
+                Transition vers l'état ETAT_APPEL_SORTANT
+                Liste des actions à faire si besoin
+                    terminer lecture tonalite etablissement connexion
+            """
+            print ("[Automate ChangerEtat_AppelSortant] etat"
+                   " origine=", self.etat_automate)
+            self.etat_automate = ETAT_APPEL_SORTANT
 
 def main():
     print "[main]"
