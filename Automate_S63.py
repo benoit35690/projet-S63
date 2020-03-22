@@ -7,8 +7,8 @@ import sys
 import RPi.GPIO as GPIO
 import Constantes
 # from threading import Timer
-from modules import Cadran
-from modules import Combine
+from Cadran import Cadran
+from Combine import Combine
 
 callback_queue = Queue.Queue()
 
