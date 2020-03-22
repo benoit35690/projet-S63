@@ -26,9 +26,8 @@ class Automate_S63:
 
         self.RotaryDial = Combine()
         self.RotaryDial.RegisterCallback(NotificationDecroche = self.ReceptionDecroche,
-                                         NotificationRaccroche = self.ReceptionRaccroche)
-#                                         ,
-#                                         OnVerifyHook = self.OnVerifyHook)
+                                         NotificationRaccroche = self.ReceptionRaccroche,
+                                         NotificationVerifDecroche = self.ReceptionVerifDecroche)
 
         raw_input("Waiting.\n")
 

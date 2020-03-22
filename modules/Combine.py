@@ -39,12 +39,14 @@ class Combine:
                               callback=self.EvenementDecroche,
                               bouncetime=Constantes.PIN_COMBINE_ANTIREBOND)
 
-#        self.onhook_timer = Timer(2, self.verifyHook)
-#        self.onhook_timer.start()
+        # on arme un timer qui va vérifier périodiquement l'état du combiné
+        self.timer_combine = Timer(Constantes.TIMER_COMBINE,
+                                   self.VerifieCombine)
+        self.timer_combine.start()
 
     def EvenementDecroche(self, channel):
-        print ("[Combine EvenementDecroche]")
         input = GPIO.input(Constantes.PIN_COMBINE)
+        print ("[Combine EvenementDecroche input= ]", input)
         if input:
             self.etat_decroche = 1
             self.NotificationRaccroche()
@@ -52,23 +54,24 @@ class Combine:
             self.etat_decroche = 0
             self.NotificationDecroche()
 
-#    def StopVerifyHook(self):
-#        print("[RotaryDial StopVerifyHook]", input)
-#        self.should_verify_hook = False
+    def ArretVerificationDecroche(self):
+        print ("[Combine ArretVerificationDecroche]")
+        self.verification_combine_active = False
 
-#    def verifyHook(self):
-#        while self.should_verify_hook:
-#            state = GPIO.input(self.pin_onhook)
-#            #if state == GPIO.HIGH:
-#            #    print("[RotaryDial verifyHook] HIGH")
-#            #else:
-#            #    print("[RotaryDial verifyHook] LOW")
-#            self.OnVerifyHook(state)
-#            time.sleep(1)
+    def VerifieCombine(self):
+        print ("[Combine VerifieCombine]")
+        while self.verification_combine_active:
+            state = GPIO.input(Constantes.PIN_COMBINE)
+            if state == GPIO.HIGH:
+                print("[Combine VerifieCombine] HIGH")
+            else:
+                print("[Combine VerifieCombine] LOW")
+            self.NotificationVerifDecroche(state)
+            time.sleep(Constantes.TIMEOUT_VERIF_COMBINE)
 
     # Enregistrement des callbacks
-    def RegisterCallback(self, NotificationDecroche, NotificationRaccroche):
-    #                     NotificationVerifDecroche):
+    def RegisterCallback(self, NotificationDecroche, NotificationRaccroche,
+                         NotificationVerifDecroche):
         """
             Enregistrement de la callbacks utilisée pour notifier quand
             l'état du combiné change
@@ -76,7 +79,7 @@ class Combine:
         print ("[Combine RegisterCallback]")
         self.NotificationDecroche = NotificationDecroche
         self.NotificationRaccroche = NotificationRaccroche
-#        self.NotificationVerifDecroche = NotificationVerifDecroche
+        self.NotificationVerifDecroche = NotificationVerifDecroche
         input = GPIO.input(Constantes.PIN_COMBINE)
         if input:
             self.NotificationDecroche()
