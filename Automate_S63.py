@@ -36,7 +36,7 @@ class Automate_S63:
     # def ReceptionChiffre(self, chiffre):
     #    print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
     #    message = Message(message_type=Constantes.MESSAGE_CHIFFRE,
-                          chiffre=chiffre)
+    #                      chiffre=chiffre)
     #    self.message_queue.put(message)
 
     def OnHook(self):
