@@ -14,8 +14,7 @@
 import Constantes
 from threading import Timer
 import time
-if Constantes.IS_RASPBERRY_PI:
-    import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 
 class Cadran:

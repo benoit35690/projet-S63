@@ -53,15 +53,15 @@ class Automate:
             NotificationRaccroche=self.ReceptionRaccroche)
 
         while self.automate_actif:
-            #print "[Automate FonctionWorkerThread wait for a message]"
+            print "[Automate __init__ wait for a message]"
             try:
                 message = self.message_queue.get(True,
                                                  Constantes.TIMEOUT_AUTOMATE)
                 if message is not None:
                     self.TraiteMessage(message)
             except Queue.Empty:
-                print("Automate FonctionWorkerThread message_queue empty")
-        print "[Automate Fonction_Worker_Thread] sortie de la boucle"
+                print("Automate __init__ message_queue empty")
+        print "[Automate __init__] sortie de la boucle"
 
     def FonctionWorkerThread(self):
         """
@@ -74,14 +74,14 @@ class Automate:
         """
         print "[Automate FonctionWorkerThread start]"
         while self.automate_actif:
-            #print "[Automate FonctionWorkerThread wait for a message]"
+            print "[Automate FonctionWorkerThread wait for a message]"
             try:
                 message = self.message_queue.get(True,
                                                  Constantes.TIMEOUT_AUTOMATE)
                 if message is not None:
                     self.TraiteMessage(message)
             except Queue.Empty:
-                #print("Automate FonctionWorkerThread message_queue empty")
+                print("Automate FonctionWorkerThread message_queue empty")
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
     def ArretAutomate(self):
