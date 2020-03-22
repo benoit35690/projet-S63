@@ -6,7 +6,7 @@ import sys
 import yaml
 
 from threading import Timer
-from modules.RotaryDial import RotaryDial
+#from modules.RotaryDial import RotaryDial
 from modules.cadran.cadran import Cadran
 
 callback_queue = Queue.Queue()
@@ -22,22 +22,22 @@ class Automate_S63:
 
         signal.signal(signal.SIGINT, self.OnSignal)
 
-        #self.cadran = Cadran()
-        #self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
+        self.cadran = Cadran()
+        self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
 
-        self.RotaryDial = RotaryDial()
+#        self.RotaryDial = RotaryDial()
 #        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit,
 #                                         OffHookCallback = self.OffHook,
 #                                         OnHookCallback = self.OnHook,
 #                                         OnVerifyHook = self.OnVerifyHook)
-        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit)
+#        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit)
         raw_input("Waiting.\n")
 
-    # def ReceptionChiffre(self, chiffre):
-    #    print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
-    #    message = Message(message_type=Constantes.MESSAGE_CHIFFRE,
-    #                      chiffre=chiffre)
-    #    self.message_queue.put(message)
+     def ReceptionChiffre(self, chiffre):
+        print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
+#        message = Message(message_type=Constantes.MESSAGE_CHIFFRE,
+#                          chiffre=chiffre)
+#        self.message_queue.put(message)
 
 #    def OnHook(self):
 #        print "Daemon OnHook [PHONE] On hook"

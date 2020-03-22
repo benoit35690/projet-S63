@@ -38,7 +38,8 @@ class RotaryDial:
 
         # Listen for rotary movements
         GPIO.setup(self.pin_rotary, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(self.pin_rotary, GPIO.BOTH, callback = self.NumberCounter)
+        GPIO.add_event_detect(self.pin_rotary, GPIO.BOTH,
+                              callback = self.NumberCounter)
 
         # Listen for on/off hooks
 #        GPIO.setup(self.pin_onhook, GPIO.IN, pull_up_down=GPIO.PUD_UP)
