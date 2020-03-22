@@ -33,7 +33,7 @@ class Automate_S63:
 #        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit)
         raw_input("Waiting.\n")
 
-     def ReceptionChiffre(self, chiffre):
+    def ReceptionChiffre(self, chiffre):
         print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
 #        message = Message(message_type=Constantes.MESSAGE_CHIFFRE,
 #                          chiffre=chiffre)
