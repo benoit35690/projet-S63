@@ -16,29 +16,14 @@ from threading import Timer
 import time
 import RPi.GPIO as GPIO
 
+
 class Cadran:
+    compteur_pulsations = 0
+    numero_compose = ""
 
-    # We'll be reading BCM GPIO 4 (pin 7 on board)
-    pin_rotary = 4
-
-    # We'll be reading on/off hook events from BCM GPIO 3
-#    pin_onhook = 3
-
-    # After 900ms, we assume the rotation is done and we get
-    # the final digit.
-    digit_timeout = 0.9
-
-    # We keep a counter to count each pulse.
-    current_digit = 0
-
-    # Simple timer for handling the number callback
-    number_timeout = None
-
+    # Timer pour gérer la numérotation d'un chiffre
+    timer_chiffre = None
     last_input = 0
-
-    # Timer to ensure we're on hook
-#    onhook_timer = None
-#    should_verify_hook = True
 
     def __init__(self):
         """
@@ -55,70 +40,48 @@ class Cadran:
         GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
                    pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
-                              callback=self.NumberCounter)
+                              callback=self.CompteImpulsions)
 
-    # Handle counting of rotary movements and respond with digit after timeout
-    def NumberCounter(self, channel):
-        input = GPIO.input(self.pin_rotary)
-        #print "NumberCounter [INPUT] %s (%s)" % (input, channel)
+    def CompteImpulsions(self, channel):
+        """
+            Compte les impulsions reçues et arme un timer de fin
+            Une impulsion est définie par une transition sur l'entrée PIN
+            La fonction de callback est executée dans un thread séparé
+            instancié par RPi.GPIO
+        """
+        print ("[Cadran CompteImpulsions]")
+        input = GPIO.input(Constantes.PIN_CADRAN)
         if input and not self.last_input:
-            self.current_digit += 1
+            self.compteur_pulsations += 1
 
-            if self.number_timeout is not None:
-                self.number_timeout.cancel()
+            if self.timer_chiffre is not None:
+                self.timer_chiffre.cancel()
 
-            self.number_timeout = Timer(self.digit_timeout, self.FoundNumber)
-            self.number_timeout.start()
+            self.timer_chiffre = Timer(Constantes.TIMOUT_CHIFFRE_CADRAN,
+                                       self.FinNumerotationChiffre)
+            self.timer_chiffre.start()
         self.last_input = input
+        #time.sleep(Constantes.TEMPO_ENTRE_IMPULSIONS)
         time.sleep(0.002)
 
-    # Wrapper around the off/on hook event
-#    def HookEvent(self, channel):
-#        input = GPIO.input(self.pin_onhook)
-#        #if input == GPIO.HIGH:
-#        #    print ("[RotaryDial HookEvent] HIGH")
-#        #else:
-#        #    print("[RotaryDial HookEvent] LOW")
-#        if input:
-#            self.hook_state = 1
-#            self.OnHookCallback()
-#        else:
-#            self.hook_state = 0
-#            self.OffHookCallback()
-#        #self.OnHookCallback()
+    # Quand la numérotation d'un chiffre est terminée
+    def FinNumerotationChiffre(self):
+        """
+            Appelé par le timer quand la numérotation d'un chiffre est finie
+            Envoie une notification avec le chiffre composé
+        """
+        print ("[Cadran FinNumerotationChiffre]")
+        if self.compteur_pulsations == 10:
+            self.compteur_pulsations = 0
+        self.numero_compose += str(self.compteur_pulsations)
+        self.NotificationChiffre(self.compteur_pulsations)
+        self.compteur_pulsations = 0
 
-#    def StopVerifyHook(self):
-#        print("[RotaryDial StopVerifyHook]", input)
-#        self.should_verify_hook = False
-
-#    def verifyHook(self):
-#        while self.should_verify_hook:
-#            state = GPIO.input(self.pin_onhook)
-#            #if state == GPIO.HIGH:
-#            #    print("[RotaryDial verifyHook] HIGH")
-#            #else:
-#            #    print("[RotaryDial verifyHook] LOW")
-#            self.OnVerifyHook(state)
-#            time.sleep(1)
-
-    # When the rotary movement has timed out, we callback with the final digit
-    def FoundNumber(self):
-        if self.current_digit == 10:
-            self.current_digit = 0
-        self.NumberCallback(self.current_digit)
-        self.current_digit = 0
-
-    # Handles the callbacks we're supplying
-    def RegisterCallback(self, NumberCallback):
-        self.NumberCallback = NumberCallback
-
-#    def RegisterCallback(self, NumberCallback, OffHookCallback, OnHookCallback, OnVerifyHook):
-#        self.NumberCallback = NumberCallback
-#        self.OffHookCallback = OffHookCallback
-#        self.OnHookCallback = OnHookCallback
-#        self.OnVerifyHook = OnVerifyHook
-#        input = GPIO.input(self.pin_onhook)
-#        if input:
-#            self.OffHookCallback()
-#        else:
-#            self.OnHookCallback()
+    # Enregistrement des callbacks
+    def RegisterCallback(self, NotificationChiffre):
+        """
+            Enregistrement de la callbacks utilisée pour notifier quand
+            un chiffre est composé sur le cadran
+        """
+        print ("[Cadran RegisterCallback]")
+        self.NotificationChiffre = NotificationChiffre
