@@ -22,7 +22,7 @@ class Automate_S63:
         signal.signal(signal.SIGINT, self.OnSignal)
 
         self.cadran = Cadran()
-        self.cadran.RegisterCallback(NumberCallback = self.ReceptionChiffre)
+        self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
         raw_input("Waiting.\n")
 
     def ReceptionChiffre(self, chiffre):
