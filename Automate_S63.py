@@ -67,21 +67,6 @@ class Automate_S63:
     def OnOffHookTimeout(self):
         print "[Daemon OFFHOOK TIMEOUT]"
 
-    def GotDigit(self, digit):
-        print "[Daemon GotDigit DIGIT] Got digit: %s" % digit
-        self.dial_number += str(digit)
-        print "[Daemon GotDigit NUMBER] We have: %s" % self.dial_number
-        print "[Daemon GotDigit NUMBER] len = %s" % len(self.dial_number)
-        if self.dial_number == "0666":
-            os.system("halt")
-
-        if len(self.dial_number) == 2:
-            if self.offHook:
-                print "[Daemon GotDigit PHONE] Dialing number: %s" % self.dial_number
-                self.dial_number = "malo35"
-                print "[Daemon GotDigit PHONE] Dialing number: %s" % self.dial_number
-                self.dial_number = ""
-
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
         sys.exit(0)

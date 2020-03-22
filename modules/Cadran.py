@@ -1,12 +1,20 @@
-# Rotary Dial Parser
-# Expects the following hardware rules:
-# 1 is 1 pulse
-# 9 is 9 pulses
-# 0 is 10 pulses
+# -*- coding: utf-8 -*-
+# module Cadran
+"""
+    Module qui gère les impulsions electriques reçues du cadran rotatif du S63
+    Detecte le chiffre composé sur le cadran en comptant les impulstions
+    Notifie le chiffre composé
 
-import RPi.GPIO as GPIO
+    Regles materielles:
+        1 impulsion -> chiffre 1
+        9 impulsions -> chiffre 9
+        10 impulstions -> chiffre 0
+"""
+
+import Constantes
 from threading import Timer
 import time
+import RPi.GPIO as GPIO
 
 class Cadran:
 
@@ -33,20 +41,21 @@ class Cadran:
 #    should_verify_hook = True
 
     def __init__(self):
+        """
+            Initialisation de la PIN du Raspberry reliée au cadran du S63
+        """
+        print "[Cadran __init__]"
         # Set GPIO mode to Broadcom SOC numbering
         GPIO.setmode(GPIO.BCM)
 
-        # Listen for rotary movements
-        GPIO.setup(self.pin_rotary, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(self.pin_rotary, GPIO.BOTH,
-                              callback = self.NumberCounter)
-
-        # Listen for on/off hooks
-#        GPIO.setup(self.pin_onhook, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-#        GPIO.add_event_detect(self.pin_onhook, GPIO.BOTH, callback = self.HookEvent, bouncetime=100)
-
-#        self.onhook_timer = Timer(2, self.verifyHook)
-#        self.onhook_timer.start()
+        # Configuration du GPIO pour écouter les mouvements du cadran
+        # On utilise un "pull up" pour forcer l'état haut quand le circuit
+        # du cadran est ouvert
+        # A chaque changement d'état la callback CompteImpulsions est appelée
+        GPIO.setup(Constantes.PIN_CADRAN, GPIO.IN,
+                   pull_up_down=GPIO.PUD_UP)
+        GPIO.add_event_detect(Constantes.PIN_CADRAN, GPIO.BOTH,
+                              callback=self.NumberCounter)
 
     # Handle counting of rotary movements and respond with digit after timeout
     def NumberCounter(self, channel):
