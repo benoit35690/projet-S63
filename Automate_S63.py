@@ -339,49 +339,55 @@ class Automate_S63:
                self.etat_automate)
         self.etat_automate = Constantes.ETAT_NUMEROTATION
 
-        def ChangerEtat_TonaliteSortante(self):
-            """
-                Transition vers l'état ETAT_TONALITE_SORTANT
-                Liste des actions à faire si besoin
-                    lecture tonalité mise en relation
-                    armer timer
-            """
-            print ("[Automate ChangerEtat_TonaliteSortante] etat origine=",
-                   self.etat_automate)
-            self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
+    def ChangerEtat_TonaliteSortante(self):
+        """
+            Transition vers l'état ETAT_TONALITE_SORTANT
+            Liste des actions à faire si besoin
+                lecture tonalité mise en relation
+                armer timer
+        """
+        print ("[Automate ChangerEtat_TonaliteSortante] etat origine=",
+               self.etat_automate)
+        self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
 
-        def ChangerEtat_InitialisationAppelSortant(self):
-            """
-                Transition vers l'état ETAT_INIT_APPEL_SORTANT
-                Liste des actions à faire si besoin
-                    etablissement connexion appel sortant
-            """
-            print ("[Automate ChangerEtat_InitialisationAppelSortant] etat"
-                   " origine=", self.etat_automate)
-            self.etat_automate = Constantes.ETAT_INIT_APPEL_SORTANT
+    def ChangerEtat_InitialisationAppelSortant(self):
+        """
+            Transition vers l'état ETAT_INIT_APPEL_SORTANT
+            Liste des actions à faire si besoin
+                etablissement connexion appel sortant
+        """
+        print ("[Automate ChangerEtat_InitialisationAppelSortant] etat"
+               " origine=", self.etat_automate)
+        self.etat_automate = Constantes.ETAT_INIT_APPEL_SORTANT
 
-        def ChangerEtat_EchecAppelSortant(self):
-            """
-                Transition vers l'état ETAT_ECHEC_APPEL_SORTANT
-                Liste des actions à faire si besoin
-                    terminer lecture tonalite etablissement connexion
-                    reinitialiser numero composé
-                    lecture tonalié erreur connexion
-                    armer timer
-            """
-            print ("[Automate ChangerEtat_EchecAppelSortant] etat"
-                   " origine=", self.etat_automate)
-            self.etat_automate = Constantes.ETAT_ECHEC_APPEL_SORTANT
+    def ChangerEtat_EchecAppelSortant(self):
+        """
+            Transition vers l'état ETAT_ECHEC_APPEL_SORTANT
+            Liste des actions à faire si besoin
+                terminer lecture tonalite etablissement connexion
+                reinitialiser numero composé
+                lecture tonalié erreur connexion
+                armer timer
+        """
+        print ("[Automate ChangerEtat_EchecAppelSortant] etat"
+               " origine=", self.etat_automate)
+        self.etat_automate = Constantes.ETAT_ECHEC_APPEL_SORTANT
 
-        def ChangerEtat_AppelSortant(self):
-            """
-                Transition vers l'état ETAT_APPEL_SORTANT
-                Liste des actions à faire si besoin
-                    terminer lecture tonalite etablissement connexion
-            """
-            print ("[Automate ChangerEtat_AppelSortant] etat"
-                   " origine=", self.etat_automate)
-            self.etat_automate = Constantes.ETAT_APPEL_SORTANT
+    def ChangerEtat_AppelSortant(self):
+        """
+            Transition vers l'état ETAT_APPEL_SORTANT
+            Liste des actions à faire si besoin
+                terminer lecture tonalite etablissement connexion
+        """
+        print ("[Automate ChangerEtat_AppelSortant] etat"
+               " origine=", self.etat_automate)
+        self.etat_automate = Constantes.ETAT_APPEL_SORTANT
+
+    def OnSignal(self, signal, frame):
+        print "[SIGNAL] Shutting down on %s" % signal
+        self.combine.ArretVerificationDecroche()
+        self.automate_actif = False
+        sys.exit(0)
 
 def main():
     print "[main]"
