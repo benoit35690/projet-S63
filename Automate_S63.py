@@ -140,14 +140,14 @@ class Automate_S63:
     def TraiteTransitionRaccroche(self, message):
         print ("[Automate TraiteTransitionRaccroche] transition=",
                message.transition_automate)
-        if self.etat_automate == Constantes.ETAT_INIT OR\
-           self.etat_automate == Constantes.ETAT_DECROCHE_REPOS OR\
-           self.etat_automate == Constantes.ETAT_DECROCHE_OUBLIE OR\
-           self.etat_automate == Constantes.ETAT_NUMEROTATION OR\
-           self.etat_automate == Constantes.ETAT_APPEL_ENTRANT OR\
-           self.etat_automate == Constantes.ETAT_TONALITE_SORTANT OR\
-           self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT OR\
-           self.etat_automate == Constantes.ETAT_ECHEC_APPEL_SORTANT OR\
+        if self.etat_automate == Constantes.ETAT_INIT or \
+           self.etat_automate == Constantes.ETAT_DECROCHE_REPOS or \
+           self.etat_automate == Constantes.ETAT_DECROCHE_OUBLIE or \
+           self.etat_automate == Constantes.ETAT_NUMEROTATION or \
+           self.etat_automate == Constantes.ETAT_APPEL_ENTRANT or \
+           self.etat_automate == Constantes.ETAT_TONALITE_SORTANT or \
+           self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT or \
+           self.etat_automate == Constantes.ETAT_ECHEC_APPEL_SORTANT or \
            self.etat_automate == Constantes.ETAT_APPEL_SORTANT:
             self.ChangerEtat_Repos()
         else:
@@ -157,7 +157,7 @@ class Automate_S63:
     def TraiteTransitionDecroche(self, message):
         print ("[Automate TraiteTransitionDecroche] transition=",
                message.transition_automate)
-        if self.etat_automate == Constantes.ETAT_INIT OR\
+        if self.etat_automate == Constantes.ETAT_INIT or \
            self.etat_automate == Constantes.ETAT_REPOS:
             self.ChangerEtat_DecrocheRepos()
         else if self.etat_automate == Constantes.ETAT_SONNERIE:
@@ -180,7 +180,7 @@ class Automate_S63:
                message.transition_automate)
         if self.etat_automate == Constantes.ETAT_SONNERIE:
             self.ChangerEtat_Repos()
-        else if self.etat_automate == Constantes.ETAT_APPEL_ENTRANT OR\
+        else if self.etat_automate == Constantes.ETAT_APPEL_ENTRANT or \
                 self.etat_automate == Constantes.ETAT_APPEL_SORTANT:
             self.ChangerEtat_DecrocheRepos()
         else:
@@ -208,7 +208,7 @@ class Automate_S63:
     def TraiteTransitionChiffreCompose(self, message):
         print ("[Automate TraiteTransitionChiffreCompose] transition=",
                message.transition_automate)
-        if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS OR\
+        if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS or \
            self.etat_automate == Constantes.ETAT_NUMEROTATION:
             self.ChangerEtat_Numerotation()
         else:
