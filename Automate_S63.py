@@ -23,7 +23,8 @@ class Automate_S63:
         signal.signal(signal.SIGINT, self.OnSignal)
 
         self.cadran = Cadran()
-        self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
+#        self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
+        self.cadran.RegisterCallback(NotificationChiffre=self.GotDigit)
 
 #        self.RotaryDial = RotaryDial()
 #        self.RotaryDial.RegisterCallback(NumberCallback = self.GotDigit,
