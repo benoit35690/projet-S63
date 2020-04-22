@@ -54,8 +54,6 @@ class Automate_S63:
 
         self.Ringtone = Ringtone()
 
-        self.Ringtone.playfile("piano2.wav")
-
         raw_input("Waiting.\n")
 
     def ReceptionChiffre(self, chiffre):
