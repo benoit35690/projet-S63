@@ -17,6 +17,7 @@ class Ringtone:
     config = None
 
     def __init__(self):
+        print "[RINGTONE] __init__"
 
     def start(self):
         self.shouldring = 1
