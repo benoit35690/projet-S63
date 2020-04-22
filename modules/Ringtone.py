@@ -49,7 +49,8 @@ class Ringtone:
     def playhandset(self):
         print "Starting dialtone"
         wv = wave.open(self.handsetfile)
-        device = alsaaudio.PCM(device="hw:1,0")
+        self.device = alsaaudio.PCM(device="hw:1,0")
+
         # Set attributes
         self.device.setchannels(wv.getnchannels())
         self.device.setrate(wv.getframerate())
