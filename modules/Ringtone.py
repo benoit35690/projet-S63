@@ -54,6 +54,9 @@ class Ringtone:
         # Set attributes
         self.device.setchannels(wv.getnchannels())
         self.device.setrate(wv.getframerate())
+        print('%d channels, %d sampling rate, sampwidth %d\n' % (wv.getnchannels(),
+                                           wv.getframerate(),
+                                           wv.getsampwidth()))
 
         # 8bit is unsigned in wav files
         if wv.getsampwidth() == 1:
