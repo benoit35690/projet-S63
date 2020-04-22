@@ -311,7 +311,8 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_DecrocheRepos] etat origine=",
                self.etat_automate)
-        self.Ringtone.starthandset("./assets/ringtones/tonalites/occupation.WAV")
+        # self.Ringtone.starthandset("./assets/ringtones/tonalites/occupation.WAV")
+        self.Ringtone.starthandset("piano2.wav")
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
 
     def ChangerEtat_DecrocheOublie(self):
