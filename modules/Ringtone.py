@@ -68,7 +68,7 @@ class Ringtone:
         else:
             raise ValueError('Unsupported format')
 
-        self.device.setformat(alsaaudio.PCM_FORMAT_FLOAT_BE)
+        self.device.setformat(alsaaudio.PCM_FORMAT_FLOAT_LE)
 
         periodsize = wv.getframerate() / 8
         self.device.setperiodsize(periodsize)
