@@ -52,7 +52,7 @@ class Automate_S63:
                     NotificationRaccroche=self.ReceptionRaccroche,
                     NotificationVerifDecroche=self.ReceptionVerifDecroche)
 
-        self.Ringtone = Ringtone(self.config)
+        self.Ringtone = Ringtone()
 
         self.Ringtone.playfile("../piano2.wav")
 
