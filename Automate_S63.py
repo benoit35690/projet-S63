@@ -54,7 +54,7 @@ class Automate_S63:
 
         self.Ringtone = Ringtone(self.config)
 
-        self.Ringtone.playfile("../asset/ringtones/messages_vocaux/itineris_inaccessible.wav")
+        self.Ringtone.playfile("../piano2.wav")
 
         raw_input("Waiting.\n")
 
