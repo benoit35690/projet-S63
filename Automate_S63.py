@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-import os
+# import os
 import Queue
 from threading import Thread
-import threading
+# import threading
 import signal
 import sys
 import RPi.GPIO as GPIO
 import Constantes
-from threading import Timer
+# from threading import Timer
 from modules.Cadran import Cadran
 from modules.Combine import Combine
+from modules.Ringtone import Ringtone
 
 callback_queue = Queue.Queue()
 
@@ -50,6 +51,10 @@ class Automate_S63:
                     NotificationDecroche=self.ReceptionDecroche,
                     NotificationRaccroche=self.ReceptionRaccroche,
                     NotificationVerifDecroche=self.ReceptionVerifDecroche)
+
+        self.Ringtone = Ringtone(self.config)
+
+        self.Ringtone.playfile("../asset/ringtones/messages_vocaux/itineris_inaccessible.wav")
 
         raw_input("Waiting.\n")
 
@@ -106,8 +111,8 @@ class Automate_S63:
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
     def TraiteMessage(self, message):
-        print ("[Automate TraiteMessage] message_type=",
-               message.transition_automate)
+        #print ("[Automate TraiteMessage] transition=",
+        #       message.transition_automate)
         if message.transition_automate == Constantes.TRANSITION_RACCROCHE:
             self.TraiteTransitionRaccroche(message)
         elif message.transition_automate == Constantes.TRANSITION_DECROCHE:
@@ -139,8 +144,8 @@ class Automate_S63:
                    message.transition_automate)
 
     def TraiteTransitionRaccroche(self, message):
-        print ("[Automate TraiteTransitionRaccroche] transition=",
-               message.transition_automate)
+        print ("[Automate TraiteTransitionRaccroche] etat_automate=",
+               self.etat_automate)
         if self.etat_automate == Constantes.ETAT_REPOS or \
            self.etat_automate == Constantes.ETAT_SONNERIE:
             return
@@ -161,7 +166,7 @@ class Automate_S63:
 
     def TraiteTransitionDecroche(self, message):
         print ("[Automate TraiteTransitionDecroche] transition=",
-               message.transition_automate)
+               self.etat_automate)
 
         if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS or \
            self.etat_automate == Constantes.ETAT_DECROCHE_OUBLIE or \
@@ -184,7 +189,7 @@ class Automate_S63:
 
     def TraiteTransitionAppelEntrant(self, message):
         print ("[Automate TraiteTransitionAppelEntrant] transition=",
-               message.transition_automate)
+               self.etat_automate)
         if self.etat_automate == Constantes.ETAT_REPOS:
             self.ChangerEtat_Sonnerie()
         else:
@@ -193,7 +198,7 @@ class Automate_S63:
 
     def TraiteTransitionFinAppel(self, message):
         print ("[Automate TraiteTransitionFinAppel] transition=",
-               message.transition_automate)
+               self.etat_automate)
         if self.etat_automate == Constantes.ETAT_SONNERIE:
             self.ChangerEtat_Repos()
         elif self.etat_automate == Constantes.ETAT_APPEL_ENTRANT or \
@@ -205,7 +210,7 @@ class Automate_S63:
 
     def TraiteTransitionTimerOublie(self, message):
         print ("[Automate TraiteTransitionTimerOublie] transition=",
-               message.transition_automate)
+               self.etat_automate)
         if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS:
             self.ChangerEtat_DecrocheOublie()
         else:
@@ -214,7 +219,7 @@ class Automate_S63:
 
     def TraiteTransitionEchecNumerotation(self, message):
         print ("[Automate TraiteTransitionEchecNumerotation] transition=",
-               message.transition_automate)
+               self.etat_automate)
         if self.etat_automate == Constantes.ETAT_INIT_APPEL_SORTANT:
             self.ChangerEtat_EchecAppelSortant()
         else:
@@ -223,7 +228,7 @@ class Automate_S63:
 
     def TraiteTransitionChiffreCompose(self, message):
         print ("[Automate TraiteTransitionChiffreCompose] transition=",
-               message.transition_automate)
+               self.etat_automate)
         if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS or \
            self.etat_automate == Constantes.ETAT_NUMEROTATION:
             self.ChangerEtat_Numerotation()
@@ -297,6 +302,9 @@ class Automate_S63:
         print ("[Automate ChangerEtat_Repos] etat origine=",
                self.etat_automate)
         self.etat_automate = Constantes.ETAT_REPOS
+
+
+
 
     def ChangerEtat_DecrocheRepos(self):
         """

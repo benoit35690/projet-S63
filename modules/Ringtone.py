@@ -16,8 +16,7 @@ class Ringtone:
 
     config = None
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
 
     def start(self):
         self.shouldring = 1
@@ -49,51 +48,64 @@ class Ringtone:
     def playhandset(self):
         print "Starting dialtone"
         wv = wave.open(self.handsetfile)
-        device = alsaaudio.PCM(card="plug:external")
-        #device.setchannels(wv.getnchannels())
-        #device.setrate(wv.getframerate())
-        #device.setperiodsize(320)
-
-        data = wv.readframes(320)
-        while data and self.shouldplayhandset:
-            device.write(data)
-            data = wv.readframes(320)
-        wv.rewind()
-        wv.close()
-
-
-    def playfile(self, file):
-        wv = wave.open(file)
-        self.device = alsaaudio.PCM(card="pulse")
+        device = alsaaudio.PCM(device="hw:1,0")
+        # Set attributes
         self.device.setchannels(wv.getnchannels())
         self.device.setrate(wv.getframerate())
-        self.device.setperiodsize(320)
 
-        data = wv.readframes(320)
-        while data:
-            self.device.write(data)
-            data = wv.readframes(320)
+        # 8bit is unsigned in wav files
+        if wv.getsampwidth() == 1:
+            self.device.setformat(alsaaudio.PCM_FORMAT_U8)
+        # Otherwise we assume signed data, little endian
+        elif wv.getsampwidth() == 2:
+            self.device.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+        elif wv.getsampwidth() == 3:
+            self.device.setformat(alsaaudio.PCM_FORMAT_S24_LE)
+        elif wv.getsampwidth() == 4:
+            self.device.setformat(alsaaudio.PCM_FORMAT_S32_LE)
+        else:
+            raise ValueError('Unsupported format')
+
+        periodsize = wv.getframerate() / 8
+        self.device.setperiodsize(periodsize)
+
+        data = wv.readframes(periodsize)
+        while data and self.shouldplayhandset:
+            device.write(data)
+            data = wv.readframes(periodsize)
         wv.rewind()
         wv.close()
 
-    def doring(self):
-        if self.ringfile is not None:
-            self.ringfile.rewind()
+    def playfile(self, file):
+        # wv = wave.open(file)
+        wv = wave.open(file, 'rb')
+        # self.device = alsaaudio.PCM(card="pulse")
+        self.device = alsaaudio.PCM(device="hw:1,0")
+
+        # Set attributes
+        self.device.setchannels(wv.getnchannels())
+        self.device.setrate(wv.getframerate())
+
+        # 8bit is unsigned in wav files
+        if wv.getsampwidth() == 1:
+            self.device.setformat(alsaaudio.PCM_FORMAT_U8)
+        # Otherwise we assume signed data, little endian
+        elif wv.getsampwidth() == 2:
+            self.device.setformat(alsaaudio.PCM_FORMAT_S16_LE)
+        elif wv.getsampwidth() == 3:
+            self.device.setformat(alsaaudio.PCM_FORMAT_S24_LE)
+        elif wv.getsampwidth() == 4:
+            self.device.setformat(alsaaudio.PCM_FORMAT_S32_LE)
         else:
-            self.ringfile = wave.open(self.config["soundfiles"]["ringtone"], 'rb')
-            self.device = alsaaudio.PCM(card="pulse")
-            self.device.setchannels(self.ringfile.getnchannels())
-            self.device.setrate(self.ringfile.getframerate())
-            self.device.setperiodsize(320)
+            raise ValueError('Unsupported format')
 
+        periodsize = wv.getframerate() / 8
 
-        while self.shouldring:
-            data = self.ringfile.readframes(320)
-            while data:
-                self.device.write(data)
-                data = self.ringfile.readframes(320)
+        self.device.setperiodsize(periodsize)
 
-            self.ringfile.rewind()
-            time.sleep(2)
-            if time.time() - 60 > self.ringstart:
-                self.stop()
+        data = wv.readframes(periodsize)
+        while data:
+            self.device.write(data)
+            data = wv.readframes(periodsize)
+        wv.rewind()
+        wv.close()
