@@ -73,7 +73,7 @@ class Ringtone:
 
         data = wv.readframes(periodsize)
         while data and self.shouldplayhandset:
-            device.write(data)
+            self.device.write(data)
             data = wv.readframes(periodsize)
         wv.rewind()
         wv.close()
