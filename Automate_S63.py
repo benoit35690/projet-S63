@@ -10,7 +10,7 @@ import Constantes
 # from threading import Timer
 from modules.Cadran import Cadran
 from modules.Combine import Combine
-from modules.Ringtone import Ringtone
+from modules.Tonalite import Tonalite
 
 callback_queue = Queue.Queue()
 
@@ -52,7 +52,7 @@ class Automate_S63:
                     NotificationRaccroche=self.ReceptionRaccroche,
                     NotificationVerifDecroche=self.ReceptionVerifDecroche)
 
-        self.Ringtone = Ringtone()
+        self.Tonalite = Tonalite()
 
         raw_input("Waiting.\n")
 
@@ -311,9 +311,9 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_DecrocheRepos] etat origine=",
                self.etat_automate)
-        # self.Ringtone.starthandset("./assets/ringtones/tonalites/occupation.WAV")
-        self.Ringtone.starthandset("piano2.wav")
-        
+        # self.Tonalite.startLecture("./assets/ringtones/tonalites/occupation.WAV")
+        self.Tonalite.startLecture("piano2.wav")
+
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
 
     def ChangerEtat_DecrocheOublie(self):
