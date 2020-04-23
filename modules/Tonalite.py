@@ -54,5 +54,5 @@ class Tonalite:
             stream.stop_stream()
             stream.close()
             wf.rewind()
-            wf.close()
+        wf.close()
         print "[Tonalite] lecture fin de procedure"
