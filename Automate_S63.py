@@ -38,6 +38,8 @@ class Automate_S63:
 
         signal.signal(signal.SIGINT, self.OnSignal)
 
+        self.tonalite = Tonalite()
+
         self.etat_automate = Constantes.ETAT_INIT
 
         # creation de la queue de messages
@@ -57,7 +59,7 @@ class Automate_S63:
                     NotificationRaccroche=self.ReceptionRaccroche,
                     NotificationVerifDecroche=self.ReceptionVerifDecroche)
 
-        self.tonalite = Tonalite()
+
 
         raw_input("Waiting.\n")
 
