@@ -20,7 +20,9 @@ class Tonalite:
 
     def startLecture(self, fichier, boucle):
         print "[Tonalite] startLecture"
-        if self.lectureActive is not None:
+        if (self.lectureActive is not None) or\
+                self.waveFile is not None or\
+                self.stream is not None:
             print "[Tonalite] startLecture lecture en cours"
             self.stopLecture()
         self.lectureEnBoucle = boucle
@@ -42,15 +44,22 @@ class Tonalite:
 
     def stopLecture(self):
         print "[Tonalite] stopLecture"
-        self.timerLecture.cancel()
-        self.timerLecture = None
+        if self.timerLecture is not None:
+            self.timerLecture.cancel()
+            self.timerLecture = None
         self.lectureActive = None
-        self.waveFile.close()
-        self.stream.stop_stream()
-        self.stream.close()
+        if self.waveFile is not None:
+            self.waveFile.close()
+        if self.stream is not None:
+            self.stream.stop_stream()
+            self.stream.close()
 
     def lecture(self):
         print "[Tonalite] lecture"
+        if self.waveFile is None or\
+                self.stream is None:
+            print "[Tonalite] lecture ERROR"
+            return
 
         while self.lectureActive:
             data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
