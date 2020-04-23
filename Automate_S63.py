@@ -2,6 +2,7 @@
 # import os
 import Queue
 from threading import Thread
+from threading import Timer
 # import threading
 import signal
 import sys
@@ -57,34 +58,41 @@ class Automate_S63:
         raw_input("Waiting.\n")
 
     def ReceptionChiffre(self, chiffre):
-        #print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
+        # print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
         message = Message()
         message.transition_automate = Constantes.TRANSITION_CHIFFRE_COMP
         message.chiffre_compose = chiffre
         self.message_queue.put(message)
 
     def ReceptionDecroche(self):
-        #print ("[Automate ReceptionDecroche]")
+        # print ("[Automate ReceptionDecroche]")
         message = Message()
         message.transition_automate = Constantes.TRANSITION_DECROCHE
         self.message_queue.put(message)
 
     def ReceptionRaccroche(self):
-        #print ("[Automate ReceptionRaccroche]")
+        # print ("[Automate ReceptionRaccroche]")
         message = Message()
         message.transition_automate = Constantes.TRANSITION_RACCROCHE
         self.message_queue.put(message)
 
     def ReceptionVerifDecroche(self, etat):
-        #print ("[Automate ReceptionVerifDecroche]", etat)
+        # print ("[Automate ReceptionVerifDecroche]", etat)
         message = Message()
         if etat == GPIO.HIGH:
-            #print("[Combine VerifieCombine] HIGH -> Raccroche")
+            # print("[Combine VerifieCombine] HIGH -> Raccroche")
             message.transition_automate = Constantes.TRANSITION_RACCROCHE
         else:
-            #print("[Combine VerifieCombine] LOW -> Decroche")
+            # print("[Combine VerifieCombine] LOW -> Decroche")
             message.transition_automate = Constantes.TRANSITION_DECROCHE
         self.message_queue.put(message)
+
+    def ReceptionNotificationTimer(self, timer):
+        print ("[Automate ReceptionNotificationTimer] timer= ", timer)
+        message = Message()
+        if timer == Constantes.TIMER_DECROCHER_REPOS:
+            message.transition_automate = Constantes.TRANSITION_TIMER_OUBLIE
+            self.message_queue.put(message)
 
     def FonctionWorkerThread(self):
         """
@@ -97,7 +105,7 @@ class Automate_S63:
         """
         print "[Automate FonctionWorkerThread start]"
         while self.automate_actif:
-            #print "[Automate FonctionWorkerThread wait for a message]"
+            # print "[Automate FonctionWorkerThread wait for a message]"
             try:
                 message = self.message_queue.get(True,
                                                  Constantes.TIMEOUT_AUTOMATE)
@@ -109,7 +117,7 @@ class Automate_S63:
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
 
     def TraiteMessage(self, message):
-        #print ("[Automate TraiteMessage] transition=",
+        # print ("[Automate TraiteMessage] transition=",
         #       message.transition_automate)
         if message.transition_automate == Constantes.TRANSITION_RACCROCHE:
             self.TraiteTransitionRaccroche(message)
@@ -299,6 +307,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_Repos] etat origine=",
                self.etat_automate)
+        self.Tonalite.stopLecture()
         self.etat_automate = Constantes.ETAT_REPOS
 
 
@@ -307,13 +316,17 @@ class Automate_S63:
             Transition vers l'état ETAT_DECROCHE_REPOS
             Liste des actions à faire si besoin
                 appel terminé à l'initiative du corespondant -> terminer
-                lecture tonalité décroché
+                lecture tonalité TONALITE_INVITATION
+                armer timer d'oublie
         """
         print ("[Automate ChangerEtat_DecrocheRepos] etat origine=",
                self.etat_automate)
-        # self.Tonalite.startLecture("./assets/ringtones/tonalites/occupation.WAV")
-        self.Tonalite.startLecture("./assets/ringtones/tonalites/occupation.WAV")
 
+        self.Tonalite.startLecture(Constantes.TONALITE_INVITATION)
+        self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
+        self.timerDecrocheRepos = Timer(Constantes.TIMEOUT_DECROCHE_REPOS,
+                                        self.lecture)
+        self.timerDecrocheRepos.start()
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
 
     def ChangerEtat_DecrocheOublie(self):
@@ -321,11 +334,12 @@ class Automate_S63:
             Transition vers l'état ETAT_DECROCHE_OUBLIE
             Liste des actions à faire si besoin
                 terminer lecture tonalité décroché
-                lecture tonalité décroché
+                lecture tonalité TONALITE_OCCUPATION
                 reinitialisé numero composé
         """
         print ("[Automate ChangerEtat_DecrocheOublie] etat origine=",
                self.etat_automate)
+        self.Tonalite.startLecture(Constantes.TONALITE_OCCUPATION)
         self.etat_automate = Constantes.ETAT_DECROCHE_OUBLIE
 
     def ChangerEtat_Sonnerie(self):

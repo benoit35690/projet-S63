@@ -11,6 +11,9 @@ PIN_SOLENOIDE_GAUCHE     = 1
 PIN_SOLENOIDE_DROIT      = 2
 PIN_COMBINE_ANTIREBOND   = 100
 
+# liste des timer
+TIMER_DECROCHER_REPOS    = 1
+ 
 # aprés 0.9s on considère que le cadran a fini de numéroter le chiffre
 TIMOUT_CHIFFRE_CADRAN    = 0.9
 TEMPO_ENTRE_IMPULSIONS   = 0.002
@@ -19,6 +22,7 @@ TIMER_COMBINE            = 2
 TIMEOUT_VERIF_COMBINE    = 1
 
 TIMEOUT_AUTOMATE         = 0.5
+TIMEOUT_DECROCHE_REPOS   = 20
 
 # etats du combiné
 COMBINE_DECROCHE         = 1
@@ -54,3 +58,8 @@ TRANSITION_TIMER_CONNEX  = 12
 TRANSITION_APPEL_SORTANT = 13
 
 AUDIO_CHUNK              = 1024
+
+#liste des tonalités
+TONALITE_OCCUPATION      = "./assets/ringtones/tonalites/occupation.WAV"
+TONALITE_INVITATION      = "./assets/ringtones/tonalites/invitation_a_numeroter.WAV"
+TONALITE_ACHEMINEMENT    = "./assets/ringtones/tonalites/acheminement.WAV"

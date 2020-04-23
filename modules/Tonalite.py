@@ -14,6 +14,9 @@ class Tonalite:
         print "[Tonalite] __init__"
 
     def startLecture(self, fichier):
+        if self.lectureActive == 1:
+            self.stopLecture()
+
         self.lectureActive = 1
         self.fichierTonalite = fichier
         if self.timerLecture is not None:
