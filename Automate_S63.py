@@ -87,10 +87,10 @@ class Automate_S63:
             message.transition_automate = Constantes.TRANSITION_DECROCHE
         self.message_queue.put(message)
 
-    def ReceptionNotificationTimer(self, timer):
-        print ("[Automate ReceptionNotificationTimer] timer= ", timer)
+    def ReceptionNotificationTimer(self, *timer):
+        print ("[Automate ReceptionNotificationTimer] timer= ", timer[0])
         message = Message()
-        if timer == Constantes.TIMER_DECROCHER_REPOS:
+        if timer[0] == Constantes.TIMER_DECROCHER_REPOS:
             message.transition_automate = Constantes.TRANSITION_TIMER_OUBLIE
             self.message_queue.put(message)
 
@@ -326,7 +326,7 @@ class Automate_S63:
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
         self.timerDecrocheRepos = Timer(Constantes.TIMEOUT_DECROCHE_REPOS,
                                         self.ReceptionNotificationTimer,
-                                        Constantes.TIMER_DECROCHER_REPOS)
+                                        [Constantes.TIMER_DECROCHER_REPOS])
         self.timerDecrocheRepos.start()
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
 
