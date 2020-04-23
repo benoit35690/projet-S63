@@ -1,4 +1,4 @@
 from modules.Tonalite import Tonalite
 
 t = Tonalite()
-t.startLecture("piano2.wav")
+t.startLecture("./assets/ringtones/tonalites/acheminement.WAV")
