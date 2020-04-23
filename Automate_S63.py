@@ -312,7 +312,7 @@ class Automate_S63:
         print ("[Automate ChangerEtat_DecrocheRepos] etat origine=",
                self.etat_automate)
         # self.Tonalite.startLecture("./assets/ringtones/tonalites/occupation.WAV")
-        self.Tonalite.startLecture("piano2.wav")
+        self.Tonalite.startLecture("./assets/ringtones/tonalites/occupation.WAV")
 
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
 
