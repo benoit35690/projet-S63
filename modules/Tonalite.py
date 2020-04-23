@@ -41,11 +41,13 @@ class Tonalite:
                         channels=wf.getnchannels(),
                         rate=wf.getframerate(),
                         output=True)
-        data = wf.readframes(Constantes.AUDIO_CHUNK)
 
-        while data != '' and self.lectureActive:
-            stream.write(data)
+        while self.lectureActive:
             data = wf.readframes(Constantes.AUDIO_CHUNK)
+            while data != '' and self.lectureActive:
+                stream.write(data)
+                data = wf.readframes(Constantes.AUDIO_CHUNK)
+            wf.rewind()
 
         stream.stop_stream()
         stream.close()
