@@ -53,7 +53,7 @@ class Automate_S63:
                     NotificationRaccroche=self.ReceptionRaccroche,
                     NotificationVerifDecroche=self.ReceptionVerifDecroche)
 
-        self.Tonalite = Tonalite()
+        self.tonalite = Tonalite()
 
         raw_input("Waiting.\n")
 
@@ -307,7 +307,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_Repos] etat origine=",
                self.etat_automate)
-        self.Tonalite.stopLecture()
+        self.tonalite.stopLecture()
         self.etat_automate = Constantes.ETAT_REPOS
 
 
@@ -322,7 +322,7 @@ class Automate_S63:
         print ("[Automate ChangerEtat_DecrocheRepos] etat origine=",
                self.etat_automate)
 
-        self.Tonalite.startLecture(Constantes.TONALITE_INVITATION)
+        self.tonalite.startLecture(Constantes.TONALITE_INVITATION, True)
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
         self.timerDecrocheRepos = Timer(Constantes.TIMEOUT_DECROCHE_REPOS,
                                         self.ReceptionNotificationTimer,
@@ -340,7 +340,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_DecrocheOublie] etat origine=",
                self.etat_automate)
-        self.Tonalite.startLecture(Constantes.TONALITE_OCCUPATION)
+        self.tonalite.startLecture(Constantes.TONALITE_OCCUPATION, True)
         self.etat_automate = Constantes.ETAT_DECROCHE_OUBLIE
 
     def ChangerEtat_Sonnerie(self):
@@ -423,7 +423,7 @@ class Automate_S63:
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
         self.combine.ArretVerificationDecroche()
-        self.Tonalite.stopLecture()
+        self.tonalite.stopLecture()
         self.automate_actif = False
         sys.exit(0)
 
