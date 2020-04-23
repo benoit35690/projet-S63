@@ -423,6 +423,7 @@ class Automate_S63:
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
         self.combine.ArretVerificationDecroche()
+        self.Tonalite.stopLecture()
         self.automate_actif = False
         sys.exit(0)
 
