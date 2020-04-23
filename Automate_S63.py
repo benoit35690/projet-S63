@@ -28,6 +28,10 @@ class Automate_S63:
     etat_automate = Constantes.ETAT_INIT
     offHook = False
     offHookTimeoutTimer = None
+    worker = None
+    cadran = None
+    combine = None
+    tonalite = None
 
     def __init__(self):
         print ("[Automate_S63 __init__]")
