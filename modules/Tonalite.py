@@ -8,19 +8,31 @@ class Tonalite:
 
     fichierTonalite = None
     lectureActive   = 0
+    lectureEnBoucle = 0
     timerLecture    = None
+    pyAudio         = None
+    waveFile        = None
+    stream          = None
 
     def __init__(self):
         print "[Tonalite] __init__"
+        self.pyAudio = pyaudio.PyAudio()
 
-    def startLecture(self, fichier):
+    def startLecture(self, fichier, boucle):
         print "[Tonalite] startLecture"
         if self.lectureActive is not None:
             print "[Tonalite] startLecture lecture en cours"
             self.stopLecture()
-
-        self.lectureActive = 1
+        self.lectureEnBoucle = boucle
         self.fichierTonalite = fichier
+        self.waveFile = wave.open(self.fichierTonalite, 'rb')
+        self.stream = self.pyAudio.open(
+                                format=self.pyAudio.get_format_from_width(
+                                                self.waveFile.getsampwidth()),
+                                channels=self.waveFile.getnchannels(),
+                                rate=self.waveFile.getframerate(),
+                                output=True)
+        self.lectureActive = 1
         if self.timerLecture is not None:
             print "[Tonalite] Handset already playing?"
             return
@@ -30,29 +42,23 @@ class Tonalite:
 
     def stopLecture(self):
         print "[Tonalite] stopLecture"
-        if self.timerLecture is not None:
-            self.timerLecture.cancel()
-            self.timerLecture = None
+        self.timerLecture.cancel()
+        self.timerLecture = None
         self.lectureActive = None
+        self.waveFile.close()
+        self.stream.stop_stream()
+        self.stream.close()
 
     def lecture(self):
         print "[Tonalite] lecture"
 
-        wf = wave.open(self.fichierTonalite, 'rb')
-        p = pyaudio.PyAudio()
-
         while self.lectureActive:
-            stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                            channels=wf.getnchannels(),
-                            rate=wf.getframerate(),
-                            output=True)
-            data = wf.readframes(Constantes.AUDIO_CHUNK)
+            data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             while data != '' and self.lectureActive:
-                stream.write(data)
-                data = wf.readframes(Constantes.AUDIO_CHUNK)
-            print "[Tonalite] lecture rebouclage"
-            stream.stop_stream()
-            stream.close()
-            wf.rewind()
-        wf.close()
+                self.stream.write(data)
+                data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+            if self.timerLecture is not None and self.lectureEnBoucle == 1:
+                print "[Tonalite] lecture rebouclage"
+                self.waveFile.rewind()
+
         print "[Tonalite] lecture fin de procedure"
