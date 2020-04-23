@@ -325,7 +325,8 @@ class Automate_S63:
         self.Tonalite.startLecture(Constantes.TONALITE_INVITATION)
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
         self.timerDecrocheRepos = Timer(Constantes.TIMEOUT_DECROCHE_REPOS,
-                                        self.lecture)
+                                        self.ReceptionNotificationTimer,
+                                        Constantes.TIMER_DECROCHER_REPOS)
         self.timerDecrocheRepos.start()
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
 
