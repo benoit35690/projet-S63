@@ -30,10 +30,10 @@ class Tonalite:
 
     def stopLecture(self):
         print "[Tonalite] stopLecture"
-        self.lectureActive = 0
         if self.timerLecture is not None:
             self.timerLecture.cancel()
             self.timerLecture = None
+        self.lectureActive = None
 
     def lecture(self):
         print "[Tonalite] lecture"
