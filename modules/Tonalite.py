@@ -59,7 +59,7 @@ class Tonalite:
                 print "[Tonalite] thread de lecture deja demarre"
             else:
                 # demarage du thread de lecture
-                rint "[Tonalite] demarage du thread de lecture"
+                print "[Tonalite] demarage du thread de lecture"
                 self.timerLecture = Timer(0, self.lecture)
                 self.timerLecture.start()
 
