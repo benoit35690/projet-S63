@@ -80,11 +80,13 @@ class Tonalite:
             if self.stream is not None:
                 self.stream.stop_stream()
                 self.stream.close()
+                self.stream = None
                 print "[Tonalite] stream closed"
 
             # fermeture du fichier
             if self.waveFile is not None:
                 self.waveFile.close()
+                self.waveFile = None
                 print "[Tonalite] wave closed"
 
             self.lectureActive = None
