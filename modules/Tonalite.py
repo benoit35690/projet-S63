@@ -74,9 +74,11 @@ class Tonalite:
                 print "[Tonalite] lecture rebouclage"
                 self.waveFile.rewind()
 
-        if self.waveFile is not None:
-            self.waveFile.close()
         if self.stream is not None:
             self.stream.stop_stream()
             self.stream.close()
+            print "[Tonalite] stream closed"
+        if self.waveFile is not None:
+            self.waveFile.close()
+            print "[Tonalite] wave closed"
         print "[Tonalite] lecture fin de procedure"
