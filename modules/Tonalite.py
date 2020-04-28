@@ -66,7 +66,7 @@ class Tonalite:
                 self.stream.write(data)
                 data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
 
-                nbchunck ++
+                nbchunck = nbchunck + 1
                 tmps2 = time.time()-tmps1
                 print "Temps d'execution chunk %d = %f" % nbchunck % tmps2
 
