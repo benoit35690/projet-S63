@@ -316,7 +316,6 @@ class Automate_S63:
         self.tonalite.stopLecture()
         self.etat_automate = Constantes.ETAT_REPOS
 
-
     def ChangerEtat_DecrocheRepos(self):
         """
             Transition vers l'état ETAT_DECROCHE_REPOS
@@ -328,7 +327,7 @@ class Automate_S63:
         print ("[Automate ChangerEtat_DecrocheRepos] etat origine=",
                self.etat_automate)
 
-        self.tonalite.startLecture(Constantes.TONALITE_INVITATION, True)
+        self.tonalite.startLecture(Constantes.TONALITE_INVITATION, False)
         self.etat_automate = Constantes.ETAT_DECROCHE_REPOS
         self.timerDecrocheRepos = Timer(Constantes.TIMEOUT_DECROCHE_REPOS,
                                         self.ReceptionNotificationTimer,
@@ -346,7 +345,8 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_DecrocheOublie] etat origine=",
                self.etat_automate)
-        self.tonalite.startLecture(Constantes.TONALITE_OCCUPATION, True)
+        #self.tonalite.startLecture(Constantes.TONALITE_OCCUPATION, True)
+        self.tonalite.stopLecture()
         self.etat_automate = Constantes.ETAT_DECROCHE_OUBLIE
 
     def ChangerEtat_Sonnerie(self):
