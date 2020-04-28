@@ -2,7 +2,7 @@ from threading import Timer
 import pyaudio
 import wave
 import Constantes
-
+import time
 
 class Tonalite:
 
@@ -48,11 +48,6 @@ class Tonalite:
             self.timerLecture.cancel()
             self.timerLecture = None
         self.lectureActive = None
-        if self.waveFile is not None:
-            self.waveFile.close()
-        if self.stream is not None:
-            self.stream.stop_stream()
-            self.stream.close()
 
     def lecture(self):
         print "[Tonalite] lecture"
@@ -61,13 +56,27 @@ class Tonalite:
             print "[Tonalite] lecture ERROR"
             return
 
+        nbchunck = 0
+
         while self.lectureActive:
             data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             while data != '' and self.lectureActive:
+                tmps1 = time.time()
+
                 self.stream.write(data)
                 data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+
+                nbchunck ++
+                tmps2 = time.time()-tmps1
+                print "Temps d'execution chunk %d = %f" % nbchunck % tmps2
+
             if self.timerLecture is not None and self.lectureEnBoucle == 1:
                 print "[Tonalite] lecture rebouclage"
                 self.waveFile.rewind()
 
+        if self.waveFile is not None:
+            self.waveFile.close()
+        if self.stream is not None:
+            self.stream.stop_stream()
+            self.stream.close()
         print "[Tonalite] lecture fin de procedure"
