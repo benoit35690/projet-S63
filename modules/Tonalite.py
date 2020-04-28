@@ -24,7 +24,11 @@ class Tonalite:
                 self.waveFile is not None or\
                 self.stream is not None:
             print "[Tonalite] startLecture lecture en cours"
-            self.stopLecture()
+            self.stream.stop_stream()
+            self.stream.close()
+            print "[Tonalite] stream closed"
+            self.waveFile.close()
+            print "[Tonalite] wave closed"
         self.lectureEnBoucle = boucle
         self.fichierTonalite = fichier
         self.waveFile = wave.open(self.fichierTonalite, 'rb')
