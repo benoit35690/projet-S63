@@ -1,4 +1,4 @@
-from threading import Timer
+from threading import Timer, Lock
 import pyaudio
 import wave
 import Constantes
@@ -6,9 +6,12 @@ import time
 
 class Tonalite:
 
+    # lectureActive mis a jour par startLecture et stopLecture
+    lectureActive   = None
+
     fichierTonalite = None
-    lectureActive   = 0
     lectureEnBoucle = 0
+    mutex           = None
     timerLecture    = None
     pyAudio         = None
     waveFile        = None
@@ -16,73 +19,120 @@ class Tonalite:
 
     def __init__(self):
         print "[Tonalite] __init__"
+        self.mutex = Lock()
         self.pyAudio = pyaudio.PyAudio()
 
     def startLecture(self, fichier, boucle):
         print "[Tonalite] startLecture"
-        if (self.lectureActive is not None) or\
-                self.waveFile is not None or\
-                self.stream is not None:
-            print "[Tonalite] startLecture lecture en cours"
-            self.stream.stop_stream()
-            self.stream.close()
-            print "[Tonalite] stream closed"
-            self.waveFile.close()
-            print "[Tonalite] wave closed"
-        self.lectureEnBoucle = boucle
-        self.fichierTonalite = fichier
-        self.waveFile = wave.open(self.fichierTonalite, 'rb')
-        self.stream = self.pyAudio.open(
-                                format=self.pyAudio.get_format_from_width(
-                                                self.waveFile.getsampwidth()),
-                                channels=self.waveFile.getnchannels(),
-                                rate=self.waveFile.getframerate(),
-                                output=True)
-        self.lectureActive = 1
-        if self.timerLecture is not None:
-            print "[Tonalite] Handset already playing?"
-            return
+        self.mutex.acquire()
+        try:
+            if (self.lectureActive is not None) or\
+                    self.waveFile is not None or\
+                    self.stream is not None:
+                print "[Tonalite] startLecture lecture en cours"
 
-        self.timerLecture = Timer(0, self.lecture)
-        self.timerLecture.start()
+                # on ferme d'abord le flux en cours
+                self.stream.stop_stream()
+                self.stream.close()
+                print "[Tonalite] stream closed"
+                self.waveFile.close()
+                print "[Tonalite] wave closed"
+                self.lectureEnBoucle = None
+                self.fichierTonalite = None
+                self.lectureActive   = None
+
+            # mise à jour avec parametre du flux à jouer
+            self.lectureEnBoucle = boucle
+            self.fichierTonalite = fichier
+
+            # ouverture du flux à jouer
+            self.waveFile = wave.open(self.fichierTonalite, 'rb')
+            self.stream = self.pyAudio.open(
+                                    format=self.pyAudio.get_format_from_width(
+                                                self.waveFile.getsampwidth()),
+                                    channels=self.waveFile.getnchannels(),
+                                    rate=self.waveFile.getframerate(),
+                                    output=True)
+
+            if self.timerLecture is not None:
+                print "[Tonalite] thread de lecture deja demarre"
+            else:
+                # demarage du thread de lecture
+                rint "[Tonalite] demarage du thread de lecture"
+                self.timerLecture = Timer(0, self.lecture)
+                self.timerLecture.start()
+
+            self.lectureActive = 1
+        finally:
+            self.mutex.release()
 
     def stopLecture(self):
         print "[Tonalite] stopLecture"
-        if self.timerLecture is not None:
-            self.timerLecture.cancel()
-            self.timerLecture = None
-        self.lectureActive = None
+        self.mutex.acquire()
+        try:
+            # arret du thread de lecture
+            if self.timerLecture is not None:
+                self.timerLecture.cancel()
+                self.timerLecture = None
+
+            # fermeture du flux
+            if self.stream is not None:
+                self.stream.stop_stream()
+                self.stream.close()
+                print "[Tonalite] stream closed"
+
+            # fermeture du fichier
+            if self.waveFile is not None:
+                self.waveFile.close()
+                print "[Tonalite] wave closed"
+
+            self.lectureActive = None
+        finally:
+            self.mutex.release()
 
     def lecture(self):
+        # wave file can be closed outside of this thread by
         print "[Tonalite] lecture"
-        if self.waveFile is None or\
-                self.stream is None:
-            print "[Tonalite] lecture ERROR"
-            return
 
-        nbchunck = 0
+        lectureActive = None
+        self.mutex.acquire()
+        try:
+            lectureActive = self.lectureActive
+        finally:
+            self.mutex.release()
 
-        while self.lectureActive:
-            data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
-            while data != '' and self.lectureActive:
-                tmps1 = time.time()
+        while lectureActive is not None:
+            # ce while sert a gerer le rebouclage
+            data = None
+            self.mutex.acquire()
+            try:
+                if self.waveFile is not None:
+                    data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+            finally:
+                self.mutex.release()
 
-                self.stream.write(data)
-                data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+            while data is not None and\
+                    data != '' and\
+                    lectureActive:
+                self.mutex.acquire()
+                try:
+                    if self.stream is not None and\
+                         self.waveFile is not None:
+                        self.stream.write(data)
+                        data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+                        lectureActive = self.lectureActive
+                finally:
+                    self.mutex.release()
 
-                nbchunck = nbchunck + 1
-                tmps2 = time.time()-tmps1
-                print "Temps d'execution chunk ", nbchunck, " = ", tmps2
+            self.mutex.acquire()
+            try:
+                if self.timerLecture is not None and\
+                   self.lectureEnBoucle == 1:
+                    print "[Tonalite] lecture rebouclage"
+                    self.waveFile.rewind()
+            finally:
+                self.mutex.release()
 
-            if self.timerLecture is not None and self.lectureEnBoucle == 1:
-                print "[Tonalite] lecture rebouclage"
-                self.waveFile.rewind()
+            # end while lectureActive
 
-        if self.stream is not None:
-            self.stream.stop_stream()
-            self.stream.close()
-            print "[Tonalite] stream closed"
-        if self.waveFile is not None:
-            self.waveFile.close()
-            print "[Tonalite] wave closed"
         print "[Tonalite] lecture fin de procedure"
