@@ -24,7 +24,7 @@ class Tonalite:
         self.pyAudio = pyaudio.PyAudio()
 
     def startLecture(self, fichier, boucle):
-        print "[Tonalite] startLecture"
+        print "[Tonalite] startLecture boucle= ", boucle
         self.mutex.acquire()
         try:
             if (self.lectureActive is not None) or\
@@ -93,7 +93,8 @@ class Tonalite:
 
     def lecture(self):
         # wave file can be closed outside of this thread by
-        print "[Tonalite] lecture"
+        print "[Tonalite] lecture fichier = ", self.fichierTonalite, \
+            " boucle = ", self.lectureEnBoucle
 
         lectureActive = None
         self.mutex.acquire()
