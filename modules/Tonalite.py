@@ -68,7 +68,7 @@ class Tonalite:
 
                 nbchunck = nbchunck + 1
                 tmps2 = time.time()-tmps1
-                print "Temps d'execution chunk ", nbchunck, " = " tmps2
+                print "Temps d'execution chunk ", nbchunck, " = ", tmps2
 
             if self.timerLecture is not None and self.lectureEnBoucle == 1:
                 print "[Tonalite] lecture rebouclage"
