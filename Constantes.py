@@ -13,7 +13,7 @@ PIN_COMBINE_ANTIREBOND   = 100
 
 # liste des timer
 TIMER_DECROCHER_REPOS    = 1
- 
+
 # aprés 0.9s on considère que le cadran a fini de numéroter le chiffre
 TIMOUT_CHIFFRE_CADRAN    = 0.9
 TEMPO_ENTRE_IMPULSIONS   = 0.002
@@ -22,7 +22,8 @@ TIMER_COMBINE            = 2
 TIMEOUT_VERIF_COMBINE    = 1
 
 TIMEOUT_AUTOMATE         = 0.5
-TIMEOUT_DECROCHE_REPOS   = 20
+#TIMEOUT_DECROCHE_REPOS   = 20
+TIMEOUT_DECROCHE_REPOS   = 5
 
 # etats du combiné
 COMBINE_DECROCHE         = 1
