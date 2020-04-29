@@ -78,6 +78,12 @@ class lectureThread(Thread):
                 time.sleep(0.1)  # éviter de saturer le processeur
                 continue
 
+            if self.waveFile is None:
+                print "[lectureThread] run waveFile is None"
+
+            if self.stream is None:
+                print "[lectureThread] run stream is None"
+
             if self.waveFile is None or\
                self.stream is None:
                 print "[lectureThread] open file and stream"
