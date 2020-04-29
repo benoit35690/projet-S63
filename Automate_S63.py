@@ -381,7 +381,7 @@ class Automate_S63:
         self.numeroCompose = self.numeroCompose + chiffreCompose
         print "chiffreCompose = ", chiffreCompose,\
               " numeroCompose = ", self.numeroCompose
-        if numeroComposeValide() is True:
+        if self.numeroComposeValide() is True:
             self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
         else:
             self.etat_automate = Constantes.ETAT_NUMEROTATION
