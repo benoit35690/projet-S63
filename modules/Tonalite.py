@@ -71,6 +71,7 @@ class Tonalite:
     def stopLecture(self):
         print "[Tonalite] stopLecture"
         self.mutex.acquire()
+        print "[Tonalite] mutex.acquire done"
         try:
             # fermeture du flux
             if self.stream is not None:
@@ -101,6 +102,7 @@ class Tonalite:
             self.lectureActive = None
         finally:
             self.mutex.release()
+            print "[Tonalite] mutex.release done"
 
     def lecture(self):
         # wave file can be closed outside of this thread by
