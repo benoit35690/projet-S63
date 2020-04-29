@@ -78,12 +78,16 @@ class Tonalite:
                 self.stream.close()
                 self.stream = None
                 print "[Tonalite] stopLecture stream closed"
+            else:
+                print "[Tonalite] self.stream is None"
 
             # fermeture du fichier
             if self.waveFile is not None:
                 self.waveFile.close()
                 self.waveFile = None
                 print "[Tonalite] stopLecture wave closed"
+            else:
+                print "[Tonalite] self.waveFile is None"
 
             self.data = None
 
@@ -91,6 +95,8 @@ class Tonalite:
             if self.timerLecture is not None:
                 self.timerLecture.cancel()
                 self.timerLecture = None
+            else:
+                print "[Tonalite] self.timerLecture is None"
 
             self.lectureActive = None
         finally:
@@ -124,7 +130,7 @@ class Tonalite:
                 try:
                     if self.stream is not None and\
                          self.waveFile is not None:
-                        print "[Tonalite] lecture stream.write"
+                        #print "[Tonalite] lecture stream.write"
                         self.stream.write(self.data)
                         self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
                         lectureActive = self.lectureActive
