@@ -61,8 +61,8 @@ class lectureThread(Thread):
 
     def run(self):
         self._etat = True
-        while self._etat:
-            if self._pause:
+        while self._etat is True:
+            if self._pause is True:
                 if self.waveFile is not None:
                     self.waveFile.close()
                     self.waveFile = None
@@ -79,6 +79,7 @@ class lectureThread(Thread):
 
             self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             if self.data == '' and self.boucle is True:
+                print "[lectureThread] run rebouclage"
                 self.waveFile.rewind()
                 self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             if self.data is not None and self.data != '':
