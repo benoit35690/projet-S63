@@ -395,10 +395,8 @@ class Automate_S63:
         print "chiffreCompose = ", chiffreCompose,\
               " numeroCompose = ", self.numeroCompose
 
-        if self.numeroComposeValide() is True:
-            self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
-        else:
-            self.etat_automate = Constantes.ETAT_NUMEROTATION
+        self.etat_automate = Constantes.ETAT_NUMEROTATION
+        self.verifieNumeroComposeValide()
 
     def ChangerEtat_TonaliteSortante(self):
         """
@@ -444,19 +442,19 @@ class Automate_S63:
                " origine=", self.etat_automate)
         self.etat_automate = Constantes.ETAT_APPEL_SORTANT
 
-    def numeroComposeValide(self):
+    def verifieNumeroComposeValide(self):
         """
             pour l'instant compare le numeroCompose avec un numero Fixe
             par la suite
             reperer un prefixe connue (mobile, pompier...)
         """
 
-        print "[Automate] numeroComposeValide numeroCompose = ", \
+        print "[Automate] verifieNumeroComposeValide numeroCompose = ", \
               self.numeroCompose
         if self.numeroCompose == "01":
-            return True
-
-        return False
+            message = Message()
+            message.transition_automate = Constantes.TRANSITION_NUMERO_VALIDE
+            self.message_queue.put(message)
 
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
