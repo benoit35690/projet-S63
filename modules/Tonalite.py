@@ -77,6 +77,8 @@ class lectureThread(Thread):
                 self.fichier = ""
                 time.sleep(0.1)  # éviter de saturer le processeur
                 continue
+            else:
+                print "[lectureThread] _pause is False"
 
             if self.waveFile is None:
                 print "[lectureThread] run waveFile is None"
