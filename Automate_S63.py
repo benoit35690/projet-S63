@@ -22,6 +22,7 @@ class Message:
 
 class Automate_S63:
     dial_number = ""
+    numeroCompose = ""
     automate_actif = True
     etat_automate = Constantes.ETAT_INIT
     offHook = False
@@ -239,7 +240,7 @@ class Automate_S63:
                self.etat_automate)
         if self.etat_automate == Constantes.ETAT_DECROCHE_REPOS or \
            self.etat_automate == Constantes.ETAT_NUMEROTATION:
-            self.ChangerEtat_Numerotation()
+            self.ChangerEtat_Numerotation(message.chiffre_compose)
         else:
             print ("[Automate TraiteTransitionChiffreCompose] ERREUR"
                    " TRANSITION etat= ", self.etat_automate)
@@ -367,7 +368,7 @@ class Automate_S63:
                self.etat_automate)
         self.etat_automate = Constantes.ETAT_APPEL_ENTRANT
 
-    def ChangerEtat_Numerotation(self):
+    def ChangerEtat_Numerotation(self, chiffreCompose):
         """
             Transition vers l'état ETAT_NUMEROTATION
             Liste des actions à faire si besoin
@@ -377,7 +378,13 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_Numerotation] etat origine=",
                self.etat_automate)
-        self.etat_automate = Constantes.ETAT_NUMEROTATION
+        self.numeroCompose = self.numeroCompose + chiffreCompose
+        print "chiffreCompose = ", chiffreCompose,\
+              " numeroCompose = ", self.numeroCompose
+        if numeroComposeValide() is True:
+            self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
+        else:
+            self.etat_automate = Constantes.ETAT_NUMEROTATION
 
     def ChangerEtat_TonaliteSortante(self):
         """
@@ -422,6 +429,17 @@ class Automate_S63:
         print ("[Automate ChangerEtat_AppelSortant] etat"
                " origine=", self.etat_automate)
         self.etat_automate = Constantes.ETAT_APPEL_SORTANT
+
+    def numeroComposeValide(self):
+        """
+            pour l'instant compare le numeroCompose avec un numero Fixe
+            par la suite
+            reperer un prefixe connue (mobile, pompier...)
+        """
+        if self.numeroCompose == "01":
+            return True
+
+        return False
 
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
