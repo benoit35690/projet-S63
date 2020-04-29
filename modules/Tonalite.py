@@ -19,15 +19,10 @@ class Tonalite:
     def __del__(self):
         self.worker.stop()
 
-    def startLecture(self, fichier, boucle, duree):
+    def startLecture(self, fichier, boucle):
         print "[Tonalite] startLecture boucle= ", boucle
         self.worker.setParameters(fichier, boucle)
         self.worker.resume()
-        if self.timerLecture is not None:
-            self.timerLecture.cancel()
-        if duree >= 0:
-            self.timerLecture = Timer(duree, self.stopLecture)
-            self.timerLecture.start()
 
     def stopLecture(self):
         print "[Tonalite] stopLecture"
