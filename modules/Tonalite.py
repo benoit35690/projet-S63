@@ -133,7 +133,7 @@ class Tonalite:
                     self.data != '' and\
                     lectureActive:
                 self.mutex.acquire()
-                print "[Tonalite] lecture mutex.acquire 3 done"
+                #print "[Tonalite] lecture mutex.acquire 3 done"
                 try:
                     if self.stream is not None and\
                          self.waveFile is not None:
@@ -145,10 +145,10 @@ class Tonalite:
                         lectureActive = self.lectureActive
                 finally:
                     self.mutex.release()
-                    print "[Tonalite] lecture mutex.release 3 done"
+                    #print "[Tonalite] lecture mutex.release 3 done"
 
             self.mutex.acquire()
-            print "[Tonalite] lecture mutex.acquire 4 done"
+            #print "[Tonalite] lecture mutex.acquire 4 done"
             try:
                 if self.waveFile is not None and\
                    self.timerLecture is not None and\
@@ -157,7 +157,7 @@ class Tonalite:
                     self.waveFile.rewind()
             finally:
                 self.mutex.release()
-                print "[Tonalite] lecture mutex.release 4 done"
+                #print "[Tonalite] lecture mutex.release 4 done"
 
             # end while lectureActive
 
