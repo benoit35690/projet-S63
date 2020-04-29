@@ -82,10 +82,12 @@ class lectureThread(Thread):
         """ Arrête l'exécution du thread.
             Après avoir appelé cette fonction le thread n'est plus utilisable.
         """
+        print "[lectureThread] stop"
         self._etat = False
 
     def pause(self):
         """ Arrête l'exécution du thread momentanément."""
+        print "[lectureThread] pause"
         if self._pause is True:
             print "[lectureThread] Thread déjà en pause"
             return
@@ -98,6 +100,7 @@ class lectureThread(Thread):
 
     def resume(self):
         """ Reprendre l'exécution d'un thread 'mis en pause'."""
+        print "[lectureThread] resume"
         if self._pause is False:
             print "[lectureThread] Thread déjà en fonctionnement"
             return
@@ -106,8 +109,12 @@ class lectureThread(Thread):
 
     def setParameters(self, fichier, boucle):
         """ Fixe les parametres de lecture (fichier et rebouclage)"""
+        print "[lectureThread] setParameters"
+
         self._pause = True
 
+        self.boucle = boucle
+        
         # ouverture du flux à jouer
         if self.waveFile is not None:
             print "[lectureThread] waveFile not None"
