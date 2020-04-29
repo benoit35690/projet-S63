@@ -24,6 +24,7 @@ class Automate_S63:
     dial_number = ""
     numeroCompose = ""
     automate_actif = True
+    timerDecrocheRepos = None
     etat_automate = Constantes.ETAT_INIT
     offHook = False
     offHookTimeoutTimer = None
@@ -57,6 +58,8 @@ class Automate_S63:
                     NotificationDecroche=self.ReceptionDecroche,
                     NotificationRaccroche=self.ReceptionRaccroche,
                     NotificationVerifDecroche=self.ReceptionVerifDecroche)
+
+        self.timerDecrocheRepos = None
 
         raw_input("Waiting.\n")
 
@@ -313,7 +316,8 @@ class Automate_S63:
                self.etat_automate)
         self.numeroCompose = ""
         self.tonalite.stopLecture()
-        self.timerDecrocheRepos.cancel()
+        if self.timerDecrocheRepos is not None:
+            self.timerDecrocheRepos.cancel()
         self.etat_automate = Constantes.ETAT_REPOS
 
     def ChangerEtat_DecrocheRepos(self):
@@ -385,7 +389,8 @@ class Automate_S63:
                self.etat_automate)
 
         self.tonalite.stopLecture()
-        self.timerDecrocheRepos.cancel()
+        if self.timerDecrocheRepos is not None:
+            self.timerDecrocheRepos.cancel()
         self.numeroCompose = self.numeroCompose + chiffreCompose
         print "chiffreCompose = ", chiffreCompose,\
               " numeroCompose = ", self.numeroCompose
