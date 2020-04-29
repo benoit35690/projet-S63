@@ -307,11 +307,13 @@ class Automate_S63:
                 terminer appel entrant
                 terminer lecture tonalité
                 reinitialisé numero composé
+                annuler timer décrocher repos
         """
         print ("[Automate ChangerEtat_Repos] etat origine=",
                self.etat_automate)
         self.numeroCompose = ""
         self.tonalite.stopLecture()
+        self.timerDecrocheRepos.cancel()
         self.etat_automate = Constantes.ETAT_REPOS
 
     def ChangerEtat_DecrocheRepos(self):
@@ -374,6 +376,7 @@ class Automate_S63:
             Transition vers l'état ETAT_NUMEROTATION
             Liste des actions à faire si besoin
                 arret lecture tonalité
+                annuler timer décroché repos
                 calculer numero composé
                 identifier numéro valide
                 appeler transition vers Appel1
@@ -382,6 +385,7 @@ class Automate_S63:
                self.etat_automate)
 
         self.tonalite.stopLecture()
+        self.timerDecrocheRepos.cancel()
         self.numeroCompose = self.numeroCompose + chiffreCompose
         print "chiffreCompose = ", chiffreCompose,\
               " numeroCompose = ", self.numeroCompose
