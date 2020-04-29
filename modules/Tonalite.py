@@ -50,6 +50,7 @@ class Tonalite:
 class lectureThread(Thread):
     boucle = None
     fichier = None
+    fichierEnCoursDeLecture = None
     pyAudio = None
     waveFile = None
     stream = None
@@ -67,6 +68,7 @@ class lectureThread(Thread):
     def run(self):
         self._etat = True
         self._pause = True
+        self.fichierEnCoursDeLecture = ""
         while self._etat is True:
             if self._pause is True:
                 if self.waveFile is not None:
@@ -90,7 +92,8 @@ class lectureThread(Thread):
             #    print "[lectureThread] run stream is None"
 
             if self.waveFile is None or\
-               self.stream is None:
+               self.stream is None or\
+               self.fichier != self.fichierEnCoursDeLecture:
                 print "[lectureThread] open file and stream"
                 self.waveFile = wave.open(self.fichier, 'rb')
                 self.stream = self.pyAudio.open(
@@ -99,6 +102,7 @@ class lectureThread(Thread):
                                 channels=self.waveFile.getnchannels(),
                                 rate=self.waveFile.getframerate(),
                                 output=True)
+                self.fichierEnCoursDeLecture = self.fichier
 
             self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             if self.data == '' and self.boucle is True:
