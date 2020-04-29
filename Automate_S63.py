@@ -64,7 +64,7 @@ class Automate_S63:
         # print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
         message = Message()
         message.transition_automate = Constantes.TRANSITION_CHIFFRE_COMP
-        message.chiffre_compose = chiffre
+        message.chiffre_compose = str(chiffre)
         self.message_queue.put(message)
 
     def ReceptionDecroche(self):
@@ -384,7 +384,7 @@ class Automate_S63:
         self.numeroCompose = self.numeroCompose + chiffreCompose
         print "chiffreCompose = ", chiffreCompose,\
               " numeroCompose = ", self.numeroCompose
-              
+
         if self.numeroComposeValide() is True:
             self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
         else:

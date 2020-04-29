@@ -19,7 +19,6 @@ import RPi.GPIO as GPIO
 
 class Cadran:
     compteur_pulsations = 0
-    numero_compose = ""
 
     # Timer pour gérer la numérotation d'un chiffre
     timer_chiffre = None
@@ -73,7 +72,6 @@ class Cadran:
         print ("[Cadran FinNumerotationChiffre]")
         if self.compteur_pulsations == 10:
             self.compteur_pulsations = 0
-        self.numero_compose += str(self.compteur_pulsations)
         self.NotificationChiffre(self.compteur_pulsations)
         self.compteur_pulsations = 0
 
