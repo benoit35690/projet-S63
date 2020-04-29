@@ -95,6 +95,7 @@ class lectureThread(Thread):
                                 rate=self.waveFile.getframerate(),
                                 output=True)
 
+            print "[lectureThread] run"
             self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             if self.data == '' and self.boucle is True:
                 print "[lectureThread] run rebouclage"
