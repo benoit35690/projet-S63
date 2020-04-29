@@ -57,7 +57,7 @@ class lectureThread(Thread):
     def __init__(self):
         Thread.__init__(self)
         self._etat = False
-        self._pause = False
+        self._pause = True
         self.boucle = False
         self.fichier = ""
         self.waveFile = None
@@ -66,6 +66,7 @@ class lectureThread(Thread):
 
     def run(self):
         self._etat = True
+        self._pause = True
         while self._etat is True:
             if self._pause is True:
                 if self.waveFile is not None:
