@@ -155,7 +155,7 @@ class Tonalite:
                     self.waveFile.rewind()
             finally:
                 self.mutex.release()
-                print "[Tonalite] lecture mutex.release 14 done"
+                print "[Tonalite] lecture mutex.release 4 done"
 
             # end while lectureActive
 
