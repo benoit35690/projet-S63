@@ -63,6 +63,12 @@ class lectureThread(Thread):
         self._etat = True
         while self._etat:
             if self._pause:
+                if self.waveFile is not None:
+                    self.waveFile.close()
+                    self.waveFile = None
+                if self.stream is not None:
+                    self.stream.close()
+                    self.stream = None
                 time.sleep(0.1)  # éviter de saturer le processeur
                 continue
 
@@ -77,6 +83,8 @@ class lectureThread(Thread):
                 self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             if self.data is not None and self.data != '':
                 self.stream.write(self.data)
+
+        print "[lectureThread] run fin de procedure"
 
     def stop(self):
         """ Arrête l'exécution du thread.
@@ -93,10 +101,6 @@ class lectureThread(Thread):
             return
 
         self._pause = True
-        self.waveFile.close()
-        self.waveFile = None
-        self.stream.close()
-        self.stream = None
 
     def resume(self):
         """ Reprendre l'exécution d'un thread 'mis en pause'."""
@@ -114,7 +118,7 @@ class lectureThread(Thread):
         self._pause = True
 
         self.boucle = boucle
-        
+
         # ouverture du flux à jouer
         if self.waveFile is not None:
             print "[lectureThread] waveFile not None"
