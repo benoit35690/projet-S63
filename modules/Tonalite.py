@@ -17,6 +17,7 @@ class Tonalite:
     pyAudio         = None
     waveFile        = None
     stream          = None
+    data            = None
 
     def __init__(self):
         print "[Tonalite] __init__"
@@ -71,11 +72,6 @@ class Tonalite:
         print "[Tonalite] stopLecture"
         self.mutex.acquire()
         try:
-            # arret du thread de lecture
-            if self.timerLecture is not None:
-                self.timerLecture.cancel()
-                self.timerLecture = None
-
             # fermeture du flux
             if self.stream is not None:
                 self.stream.stop_stream()
@@ -88,6 +84,13 @@ class Tonalite:
                 self.waveFile.close()
                 self.waveFile = None
                 print "[Tonalite] stopLecture wave closed"
+
+            self.data = None
+
+            # arret du thread de lecture
+            if self.timerLecture is not None:
+                self.timerLecture.cancel()
+                self.timerLecture = None
 
             self.lectureActive = None
         finally:
@@ -107,23 +110,23 @@ class Tonalite:
 
         while lectureActive is not None:
             # ce while sert a gerer le rebouclage
-            data = None
             self.mutex.acquire()
             try:
                 if self.waveFile is not None:
-                    data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+                    self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             finally:
                 self.mutex.release()
 
-            while data is not None and\
-                    data != '' and\
+            while self.data is not None and\
+                    self.data != '' and\
                     lectureActive:
                 self.mutex.acquire()
                 try:
                     if self.stream is not None and\
                          self.waveFile is not None:
-                        self.stream.write(data)
-                        data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+                        print "[Tonalite] lecture stream.write"
+                        self.stream.write(self.data)
+                        self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
                         lectureActive = self.lectureActive
                 finally:
                     self.mutex.release()
