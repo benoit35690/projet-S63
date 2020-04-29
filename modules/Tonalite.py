@@ -49,6 +49,7 @@ class Tonalite:
 
 class lectureThread(Thread):
     boucle = None
+    fichier = None
     pyAudio = None
     waveFile = None
     stream = None
@@ -58,6 +59,7 @@ class lectureThread(Thread):
         self._etat = False
         self._pause = False
         self.boucle = False
+        self.fichier = ""
         self.waveFile = None
         self.stream = None
         self.pyAudio = pyaudio.PyAudio()
@@ -77,14 +79,14 @@ class lectureThread(Thread):
                 self.fichier = ""
                 time.sleep(0.1)  # éviter de saturer le processeur
                 continue
-            else:
-                print "[lectureThread] _pause is False"
+            #else:
+            #    print "[lectureThread] _pause is False"
 
-            if self.waveFile is None:
-                print "[lectureThread] run waveFile is None"
+            #if self.waveFile is None:
+            #    print "[lectureThread] run waveFile is None"
 
-            if self.stream is None:
-                print "[lectureThread] run stream is None"
+            #if self.stream is None:
+            #    print "[lectureThread] run stream is None"
 
             if self.waveFile is None or\
                self.stream is None:
