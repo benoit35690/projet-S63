@@ -441,6 +441,9 @@ class Automate_S63:
             par la suite
             reperer un prefixe connue (mobile, pompier...)
         """
+
+        print "[Automate] numeroComposeValide numeroCompose = ", \
+              self.numeroCompose
         if self.numeroCompose == "01":
             return True
 
