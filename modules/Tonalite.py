@@ -5,87 +5,123 @@ import wave
 import Constantes
 import time
 
+
 class Tonalite:
 
     # lectureActive mis a jour par startLecture et stopLecture
-    lectureActive   = None
+    lectureActive   = False
     lectureEnBoucle = 0
     worker          = None
-    pyAudio         = None
-    waveFile        = None
-    stream          = None
 
     def __init__(self):
         print "[Tonalite] __init__"
-        # demarre le thread de la class Automate
-        self.worker = Thread(target=self.lecture)
-        self.worker.setDaemon(False)
 
-        self.mutex = Lock()
-        self.pyAudio = pyaudio.PyAudio()
+        # demarre le thread de la class Automate
+        self.worker = lectureThread()
+        self.worker.start()
 
     def startLecture(self, fichier, boucle):
         print "[Tonalite] startLecture boucle= ", boucle
 
-        if self.lectureActive is not None:
-            print "[Tonalite] startLecture lecture en cours"
+        if self.lectureActive is True:
+            print "[Tonalite] startLecture lecture deja en cours"
             return
 
         # mise à jour avec parametre du flux à jouer
-        self.lectureEnBoucle = boucle
+        self.worker.setParameters(fichier, boucle)
+
+        # redemarrage du thread mis en pause
+        self.worker.resume()
+        self.lectureActive = True
+
+    def stopLecture(self):
+        print "[Tonalite] stopLecture"
+        if self.lectureActive is False:
+            print "[Tonalite] stopLecture aucune lecture en cours"
+            return
+
+        self.worker.pause()
+        self.lectureActive = False
+
+
+class lectureThread(Thread):
+    boucle = None
+    pyAudio = None
+    waveFile = None
+    stream = None
+
+    def __init__(self):
+        Thread.__init__(self)
+        self._etat = False
+        self._pause = False
+        self.boucle = False
+        self.waveFile = None
+        self.stream = None
+        self.pyAudio = pyaudio.PyAudio()
+
+    def run(self):
+        self._etat = True
+        while self._etat:
+            if self._pause:
+                time.sleep(0.1)  # éviter de saturer le processeur
+                continue
+
+            if self.waveFile is None or\
+               self.stream is None:
+                time.sleep(0.1)  # éviter de saturer le processeur
+                continue
+
+            self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+            if self.data == '' and self.boucle is True:
+                self.waveFile.rewind()
+                self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
+            if self.data is not None and self.data != '':
+                self.stream.write(self.data)
+
+    def stop(self):
+        """ Arrête l'exécution du thread.
+            Après avoir appelé cette fonction le thread n'est plus utilisable.
+        """
+        self._etat = False
+
+    def pause(self):
+        """ Arrête l'exécution du thread momentanément."""
+        if self._pause is True:
+            print "[lectureThread] Thread déjà en pause"
+            return
+
+        self._pause = True
+        self.waveFile.close()
+        self.waveFile = None
+        self.stream.close()
+        self.stream = None
+
+    def resume(self):
+        """ Reprendre l'exécution d'un thread 'mis en pause'."""
+        if self._pause is False:
+            print "[lectureThread] Thread déjà en fonctionnement"
+            return
+
+        self._pause = False
+
+    def setParameters(self, fichier, boucle):
+        """ Fixe les parametres de lecture (fichier et rebouclage)"""
+        self._pause = True
 
         # ouverture du flux à jouer
+        if self.waveFile is not None:
+            print "[lectureThread] waveFile not None"
+            return
+
         self.waveFile = wave.open(fichier, 'rb')
+
+        if self.stream is not None:
+            print "[lectureThread] stream not None"
+            return
+
         self.stream = self.pyAudio.open(
                                 format=self.pyAudio.get_format_from_width(
                                             self.waveFile.getsampwidth()),
                                 channels=self.waveFile.getnchannels(),
                                 rate=self.waveFile.getframerate(),
                                 output=True)
-
-        self.lectureActive = 1
-        self.worker.start()
-
-    def stopLecture(self):
-        print "[Tonalite] stopLecture"
-        if self.lectureActive is None:
-            print "[Tonalite] stopLecture aucune lecture en cours"
-            return
-
-        self.lectureActive = None
-
-        print "[Tonalite] stopLecture attente fin du thread"
-        self.worker.join()
-        print "[Tonalite] stopLecture joint passe"
-
-    def lecture(self):
-        # wave file can be closed outside of this thread by
-        print "[Tonalite] lecture ", \
-            " boucle = ", self.lectureEnBoucle
-
-        while self.lectureActive is not None:
-            # ce while sert a gerer le rebouclage
-            if self.waveFile is not None:
-                self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
-
-            while self.data is not None and\
-                    self.data != '' and\
-                    self.lectureActive is not None:
-                if self.stream is not None and\
-                     self.waveFile is not None:
-                    #print "[Tonalite] lecture stream.write"
-                    if self.data is None or self.data == '':
-                        print "[Tonalite] lecture self.data is None"
-                    self.stream.write(self.data)
-                    self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
-
-            if self.waveFile is not None and\
-               self.lectureEnBoucle == 1:
-                print "[Tonalite] lecture rebouclage"
-                self.waveFile.rewind()
-            else:
-                self.lectureActive = None
-
-            # end while lectureActive
-
-        print "[Tonalite] lecture fin de procedure"
