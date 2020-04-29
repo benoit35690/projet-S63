@@ -7,11 +7,7 @@ import time
 
 
 class Tonalite:
-
-    # lectureActive mis a jour par startLecture et stopLecture
-    lectureActive   = False
-    lectureEnBoucle = 0
-    worker          = None
+    worker = None
 
     def __init__(self):
         print "[Tonalite] __init__"
@@ -25,26 +21,12 @@ class Tonalite:
 
     def startLecture(self, fichier, boucle):
         print "[Tonalite] startLecture boucle= ", boucle
-
-        if self.lectureActive is True:
-            print "[Tonalite] startLecture lecture deja en cours"
-            return
-
-        # mise à jour avec parametre du flux à jouer
         self.worker.setParameters(fichier, boucle)
-
-        # redemarrage du thread mis en pause
         self.worker.resume()
-        self.lectureActive = True
 
     def stopLecture(self):
         print "[Tonalite] stopLecture"
-        if self.lectureActive is False:
-            print "[Tonalite] stopLecture aucune lecture en cours"
-            return
-
         self.worker.pause()
-        self.lectureActive = False
 
 
 class lectureThread(Thread):
@@ -82,14 +64,6 @@ class lectureThread(Thread):
                 self.fichier = ""
                 time.sleep(0.1)  # éviter de saturer le processeur
                 continue
-            #else:
-            #    print "[lectureThread] _pause is False"
-
-            #if self.waveFile is None:
-            #    print "[lectureThread] run waveFile is None"
-
-            #if self.stream is None:
-            #    print "[lectureThread] run stream is None"
 
             if self.waveFile is None or\
                self.stream is None or\
