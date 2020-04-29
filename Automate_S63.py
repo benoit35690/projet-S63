@@ -372,15 +372,19 @@ class Automate_S63:
         """
             Transition vers l'état ETAT_NUMEROTATION
             Liste des actions à faire si besoin
+                arret lecture tonalité
                 calculer numero composé
                 identifier numéro valide
                 appeler transition vers Appel1
         """
         print ("[Automate ChangerEtat_Numerotation] etat origine=",
                self.etat_automate)
+
+        self.tonalite.stopLecture()
         self.numeroCompose = self.numeroCompose + chiffreCompose
         print "chiffreCompose = ", chiffreCompose,\
               " numeroCompose = ", self.numeroCompose
+              
         if self.numeroComposeValide() is True:
             self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
         else:
