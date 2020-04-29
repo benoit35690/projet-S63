@@ -13,6 +13,7 @@ PIN_COMBINE_ANTIREBOND   = 100
 
 # liste des timer
 TIMER_DECROCHER_REPOS    = 1
+TIMER_TONAL_ACHEMINEMENT = 2
 
 # aprés 0.9s on considère que le cadran a fini de numéroter le chiffre
 TIMOUT_CHIFFRE_CADRAN    = 0.9

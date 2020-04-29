@@ -407,6 +407,12 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_TonaliteSortante] etat origine=",
                self.etat_automate)
+        self.tonalite.startLecture(Constantes.TONALITE_ACHEMINEMENT, False)
+        self.timerTonaliteAcheminement = \
+            Timer(3,
+                  self.ReceptionNotificationTimer,
+                  [Constantes.TIMER_TONAL_ACHEMINEMENT])
+        self.timerTonaliteAcheminement.start()
         self.etat_automate = Constantes.ETAT_TONALITE_SORTANT
 
     def ChangerEtat_InitialisationAppelSortant(self):
