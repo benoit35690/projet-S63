@@ -138,6 +138,8 @@ class Tonalite:
                     if self.stream is not None and\
                          self.waveFile is not None:
                         #print "[Tonalite] lecture stream.write"
+                        if self.data is None or self.data == '':
+                            print "[Tonalite] lecture self.data is None"
                         self.stream.write(self.data)
                         self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
                         lectureActive = self.lectureActive
