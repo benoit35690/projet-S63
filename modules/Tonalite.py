@@ -121,13 +121,13 @@ class Tonalite:
         while lectureActive is not None:
             # ce while sert a gerer le rebouclage
             self.mutex.acquire()
-            print "[Tonalite] lecture mutex.acquire 2 done"
+            #print "[Tonalite] lecture mutex.acquire 2 done"
             try:
                 if self.waveFile is not None:
                     self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             finally:
                 self.mutex.release()
-                print "[Tonalite] lecture mutex.release 2 done"
+                #print "[Tonalite] lecture mutex.release 2 done"
 
             while self.data is not None and\
                     self.data != '' and\
