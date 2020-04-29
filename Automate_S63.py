@@ -310,6 +310,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_Repos] etat origine=",
                self.etat_automate)
+        self.numeroCompose = ""
         self.tonalite.stopLecture()
         self.etat_automate = Constantes.ETAT_REPOS
 

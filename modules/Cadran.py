@@ -28,7 +28,7 @@ class Cadran:
         """
             Initialisation de la PIN du Raspberry reliée au cadran du S63
         """
-        print "[Cadran __init__]"
+        # print "[Cadran __init__]"
 
         # Set GPIO mode to Broadcom SOC numbering
         GPIO.setmode(GPIO.BCM)
@@ -49,7 +49,7 @@ class Cadran:
             La fonction de callback est executée dans un thread séparé
             instancié par RPi.GPIO
         """
-        print ("[Cadran CompteImpulsions]")
+        # print ("[Cadran CompteImpulsions]")
         input = GPIO.input(Constantes.PIN_CADRAN)
         if input and not self.last_input:
             self.compteur_pulsations += 1
@@ -69,7 +69,7 @@ class Cadran:
             Appelé par le timer quand la numérotation d'un chiffre est finie
             Envoie une notification avec le chiffre composé
         """
-        print ("[Cadran FinNumerotationChiffre]")
+        # print ("[Cadran FinNumerotationChiffre]")
         if self.compteur_pulsations == 10:
             self.compteur_pulsations = 0
         self.NotificationChiffre(self.compteur_pulsations)
@@ -81,5 +81,5 @@ class Cadran:
             Enregistrement de la callbacks utilisée pour notifier quand
             un chiffre est composé sur le cadran
         """
-        print ("[Cadran RegisterCallback]")
+        # print ("[Cadran RegisterCallback]")
         self.NotificationChiffre = NotificationChiffre
