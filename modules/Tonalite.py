@@ -36,9 +36,9 @@ class Tonalite:
                 # on ferme d'abord le flux en cours
                 self.stream.stop_stream()
                 self.stream.close()
-                print "[Tonalite] stream closed"
+                print "[Tonalite] startLecture stream closed"
                 self.waveFile.close()
-                print "[Tonalite] wave closed"
+                print "[Tonalite] startLecture wave closed"
                 self.lectureEnBoucle = None
                 self.fichierTonalite = None
                 self.lectureActive   = None
@@ -71,7 +71,7 @@ class Tonalite:
     def stopLecture(self):
         print "[Tonalite] stopLecture"
         self.mutex.acquire()
-        print "[Tonalite] mutex.acquire done"
+        print "[Tonalite] stopLecture mutex.acquire done"
         try:
             # fermeture du flux
             if self.stream is not None:
@@ -102,7 +102,7 @@ class Tonalite:
             self.lectureActive = None
         finally:
             self.mutex.release()
-            print "[Tonalite] mutex.release done"
+            print "[Tonalite] stopLecture mutex.release done"
 
     def lecture(self):
         # wave file can be closed outside of this thread by
@@ -111,24 +111,29 @@ class Tonalite:
 
         lectureActive = None
         self.mutex.acquire()
+        print "[Tonalite] lecture mutex.acquire 1 done"
         try:
             lectureActive = self.lectureActive
         finally:
             self.mutex.release()
+            print "[Tonalite] lecture mutex.release 1 done"
 
         while lectureActive is not None:
             # ce while sert a gerer le rebouclage
             self.mutex.acquire()
+            print "[Tonalite] lecture mutex.acquire 2 done"
             try:
                 if self.waveFile is not None:
                     self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             finally:
                 self.mutex.release()
+                print "[Tonalite] lecture mutex.release 2 done"
 
             while self.data is not None and\
                     self.data != '' and\
                     lectureActive:
                 self.mutex.acquire()
+                print "[Tonalite] lecture mutex.acquire 3 done"
                 try:
                     if self.stream is not None and\
                          self.waveFile is not None:
@@ -138,8 +143,10 @@ class Tonalite:
                         lectureActive = self.lectureActive
                 finally:
                     self.mutex.release()
+                    print "[Tonalite] lecture mutex.release 3 done"
 
             self.mutex.acquire()
+            print "[Tonalite] lecture mutex.acquire 4 done"
             try:
                 if self.waveFile is not None and\
                    self.timerLecture is not None and\
@@ -148,6 +155,7 @@ class Tonalite:
                     self.waveFile.rewind()
             finally:
                 self.mutex.release()
+                print "[Tonalite] lecture mutex.release 14 done"
 
             # end while lectureActive
 
