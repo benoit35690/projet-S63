@@ -27,7 +27,7 @@ class Tonalite:
     def startLecture(self, fichier, boucle):
         print "[Tonalite] startLecture boucle= ", boucle
 
-        if self.lectureActive is not None
+        if self.lectureActive is not None:
             print "[Tonalite] startLecture lecture en cours"
             return
 
@@ -35,7 +35,7 @@ class Tonalite:
         self.lectureEnBoucle = boucle
 
         # ouverture du flux à jouer
-        self.waveFile = wave.open(fichier 'rb')
+        self.waveFile = wave.open(fichier, 'rb')
         self.stream = self.pyAudio.open(
                                 format=self.pyAudio.get_format_from_width(
                                             self.waveFile.getsampwidth()),

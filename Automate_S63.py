@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # import os
 import Queue
-from threading import Thread
-from threading import Timer
-# import threading
+from threading import Thread, Timer
 import signal
 import sys
 import RPi.GPIO as GPIO
