@@ -130,7 +130,8 @@ class Tonalite:
 
             self.mutex.acquire()
             try:
-                if self.timerLecture is not None and\
+                if self.waveFile is not None and\
+                   self.timerLecture is not None and\
                    self.lectureEnBoucle == 1:
                     print "[Tonalite] lecture rebouclage"
                     self.waveFile.rewind()
