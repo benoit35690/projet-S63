@@ -75,15 +75,16 @@ class lectureThread(Thread):
                 time.sleep(0.1)  # éviter de saturer le processeur
                 continue
 
-                if self.waveFile is None or\
-                   self.stream is None:
-                    self.waveFile = wave.open(self.fichier, 'rb')
-                    self.stream = self.pyAudio.open(
-                                    format=self.pyAudio.get_format_from_width(
-                                                self.waveFile.getsampwidth()),
-                                    channels=self.waveFile.getnchannels(),
-                                    rate=self.waveFile.getframerate(),
-                                    output=True)
+            if self.waveFile is None or\
+               self.stream is None:
+                print "[lectureThread] open file and stream"
+                self.waveFile = wave.open(self.fichier, 'rb')
+                self.stream = self.pyAudio.open(
+                                format=self.pyAudio.get_format_from_width(
+                                            self.waveFile.getsampwidth()),
+                                channels=self.waveFile.getnchannels(),
+                                rate=self.waveFile.getframerate(),
+                                output=True)
 
             self.data = self.waveFile.readframes(Constantes.AUDIO_CHUNK)
             if self.data == '' and self.boucle is True:
