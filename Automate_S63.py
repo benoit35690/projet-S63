@@ -57,8 +57,6 @@ class Automate_S63:
                     NotificationRaccroche=self.ReceptionRaccroche,
                     NotificationVerifDecroche=self.ReceptionVerifDecroche)
 
-
-
         raw_input("Waiting.\n")
 
     def ReceptionChiffre(self, chiffre):
@@ -428,7 +426,7 @@ class Automate_S63:
     def OnSignal(self, signal, frame):
         print "[SIGNAL] Shutting down on %s" % signal
         self.combine.ArretVerificationDecroche()
-        self.tonalite.stopLecture()
+        del self.tonalite
         self.automate_actif = False
         sys.exit(0)
 

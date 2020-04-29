@@ -20,6 +20,9 @@ class Tonalite:
         self.worker = lectureThread()
         self.worker.start()
 
+    def __del__(self):
+        self.worker.stop()
+
     def startLecture(self, fichier, boucle):
         print "[Tonalite] startLecture boucle= ", boucle
 
