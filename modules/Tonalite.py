@@ -48,6 +48,10 @@ class Tonalite:
 
     def stopLecture(self):
         print "[Tonalite] stopLecture"
+        if self.lectureActive is None:
+            print "[Tonalite] stopLecture aucune lecture en cours"
+            return
+
         self.lectureActive = None
 
         print "[Tonalite] stopLecture attente fin du thread"
