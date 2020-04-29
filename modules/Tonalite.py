@@ -72,6 +72,7 @@ class lectureThread(Thread):
                 if self.stream is not None:
                     self.stream.close()
                     self.stream = None
+                self.fichier = ""
                 time.sleep(0.1)  # éviter de saturer le processeur
                 continue
 
@@ -119,6 +120,7 @@ class lectureThread(Thread):
             print "[lectureThread] Thread déjà en fonctionnement"
             return
 
+        print "[lectureThread] resume fichier = ", self.fichier
         self._pause = False
 
     def setParameters(self, fichier, boucle):
