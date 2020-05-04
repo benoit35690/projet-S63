@@ -11,7 +11,7 @@ class Telephonie:
     def __init__(self):
         print "[Telephonie] __init__"
 
-        self.dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
         self.bus = dbus.SystemBus()
         manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
                                  'org.ofono.Manager')
