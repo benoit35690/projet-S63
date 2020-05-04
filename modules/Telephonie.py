@@ -1,56 +1,13 @@
 # -*- coding: utf-8 -*-
+# module Telephonie
+"""
+    Module qui gère la couche telephonie oFono
+"""
 import Constantes
 import dbus.mainloop.glib
 from gi.repository import GLib
 import dbus
 import time
-
-_dbus2py = {
-    dbus.String: str,
-    dbus.UInt32: int,
-    dbus.Int32: int,
-    dbus.Int16: int,
-    dbus.UInt16: int,
-    dbus.UInt64: int,
-    dbus.Int64: int,
-    dbus.Byte: int,
-    dbus.Boolean: bool,
-    dbus.ByteArray: str,
-    dbus.ObjectPath: str
-    }
-
-
-def dbus2py(d):
-    t = type(d)
-    if t in _dbus2py:
-        return _dbus2py[t](d)
-    if t is dbus.Dictionary:
-        return dict([(dbus2py(k), dbus2py(v)) for k, v in d.items()])
-    if t is dbus.Array and d.signature == "y":
-        return "".join([chr(b) for b in d])
-    if t is dbus.Array or t is list:
-        return [dbus2py(v) for v in d]
-    if t is dbus.Struct or t is tuple:
-        return tuple([dbus2py(v) for v in d])
-    return d
-
-
-def pretty(d):
-    d = dbus2py(d)
-    t = type(d)
-
-    if t in (dict, tuple, list) and len(d) > 0:
-        if t is dict:
-            d = ", ".join(["%s = %s" % (k, pretty(v))
-                          for k, v in d.items()])
-        return "{ %s }" % d
-
-    d = " ".join([pretty(e) for e in d])
-    if t is tuple:
-        return "( %s )" % d
-    if t is str:
-        return "%s" % d
-    return str(d)
 
 
 class Telephonie:
@@ -72,15 +29,20 @@ class Telephonie:
         self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
                                   'org.ofono.VoiceCallManager')
 
-        # path = self.vcm.Dial("0645848223", "default")
-        # print(path)
-
         self.bus.add_signal_receiver(handler_function=self.callAdded,
-                                signal_name="CallAdded",
-                                dbus_interface="org.ofono.VoiceCallManager",
-                                bus_name="org.ofono",
-                                path_keyword="path",
-                                interface_keyword="interface")
+                                     signal_name="CallAdded",
+                                     dbus_interface=
+                                     "org.ofono.VoiceCallManager",
+                                     bus_name="org.ofono",
+                                     path_keyword="path",
+                                     interface_keyword="interface")
+        self.bus.add_signal_receiver(handler_function=self.callRemoved,
+                                     signal_name="CallRemoved",
+                                     dbus_interface=
+                                     "org.ofono.VoiceCallManager",
+                                     bus_name="org.ofono",
+                                     path_keyword="path",
+                                     interface_keyword="interface")
 
         self.mainloop = GLib.MainLoop()
         self.mainloop.run()
@@ -90,7 +52,25 @@ class Telephonie:
         self.mainloop.quit()
         print "[Telephonie] __del__ fin procedure"
 
+    def RegisterCallback(self,
+                         NotificationAjoutAppelEntrant,
+                         NotificationSuppressionAppel):
+        """
+            Enregistrement des callbacks utilisées pour notifier quand
+                un nouvel appel entrant est reçu (il peut y en avoir plusieurs)
+                un appel est supprimé (fin d'appel entrant ou sortant)
+        """
+
+        self.NotificationAjoutAppelEntrant = NotificationAjoutAppelEntrant
+        self.NotificationSuppressionAppel = NotificationSuppressionAppel
+
     def callAdded(name, value, member, path, interface):
+        """notification envoyee par dbus sur ajout d'un appel
+           (entrant ou sortant)
+           actions realisees
+              ajout du numero (LineIdentification) dans la liste des numero
+              envoie d'une notification (a Automate)
+        """
         print "[Telephonie] callAdded new call"
         print "type name = ", type(name)
         print "type value = ", type(value)
@@ -99,4 +79,15 @@ class Telephonie:
         print "type interface = ", type(interface)
 
         print "value = ", value, "member = ", member
+        print "path = ", path, "interface = ", interface
+
+    def callRemoved(name, member, path, interface):
+        """notification envoyee par dbus sur suppression d'un appel
+           (entrant ou sortant)
+           actions realisees
+              retrait du numero (LineIdentification) de la liste des numero
+              envoie d'une notification (a Automate)
+        """
+        print "[Telephonie] callRemoved"
+        print "member = ", member
         print "path = ", path, "interface = ", interface
