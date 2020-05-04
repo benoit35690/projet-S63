@@ -5,6 +5,7 @@ import dbus
 
 class Telephonie:
     bus = None
+    vcm = None
 
     def __init__(self):
         print "[Telephonie] __init__"
@@ -16,10 +17,10 @@ class Telephonie:
         modem = modems[0][0]
         print("[Telephonie] __init__ Using modem %s" % modem)
 
-        vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
-                             'org.ofono.VoiceCallManager')
+        self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
+                                  'org.ofono.VoiceCallManager')
 
-        vcm.connect_to_signal("CallAdded", self.callAdded)
+        self.vcm.connect_to_signal("CallAdded", self.callAdded)
 
     def callAdded(path, propertie):
         print "[Telephonie] callAdded new call ", path
