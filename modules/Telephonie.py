@@ -99,5 +99,5 @@ class Telephonie:
         print "type interface = ", type(interface)
 
         print "name =", str(name),
-        "value = ", str(pretty(value)),
+        "value = ", pretty(value),
         "member = ", str(member)
