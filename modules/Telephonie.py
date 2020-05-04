@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import Constantes
 import dbus.mainloop.glib
+from gi.repository import GLib
 import dbus
 import time
 
@@ -28,7 +29,9 @@ class Telephonie:
 
         self.vcm.connect_to_signal("CallAdded", self.callAdded)
         self.vcm.connect_to_signal("PropertyChanged", self.propertyChanged)
-        time.sleep(10)
+
+        mainloop = GLib.MainLoop()
+        mainloop.run()
 
     def callAdded(path, propertie):
         print "[Telephonie] callAdded new call ", path
