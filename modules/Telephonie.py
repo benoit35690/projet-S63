@@ -11,6 +11,26 @@ class Telephonie:
     vcm = None
     mainloop = None
 
+    def pretty(d):
+    	d = dbus2py(d)
+    	t = type(d)
+
+    	if t in (dict, tuple, list) and len(d) > 0:
+    		if t is dict:
+    			d = ", ".join(["%s = %s" % (k, pretty(v))
+    					for k, v in d.items()])
+    			return "{ %s }" % d
+
+    		d = " ".join([pretty(e) for e in d])
+
+    		if t is tuple:
+    			return "( %s )" % d
+
+    	if t is str:
+    		return "%s" % d
+
+    	return str(d)
+
     def __init__(self):
         print "[Telephonie] __init__"
 
@@ -50,3 +70,7 @@ class Telephonie:
         print "type member = ", type(member)
         print "type path = ", type(path)
         print "type interface = ", type(interface)
+
+        print "name ="", str(name),
+              "value = ", str(pretty(value)),
+              "member = ", str(member)
