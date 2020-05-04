@@ -28,16 +28,16 @@ class Telephonie:
         # path = self.vcm.Dial("0645848223", "default")
         # print(path)
 
-        self.bus.add_signal_receiver(self.callAdded,
+        self.bus.add_signal_receiver(handler_function=self.callAdded,
+                                     signal_name="CallAdded,
+                                     dbus_interface=self.vcm,
                                      bus_name="org.ofono",
-                                     signal_name="CallAdded",
-                                     path_keyword="path",
-                                     interface_keyword="interface")
-        self.bus.add_signal_receiver(self.propertyChanged,
-                                     bus_name="org.ofono",
+                                     path="org.ofono.VoiceCallManager")
+        self.bus.add_signal_receiver(handler_function=self.propertyChanged,
                                      signal_name="PropertyChanged",
-                                     path_keyword="path",
-                                     interface_keyword="interface")
+                                     dbus_interface=self.vcm,
+                                     bus_name="org.ofono",
+                                     path="org.ofono.VoiceCallManager")
 
         self.mainloop = GLib.MainLoop()
         self.mainloop.run()
