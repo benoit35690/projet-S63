@@ -9,6 +9,7 @@ import time
 class Telephonie:
     bus = None
     vcm = None
+    mainloop = None
 
     def __init__(self):
         print "[Telephonie] __init__"
@@ -24,14 +25,17 @@ class Telephonie:
         self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
                                   'org.ofono.VoiceCallManager')
 
-        path = self.vcm.Dial("0645848223", "default")
-        print(path)
+        # path = self.vcm.Dial("0645848223", "default")
+        # print(path)
 
         self.vcm.connect_to_signal("CallAdded", self.callAdded)
         self.vcm.connect_to_signal("PropertyChanged", self.propertyChanged)
 
-        mainloop = GLib.MainLoop()
-        mainloop.run()
+        self.mainloop = GLib.MainLoop()
+        self.mainloop.run()
+
+    def __del__(self):
+        self.mainloop.quit()
 
     def callAdded(path, propertie):
         print "[Telephonie] callAdded new call ", path

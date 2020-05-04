@@ -473,6 +473,7 @@ class Automate_S63:
         print "[SIGNAL] Shutting down on %s" % signal
         self.combine.ArretVerificationDecroche()
         del self.tonalite
+        del self.telephonie
         self.automate_actif = False
         sys.exit(0)
 
