@@ -28,8 +28,16 @@ class Telephonie:
         # path = self.vcm.Dial("0645848223", "default")
         # print(path)
 
-        self.vcm.connect_to_signal("CallAdded", self.callAdded)
-        self.vcm.connect_to_signal("PropertyChanged", self.propertyChanged)
+        self.bus.add_signal_receiver(self.callAdded,
+                                     bus_name="org.ofono",
+                                     signal_name="CallAdded",
+                                     path_keyword="path",
+                                     interface_keyword="interface")
+        self.bus.add_signal_receiver(self.PropertyChanged,
+                                     bus_name="org.ofono",
+                                     signal_name="PropertyChanged",
+                                     path_keyword="path",
+                                     interface_keyword="interface")
 
         self.mainloop = GLib.MainLoop()
         self.mainloop.run()
@@ -37,12 +45,17 @@ class Telephonie:
     def __del__(self):
         self.mainloop.quit()
 
-    def callAdded(path, propertie):
-        print "[Telephonie] callAdded new call ", path
-        print("%s {%s}" % (path, propertie))
+    def callAdded(message, details, path, interface):
+        print "[Telephonie] callAdded new call ", message
+        for key in details:
+            val = details[key]
+            print("    %s = %s" % (key, val))
 
         # call = dbus.Interface(self.bus.get_object('org.ofono', path),
         #                      'org.ofono.VoiceCall')
 
-    def propertyChanged(propertie, value):
-        print "[Telephonie] propertyChanged propertie= ", propertie
+    def propertyChanged(message, details, path, interface):
+        print "[Telephonie] propertyChanged ", message
+        for key in details:
+            val = details[key]
+            print("    %s = %s" % (key, val))
