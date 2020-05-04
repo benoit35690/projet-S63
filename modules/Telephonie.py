@@ -33,16 +33,12 @@ class Telephonie:
                                      signal_name="CallAdded",
                                      dbus_interface=
                                      "org.ofono.VoiceCallManager",
-                                     bus_name="org.ofono",
-                                     path_keyword="path",
-                                     interface_keyword="interface")
+                                     bus_name="org.ofono")
         self.bus.add_signal_receiver(handler_function=self.callRemoved,
                                      signal_name="CallRemoved",
                                      dbus_interface=
                                      "org.ofono.VoiceCallManager",
-                                     bus_name="org.ofono",
-                                     path_keyword="path",
-                                     interface_keyword="interface")
+                                     bus_name="org.ofono")
 
         self.mainloop = GLib.MainLoop()
         self.mainloop.run()
@@ -64,7 +60,7 @@ class Telephonie:
         self.NotificationAjoutAppelEntrant = NotificationAjoutAppelEntrant
         self.NotificationSuppressionAppel = NotificationSuppressionAppel
 
-    def callAdded(name, value, member, path, interface):
+    def callAdded(name, value, member):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
@@ -72,16 +68,9 @@ class Telephonie:
               envoie d'une notification (a Automate)
         """
         print "[Telephonie] callAdded new call"
-        print "type name = ", type(name)
-        print "type value = ", type(value)
-        print "type member = ", type(member)
-        print "type path = ", type(path)
-        print "type interface = ", type(interface)
-
         print "value = ", value, "member = ", member
-        print "path = ", path, "interface = ", interface
 
-    def callRemoved(name, member, path, interface):
+    def callRemoved(name, member):
         """notification envoyee par dbus sur suppression d'un appel
            (entrant ou sortant)
            actions realisees
@@ -90,4 +79,3 @@ class Telephonie:
         """
         print "[Telephonie] callRemoved"
         print "member = ", member
-        print "path = ", path, "interface = ", interface
