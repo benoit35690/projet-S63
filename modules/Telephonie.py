@@ -29,7 +29,7 @@ class Telephonie:
         # print(path)
 
         self.bus.add_signal_receiver(handler_function=self.callAdded,
-                                     signal_name="CallAdded,
+                                     signal_name="CallAdded",
                                      dbus_interface=self.vcm,
                                      bus_name="org.ofono",
                                      path="org.ofono.VoiceCallManager")
