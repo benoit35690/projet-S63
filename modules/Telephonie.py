@@ -2,6 +2,7 @@
 import Constantes
 import dbus.mainloop.glib
 import dbus
+import time
 
 
 class Telephonie:
@@ -23,6 +24,7 @@ class Telephonie:
                                   'org.ofono.VoiceCallManager')
 
         self.vcm.connect_to_signal("CallAdded", self.callAdded)
+        time.sleep(10)
 
     def callAdded(path, propertie):
         print "[Telephonie] callAdded new call ", path
