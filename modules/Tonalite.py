@@ -12,7 +12,6 @@ class Tonalite:
     def __init__(self):
         print "[Tonalite] __init__"
 
-        # demarre le thread de la class Automate
         self.worker = lectureThread()
         self.worker.start()
 

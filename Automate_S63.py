@@ -10,6 +10,7 @@ import Constantes
 from modules.Cadran import Cadran
 from modules.Combine import Combine
 from modules.Tonalite import Tonalite
+from modules.Telephonie import Telephonie
 
 callback_queue = Queue.Queue()
 
@@ -32,6 +33,7 @@ class Automate_S63:
     cadran = None
     combine = None
     tonalite = None
+    telephonie = None
 
     def __init__(self):
         print ("[Automate_S63 __init__]")
@@ -60,6 +62,8 @@ class Automate_S63:
                     NotificationVerifDecroche=self.ReceptionVerifDecroche)
 
         self.timerDecrocheRepos = None
+
+        self.telephonie = Telephonie()
 
         raw_input("Waiting.\n")
 
@@ -98,6 +102,9 @@ class Automate_S63:
         message = Message()
         if timer[0] == Constantes.TIMER_DECROCHER_REPOS:
             message.transition_automate = Constantes.TRANSITION_TIMER_OUBLIE
+            self.message_queue.put(message)
+        elif timer[0] == Constantes.TIMER_TONAL_ACHEMINEMENT:
+            message.transition_automate = Constantes.TRANSITION_APPEL_SORTANT
             self.message_queue.put(message)
 
     def FonctionWorkerThread(self):
