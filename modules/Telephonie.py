@@ -4,29 +4,26 @@ import dbus
 
 
 class Telephonie:
+    bus = None
 
     def __init__(self):
         print "[Telephonie] __init__"
 
-        bus = dbus.SystemBus()
-        manager = dbus.Interface(bus.get_object('org.ofono', '/'),
+        self.bus = dbus.SystemBus()
+        manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
                                  'org.ofono.Manager')
         modems = manager.GetModems()
-        mgr = None
-        for path, properties in modems:
-            print("[ %s ]" % (path))
+        modem = modems[0][0]
+        print("[Telephonie] __init__ Using modem %s" % modem)
 
-            if "org.ofono.VoiceCallManager" not in properties["Interfaces"]:
-                continue
-            mgr = dbus.Interface(bus.get_object('org.ofono', path),
-                                 'org.ofono.VoiceCallManager')
+        vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
+                             'org.ofono.VoiceCallManager')
 
-        if mgr is None:
-            print "[Telephonie] __init__ no VoiceCallManager found "
-            return
-
-        mgr.connect_to_signal("CallAdded", self.callAdded)
+        vcm.connect_to_signal("CallAdded", self.callAdded)
 
     def callAdded(path, propertie):
         print "[Telephonie] callAdded new call ", path
         print("%s {%s}" % (path, propertie))
+
+        #call = dbus.Interface(self.bus.get_object('org.ofono', path),
+        #                      'org.ofono.VoiceCall')
