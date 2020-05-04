@@ -98,6 +98,5 @@ class Telephonie:
         print "type path = ", type(path)
         print "type interface = ", type(interface)
 
-        print "name =", name,
-        "value = ", value,
-        "member = ", member
+        print "value = ", value, "member = ", member
+        print "path = ", path, "interface = ", interface
