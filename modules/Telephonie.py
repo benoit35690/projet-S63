@@ -23,15 +23,19 @@ class Telephonie:
         self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
                                   'org.ofono.VoiceCallManager')
 
-        path = self.vcm.Dial("0645848223", "default")
-        print(path)
+        # path = self.vcm.Dial("0645848223", "default")
+        # print(path)
 
         self.vcm.connect_to_signal("CallAdded", self.callAdded)
+        self.vcm.connect_to_signal("PropertyChanged", self.propertyChanged)
         time.sleep(10)
 
     def callAdded(path, propertie):
         print "[Telephonie] callAdded new call ", path
         print("%s {%s}" % (path, propertie))
 
-        #call = dbus.Interface(self.bus.get_object('org.ofono', path),
+        # call = dbus.Interface(self.bus.get_object('org.ofono', path),
         #                      'org.ofono.VoiceCall')
+
+    def propertyChanged(propertie, value):
+        print "[Telephonie] propertyChanged propertie= ", propertie
