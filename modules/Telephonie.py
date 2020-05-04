@@ -41,9 +41,11 @@ class Telephonie:
 
         self.mainloop = GLib.MainLoop()
         self.mainloop.run()
+        print "[Telephonie] __init__ fin procedure"
 
     def __del__(self):
         self.mainloop.quit()
+        print "[Telephonie] __del__ fin procedure"
 
     def callAdded(message, details, path, interface):
         print "[Telephonie] callAdded new call ", message
