@@ -33,7 +33,7 @@ class Telephonie:
                                      signal_name="CallAdded",
                                      path_keyword="path",
                                      interface_keyword="interface")
-        self.bus.add_signal_receiver(self.PropertyChanged,
+        self.bus.add_signal_receiver(self.propertyChanged,
                                      bus_name="org.ofono",
                                      signal_name="PropertyChanged",
                                      path_keyword="path",
