@@ -31,13 +31,11 @@ class Telephonie:
         self.bus.add_signal_receiver(handler_function=self.callAdded,
                                      signal_name="CallAdded",
                                      dbus_interface=self.vcm,
-                                     bus_name="org.ofono",
-                                     path="org.ofono.VoiceCallManager")
+                                     bus_name="org.ofono")
         self.bus.add_signal_receiver(handler_function=self.propertyChanged,
                                      signal_name="PropertyChanged",
                                      dbus_interface=self.vcm,
-                                     bus_name="org.ofono",
-                                     path="org.ofono.VoiceCallManager")
+                                     bus_name="org.ofono")
 
         self.mainloop = GLib.MainLoop()
         self.mainloop.run()
