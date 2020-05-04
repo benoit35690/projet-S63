@@ -23,6 +23,9 @@ class Telephonie:
         self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
                                   'org.ofono.VoiceCallManager')
 
+        path = self.vcm.Dial("0645848223", "default")
+        print(path)
+
         self.vcm.connect_to_signal("CallAdded", self.callAdded)
         time.sleep(10)
 
