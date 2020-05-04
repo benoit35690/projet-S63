@@ -32,10 +32,6 @@ class Telephonie:
                                 signal_name="CallAdded",
                                 dbus_interface="org.ofono.VoiceCallManager",
                                 bus_name="org.ofono")
-        self.bus.add_signal_receiver(handler_function=self.propertyChanged,
-                                     signal_name="PropertyChanged",
-                                     dbus_interface="org.ofono.VoiceCallManager",
-                                     bus_name="org.ofono")
 
         self.mainloop = GLib.MainLoop()
         self.mainloop.run()
@@ -45,17 +41,5 @@ class Telephonie:
         self.mainloop.quit()
         print "[Telephonie] __del__ fin procedure"
 
-    def callAdded(message, details, path, interface):
-        print "[Telephonie] callAdded new call ", message
-        for key in details:
-            val = details[key]
-            print("    %s = %s" % (key, val))
-
-        # call = dbus.Interface(self.bus.get_object('org.ofono', path),
-        #                      'org.ofono.VoiceCall')
-
-    def propertyChanged(message, details, path, interface):
-        print "[Telephonie] propertyChanged ", message
-        for key in details:
-            val = details[key]
-            print("    %s = %s" % (key, val))
+    def callAdded(path, properties):
+        print "[Telephonie] callAdded new call ", path
