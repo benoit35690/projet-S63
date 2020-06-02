@@ -58,7 +58,7 @@ class Automate_S63:
         self.timerInialisation = Timer(Constantes.TIMEOUT_INITIALISATION,
                                         self.ReceptionNotificationTimer,
                                         [Constantes.TIMER_INITIALISATION])
-        self.timerDecrocheRepos.start()
+        self.timerInialisation.start()
 
         # initialisation du module Cadran
         self.cadran = Cadran()
@@ -263,7 +263,7 @@ class Automate_S63:
         self.timerInialisation = Timer(Constantes.TIMEOUT_INITIALISATION,
                                         self.ReceptionNotificationTimer,
                                         [Constantes.TIMER_INITIALISATION])
-        self.timerDecrocheRepos.start()
+        self.timerInialisation.start()
 
     def TraiteTransitionRaccroche(self, message):
         print ("[Automate TraiteTransitionRaccroche] etat_automate=",
