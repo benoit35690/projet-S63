@@ -21,7 +21,6 @@ class Telephonie:
         print "[Telephonie] __init__"
 
         try:
-
             dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
             self.bus = dbus.SystemBus()
             manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
@@ -33,23 +32,40 @@ class Telephonie:
             self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
                                       'org.ofono.VoiceCallManager')
 
+            print("[Telephonie] __init__ vcm initialized ")
+
             self.bus.add_signal_receiver(handler_function=self.nouvelAppel,
                                          signal_name="CallAdded",
                                          dbus_interface=
                                          "org.ofono.VoiceCallManager",
                                          bus_name="org.ofono")
+            print("[Telephonie] __init__  add_signal_receiver 1 OK")
+
             self.bus.add_signal_receiver(handler_function=self.appelSupprime,
                                          signal_name="CallRemoved",
                                          dbus_interface=
                                          "org.ofono.VoiceCallManager",
                                          bus_name="org.ofono")
+            print("[Telephonie] __init__  add_signal_receiver 2 OK")
 
             self.mainloop = GLib.MainLoop()
+            print("[Telephonie] __init__  mainloop initialized")
+
             self.mainloop.run()
+            print("[Telephonie] __init__  mainloop run OK")
 
             self.appelEnCours = False
             print "[Telephonie] __init__ fin procedure"
         except Exception as inst:
+            print "[Telephonie] __init__ Exception"
+            print(type(inst))    # the exception instance
+            print(inst.args)     # arguments stored in .args
+            print(inst)          # __str__ allows args to be printed directly,
+                                 # but may be overridden in exception subclasses
+            x, y = inst.args     # unpack args
+            print('x =', x)
+            print('y =', y)
+
             raise inst
         finally:
             return
