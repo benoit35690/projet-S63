@@ -88,9 +88,11 @@ class Automate_S63:
 
         finally:
             return
+        print ("[Automate_S63 __init__] Telephonie initialized")
         self.telephonie.registerCallback(
                     notificationAppelEntrant=self.receptionAppelEntrant,
                     notificationFinAppel=self.receptionFinAppel)
+        print ("[Automate_S63 __init__] Telephonie registerCallback OK")
 
         raw_input("Waiting.\n")
 
