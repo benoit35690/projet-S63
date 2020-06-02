@@ -74,7 +74,20 @@ class Automate_S63:
         self.timerDecrocheRepos = None
 
         # initialisation du module Telephonie
-        self.telephonie = Telephonie()
+        try:
+            self.telephonie = Telephonie()
+        except Exception as inst:
+            print ("[Automate_S63 __init__] Telephonie raised an error")
+            print(type(inst))    # the exception instance
+            print(inst.args)     # arguments stored in .args
+            print(inst)          # __str__ allows args to be printed directly,
+                                 # but may be overridden in exception subclasses
+            x, y = inst.args     # unpack args
+            print('x =', x)
+            print('y =', y)
+
+        finally:
+            return
         self.telephonie.registerCallback(
                     notificationAppelEntrant=self.receptionAppelEntrant,
                     notificationFinAppel=self.receptionFinAppel)

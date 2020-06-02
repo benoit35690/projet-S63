@@ -20,33 +20,39 @@ class Telephonie:
     def __init__(self):
         print "[Telephonie] __init__"
 
-        dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-        self.bus = dbus.SystemBus()
-        manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
-                                 'org.ofono.Manager')
-        modems = manager.GetModems()
-        modem = modems[0][0]
-        print("[Telephonie] __init__ Using modem %s" % modem)
+        try:
 
-        self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
-                                  'org.ofono.VoiceCallManager')
+            dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+            self.bus = dbus.SystemBus()
+            manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
+                                     'org.ofono.Manager')
+            modems = manager.GetModems()
+            modem = modems[0][0]
+            print("[Telephonie] __init__ Using modem %s" % modem)
 
-        self.bus.add_signal_receiver(handler_function=self.nouvelAppel,
-                                     signal_name="CallAdded",
-                                     dbus_interface=
-                                     "org.ofono.VoiceCallManager",
-                                     bus_name="org.ofono")
-        self.bus.add_signal_receiver(handler_function=self.appelSupprime,
-                                     signal_name="CallRemoved",
-                                     dbus_interface=
-                                     "org.ofono.VoiceCallManager",
-                                     bus_name="org.ofono")
+            self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
+                                      'org.ofono.VoiceCallManager')
 
-        self.mainloop = GLib.MainLoop()
-        self.mainloop.run()
+            self.bus.add_signal_receiver(handler_function=self.nouvelAppel,
+                                         signal_name="CallAdded",
+                                         dbus_interface=
+                                         "org.ofono.VoiceCallManager",
+                                         bus_name="org.ofono")
+            self.bus.add_signal_receiver(handler_function=self.appelSupprime,
+                                         signal_name="CallRemoved",
+                                         dbus_interface=
+                                         "org.ofono.VoiceCallManager",
+                                         bus_name="org.ofono")
 
-        self.appelEnCours = False
-        print "[Telephonie] __init__ fin procedure"
+            self.mainloop = GLib.MainLoop()
+            self.mainloop.run()
+
+            self.appelEnCours = False
+            print "[Telephonie] __init__ fin procedure"
+        except Exception as inst:
+            raise inst
+        finally:
+            return
 
     def __del__(self):
         self.mainloop.quit()
