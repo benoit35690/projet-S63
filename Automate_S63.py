@@ -25,8 +25,10 @@ class Automate_S63:
     dial_number = ""
     numeroCompose = ""
     automate_actif = True
+    timerInialisation = None
     timerDecrocheRepos = None
     etat_automate = Constantes.ETAT_INIT
+    etatCombine = Constantes.COMBINE_INITIALISATION
     offHook = False
     offHookTimeoutTimer = None
     worker = None
@@ -52,9 +54,17 @@ class Automate_S63:
         self.worker.setDaemon(True)
         self.worker.start()
 
+        # arme le timer d'initialisation
+        self.timerInialisation = Timer(Constantes.TIMEOUT_INITIALISATION,
+                                        self.ReceptionNotificationTimer,
+                                        [Constantes.TIMER_INITIALISATION])
+        self.timerDecrocheRepos.start()
+
+        # initialisation du module Cadran
         self.cadran = Cadran()
         self.cadran.RegisterCallback(NotificationChiffre=self.ReceptionChiffre)
 
+        # initialisation du module Combine
         self.combine = Combine()
         self.combine.RegisterCallback(
                     NotificationDecroche=self.ReceptionDecroche,
@@ -63,6 +73,7 @@ class Automate_S63:
 
         self.timerDecrocheRepos = None
 
+        # initialisation du module Telephonie
         self.telephonie = Telephonie()
         self.telephonie.registerCallback(
                     notificationAppelEntrant=self.receptionAppelEntrant,
@@ -86,34 +97,51 @@ class Automate_S63:
     def ReceptionDecroche(self):
         """ Notification envoyée par le module Combine
             A chaque fois que le combiné est décroché
+            Tant que l'automate est en cours d'initialisation l'événement est
+            ignoré
         """
         # print ("[Automate ReceptionDecroche]")
-        message = Message()
-        message.transition_automate = Constantes.TRANSITION_DECROCHE
-        self.message_queue.put(message)
+        if self.etat_automate != Constantes.ETAT_INIT:
+            message = Message()
+            message.transition_automate = Constantes.TRANSITION_DECROCHE
+            self.message_queue.put(message)
+        else:
+            self.etatCombine = Constantes.COMBINE_DECROCHE
 
     def ReceptionRaccroche(self):
         """ Notification envoyée par le module Combine
             A chaque fois que le combiné est raccroché
+            Tant que l'automate est en cours d'initialisation l'événement est
+            ignoré
         """
         # print ("[Automate ReceptionRaccroche]")
-        message = Message()
-        message.transition_automate = Constantes.TRANSITION_RACCROCHE
-        self.message_queue.put(message)
+        if self.etat_automate != Constantes.ETAT_INIT:
+            message = Message()
+            message.transition_automate = Constantes.TRANSITION_RACCROCHE
+            self.message_queue.put(message)
+        else:
+            self.etatCombine = Constantes.COMBINE_RACCROCHE
 
     def ReceptionVerifDecroche(self, etat):
         """ Notification envoyée par le module Combine
             Périodiquement pour vérifier l'état du combiné
+            Tant que l'automate est en cours d'initialisation l'événement est
+            ignoré
         """
         # print ("[Automate ReceptionVerifDecroche]", etat)
+
         message = Message()
         if etat == GPIO.HIGH:
             # print("[Combine VerifieCombine] HIGH -> Raccroche")
             message.transition_automate = Constantes.TRANSITION_RACCROCHE
+            self.etatCombine = Constantes.COMBINE_RACCROCHE
         else:
             # print("[Combine VerifieCombine] LOW -> Decroche")
             message.transition_automate = Constantes.TRANSITION_DECROCHE
-        self.message_queue.put(message)
+            self.etatCombine = Constantes.COMBINE_DECROCHE
+
+        if self.etat_automate != Constantes.ETAT_INIT:
+            self.message_queue.put(message)
 
     def ReceptionNotificationTimer(self, *timer):
         """ Notification envoyée par la fonction Timer
@@ -121,7 +149,15 @@ class Automate_S63:
         """
         print ("[Automate ReceptionNotificationTimer] timer= ", timer[0])
         message = Message()
-        if timer[0] == Constantes.TIMER_DECROCHER_REPOS:
+        if timer[0] == Constantes.TIMER_INITIALISATION:
+            if self.etatCombine == Constantes.COMBINE_DECROCHE:
+                message.transition_automate = Constantes.TRANSITION_DECROCHE
+            elif self.etatCombine == Constantes.COMBINE_RACCROCHE:
+                message.transition_automate = Constantes.TRANSITION_RACCROCHE
+            else:
+                message.transition_automate = Constantes.TRANSITION_INIT
+            self.message_queue.put(message)
+        elif timer[0] == Constantes.TIMER_DECROCHER_REPOS:
             message.transition_automate = Constantes.TRANSITION_TIMER_OUBLIE
             self.message_queue.put(message)
         elif timer[0] == Constantes.TIMER_TONAL_ACHEMINEMENT:
@@ -187,7 +223,9 @@ class Automate_S63:
     def TraiteMessage(self, message):
         # print ("[Automate TraiteMessage] transition=",
         #       message.transition_automate)
-        if message.transition_automate == Constantes.TRANSITION_RACCROCHE:
+        if message.transition_automate == Constantes.TRANSITION_INIT:
+            self.TraiteTransitionInitialisation(message)
+        elif message.transition_automate == Constantes.TRANSITION_RACCROCHE:
             self.TraiteTransitionRaccroche(message)
         elif message.transition_automate == Constantes.TRANSITION_DECROCHE:
             self.TraiteTransitionDecroche(message)
@@ -216,6 +254,16 @@ class Automate_S63:
         else:
             print ("[Automate TraiteMessage] MESSAGE INCONNU transition=",
                    message.transition_automate)
+
+    def TraiteTransitionInitialisation(self, message):
+        print ("[Automate TraiteTransitionInitialisation] etat_automate=",
+               self.etat_automate)
+
+        # rearme le timer d'initialisation
+        self.timerInialisation = Timer(Constantes.TIMEOUT_INITIALISATION,
+                                        self.ReceptionNotificationTimer,
+                                        [Constantes.TIMER_INITIALISATION])
+        self.timerDecrocheRepos.start()
 
     def TraiteTransitionRaccroche(self, message):
         print ("[Automate TraiteTransitionRaccroche] etat_automate=",
