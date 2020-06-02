@@ -100,7 +100,7 @@ class Automate_S63:
             Tant que l'automate est en cours d'initialisation l'événement est
             ignoré
         """
-        # print ("[Automate ReceptionDecroche]")
+        print ("[Automate ReceptionDecroche]")
         if self.etat_automate != Constantes.ETAT_INIT:
             message = Message()
             message.transition_automate = Constantes.TRANSITION_DECROCHE
@@ -114,7 +114,7 @@ class Automate_S63:
             Tant que l'automate est en cours d'initialisation l'événement est
             ignoré
         """
-        # print ("[Automate ReceptionRaccroche]")
+        print ("[Automate ReceptionRaccroche]")
         if self.etat_automate != Constantes.ETAT_INIT:
             message = Message()
             message.transition_automate = Constantes.TRANSITION_RACCROCHE
@@ -128,7 +128,7 @@ class Automate_S63:
             Tant que l'automate est en cours d'initialisation l'événement est
             ignoré
         """
-        # print ("[Automate ReceptionVerifDecroche]", etat)
+        print ("[Automate ReceptionVerifDecroche]", etat)
 
         message = Message()
         if etat == GPIO.HIGH:
