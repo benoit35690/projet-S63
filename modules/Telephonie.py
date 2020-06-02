@@ -51,8 +51,8 @@ class Telephonie:
             self.mainloop = GLib.MainLoop()
             print("[Telephonie] __init__  mainloop initialized")
 
-            self.mainloop.run()
-            print("[Telephonie] __init__  mainloop run OK")
+            #self.mainloop.run()
+            #print("[Telephonie] __init__  mainloop run OK")
 
             self.appelEnCours = False
             print "[Telephonie] __init__ fin procedure"
