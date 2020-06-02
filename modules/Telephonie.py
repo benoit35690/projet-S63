@@ -11,6 +11,8 @@ import time
 
 
 class Telephonie:
+    appelEnCours = None
+    appelEntrant = None
     bus = None
     vcm = None
     mainloop = None
@@ -42,49 +44,97 @@ class Telephonie:
 
         self.mainloop = GLib.MainLoop()
         self.mainloop.run()
+
+        self.appelEnCours = False
         print "[Telephonie] __init__ fin procedure"
 
     def __del__(self):
         self.mainloop.quit()
         print "[Telephonie] __del__ fin procedure"
 
-    def RegisterCallback(self,
-                         NotificationAppelEntrant,
-                         NotificationFinAppel):
+    def registerCallback(self,
+                         notificationAppelEntrant,
+                         notificationFinAppel):
         """
             Enregistrement des callbacks utilisées pour notifier quand
                 un nouvel appel entrant est reçu (il peut y en avoir plusieurs)
                 un appel est supprimé (fin d'appel entrant ou sortant)
         """
 
-        self.NotificationAppelEntrant = NotificationAppelEntrant
-        self.NotificationFinAppel = NotificationFinAppel
+        self.notificationAppelEntrant = notificationAppelEntrant
+        self.notificationFinAppel = notificationFinAppel
 
-    def refuserAppelEntrant():
+    def refuserAppelEntrant(self):
         """ appelé par le client (Automate)
-            envoie la commande dbus TO BE COMPLETE
         """
         print "[Telephonie] refuserAppelEntrant"
+        if self.appelEnCours is True:
+            print "[Telephonie] accepterAppelEntrant appel deja en cours"
+            return
 
-    def accepterAppelEntrant():
+        print "[Telephonie] accepterAppelEntrant"\
+              "appel entrant =", self.appelEntrant
+        calls = self.vcm.GetCalls()
+        for path, properties in calls:
+            state = properties["State"]
+            print("[ %s ] %s" % (path, state))
+            if state != "incoming":
+                continue
+            call = dbus.Interface(self.bus.get_object('org.ofono', path),
+                                  'org.ofono.VoiceCall')
+            call.Hangup()
+            print("appel entrant [ %s ] rejeté" % path)
+
+    def accepterAppelEntrant(self):
         """ appelé par le client (Automate)
-            envoie la commande dbus TO BE COMPLETE
         """
         print "[Telephonie] accepterAppelEntrant"
+        if self.appelEnCours is True:
+            print "[Telephonie] accepterAppelEntrant appel deja en cours"
+            return
 
-    def numeroterAppelSortant():
+        print "[Telephonie] accepterAppelEntrant"\
+              "appel entrant =", self.appelEntrant
+        calls = self.vcm.GetCalls()
+        for path, properties in calls:
+            state = properties["State"]
+            print("[ %s ] %s" % (path, state))
+            if state != "incoming":
+                continue
+            call = dbus.Interface(self.bus.get_object('org.ofono', path),
+                                  'org.ofono.VoiceCall')
+            call.Answer()
+            print("appel entrant [ %s ] rejeté" % path)
+            self.appelEnCours = True
+            return
+
+    def numeroterAppelSortant(self, number):
         """ appelé par le client (Automate)
-            envoie la commande dbus TO BE COMPLETE
         """
         print "[Telephonie] numeroterAppelSortant"
+        path = self.vcm.Dial(number, "default")
+        print("appel sortant [ %s ] rejeté" % path)
+        self.appelEnCours = path
 
-    def terminerAppel():
+    def terminerAppel(self):
         """ appelé par le client (Automate) pour terminer un appel
-            envoie la commande dbus TO BE COMPLETE
         """
         print "[Telephonie] terminerAppel"
 
-    def nouvelAppel(name, value, member):
+        calls = self.vcm.GetCalls()
+        for path, properties in calls:
+            state = properties["State"]
+            print("[ %s ] %s" % (path, state))
+            if state != "active":
+                continue
+            call = dbus.Interface(self.bus.get_object('org.ofono', path),
+                                  'org.ofono.VoiceCall')
+            call.Hangup()
+            print("appel en cours [ %s ] terminé" % path)
+            self.appelEnCours = False
+            return
+
+    def nouvelAppel(self, name, value, member):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
@@ -94,8 +144,10 @@ class Telephonie:
         """
         print "[Telephonie] nouvelAppel"
         print "value = ", value, "member = ", member
+        self.appelEntrant = value
+        self.notificationAppelEntrant()
 
-    def appelSupprime(name, member):
+    def appelSupprime(self, name, member):
         """notification envoyee par dbus sur suppression d'un appel
            (entrant ou sortant)
            actions realisees
@@ -104,3 +156,5 @@ class Telephonie:
         """
         print "[Telephonie] appelSupprime"
         print "member = ", member
+        print("appel en cours [ %s ] terminé" % self.appelEntrant)
+        self.notificationFinAppel()

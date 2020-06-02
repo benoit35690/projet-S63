@@ -64,10 +64,19 @@ class Automate_S63:
         self.timerDecrocheRepos = None
 
         self.telephonie = Telephonie()
+        self.telephonie.registerCallback(
+                    notificationAppelEntrant=self.receptionAppelEntrant,
+                    notificationFinAppel=self.receptionFinAppel)
 
         raw_input("Waiting.\n")
 
+    # fonctions permettant de recevoir les notifications des autres modules
+    # ---------------------------------------------------------------------
+
     def ReceptionChiffre(self, chiffre):
+        """ Notification envoyée par le module Cadran
+            Contient le chiffre composé sur le cadrant rotatif
+        """
         # print ("[Automate ReceptionChiffre] Chiffre recu = ", chiffre)
         message = Message()
         message.transition_automate = Constantes.TRANSITION_CHIFFRE_COMP
@@ -75,18 +84,27 @@ class Automate_S63:
         self.message_queue.put(message)
 
     def ReceptionDecroche(self):
+        """ Notification envoyée par le module Combine
+            A chaque fois que le combiné est décroché
+        """
         # print ("[Automate ReceptionDecroche]")
         message = Message()
         message.transition_automate = Constantes.TRANSITION_DECROCHE
         self.message_queue.put(message)
 
     def ReceptionRaccroche(self):
+        """ Notification envoyée par le module Combine
+            A chaque fois que le combiné est raccroché
+        """
         # print ("[Automate ReceptionRaccroche]")
         message = Message()
         message.transition_automate = Constantes.TRANSITION_RACCROCHE
         self.message_queue.put(message)
 
     def ReceptionVerifDecroche(self, etat):
+        """ Notification envoyée par le module Combine
+            Périodiquement pour vérifier l'état du combiné
+        """
         # print ("[Automate ReceptionVerifDecroche]", etat)
         message = Message()
         if etat == GPIO.HIGH:
@@ -98,6 +116,9 @@ class Automate_S63:
         self.message_queue.put(message)
 
     def ReceptionNotificationTimer(self, *timer):
+        """ Notification envoyée par la fonction Timer
+            A chaque échéance de timer
+        """
         print ("[Automate ReceptionNotificationTimer] timer= ", timer[0])
         message = Message()
         if timer[0] == Constantes.TIMER_DECROCHER_REPOS:
@@ -106,6 +127,36 @@ class Automate_S63:
         elif timer[0] == Constantes.TIMER_TONAL_ACHEMINEMENT:
             message.transition_automate = Constantes.TRANSITION_APPEL_SORTANT
             self.message_queue.put(message)
+
+    def receptionAppelEntrant(self):
+        """ Notification envoyée par le module Telephonie
+            A chaque appel entrant
+            Si une communication est établie, le module Telephonie rejete
+                un autre appel entrant
+        """
+        print ("[Automate receptionAppelEntrant]")
+        message = Message()
+        message.transition_automate = Constantes.TRANSITION_APPEL_ENTRANT
+        self.message_queue.put(message)
+        return
+
+    def receptionFinAppel(self):
+        """ Notification envoyée par le module Telephonie
+            A chaque appel terminé
+            - appel entrant (communication pas encore acceptée)
+            - appel en cours initié par le correspondant (appel entrant)
+            - appel sortant  communication pas encore acceptée par le
+              correspondant)
+            - appel en cours (appel sortant)
+        """
+        print ("[Automate receptionFinAppel]")
+        message = Message()
+        message.transition_automate = Constantes.TRANSITION_FIN_APPEL
+        self.message_queue.put(message)
+        return
+
+    # Focntion principale du thread
+    # -----------------------------
 
     def FonctionWorkerThread(self):
         """
@@ -128,6 +179,10 @@ class Automate_S63:
                 # print("Automate FonctionWorkerThread message_queue empty")
                 continue
         print "[Automate Fonction_Worker_Thread] sortie de la boucle"
+
+    # Fonctions de traitement des messages de l'automate
+    # une fonction par transition
+    # --------------------------------------------------
 
     def TraiteMessage(self, message):
         # print ("[Automate TraiteMessage] transition=",
@@ -165,13 +220,13 @@ class Automate_S63:
     def TraiteTransitionRaccroche(self, message):
         print ("[Automate TraiteTransitionRaccroche] etat_automate=",
                self.etat_automate)
-        if self.etat_automate == Constantes.ETAT_REPOS or \
-           self.etat_automate == Constantes.ETAT_SONNERIE:
+        if self.etat_automate == Constantes.ETAT_REPOS:
             return
 
         if self.etat_automate == Constantes.ETAT_INIT or \
            self.etat_automate == Constantes.ETAT_DECROCHE_REPOS or \
            self.etat_automate == Constantes.ETAT_DECROCHE_OUBLIE or \
+           self.etat_automate == Constantes.ETAT_SONNERIE or \
            self.etat_automate == Constantes.ETAT_NUMEROTATION or \
            self.etat_automate == Constantes.ETAT_APPEL_ENTRANT or \
            self.etat_automate == Constantes.ETAT_TONALITE_SORTANT or \
@@ -212,8 +267,9 @@ class Automate_S63:
         if self.etat_automate == Constantes.ETAT_REPOS:
             self.ChangerEtat_Sonnerie()
         else:
-            print ("[Automate TraiteTransitionAppelEntrant] ERREUR TRANSITION"
+            print ("[Automate TraiteTransitionAppelEntrant] Rejet de l'appel "
                    "etat= ", self.etat_automate)
+            self.telephonie.refuserAppelEntrant()
 
     def TraiteTransitionFinAppel(self, message):
         print ("[Automate TraiteTransitionFinAppel] transition=",
@@ -309,18 +365,25 @@ class Automate_S63:
             print ("[Automate TraiteTransitionAppelSortant] ERREUR"
                    " TRANSITION etat= ", self.etat_automate)
 
+    # Fonctions de changement d'état de l'automate
+    # appelées par les fonctions de transition
+    # --------------------------------------------
+
     def ChangerEtat_Repos(self):
         """
             Transition vers l'état ETAT_REPOS
             Liste des actions à faire si besoin
-                terminer appel sortant
-                terminer appel entrant
+                terminer appel en cours (sortant ou entrant)
                 terminer lecture tonalité
                 reinitialisé numero composé
                 annuler timer décrocher repos
         """
         print ("[Automate ChangerEtat_Repos] etat origine=",
                self.etat_automate)
+
+        # termine un éventuel appel (en cours)
+        self.telephonie.terminerAppel()
+
         self.numeroCompose = ""
         self.tonalite.stopLecture()
         if self.timerDecrocheRepos is not None:
@@ -369,6 +432,7 @@ class Automate_S63:
         """
         print ("[Automate ChangerEtat_Sonnerie] etat origine=",
                self.etat_automate)
+        # TO DO coder sonnerie
         self.etat_automate = Constantes.ETAT_SONNERIE
 
     def ChangerEtat_AppelEntrant(self):
@@ -377,9 +441,13 @@ class Automate_S63:
             Liste des actions à faire si besoin
                 terminer sonnerie
                 activer communication micro + haut parleur
+                accepter l'appel entrant
         """
         print ("[Automate ChangerEtat_AppelEntrant] etat origine=",
                self.etat_automate)
+
+        # TO DO arret sonnerie
+        self.telephonie.accepterAppelEntrant()
         self.etat_automate = Constantes.ETAT_APPEL_ENTRANT
 
     def ChangerEtat_Numerotation(self, chiffreCompose):
@@ -455,6 +523,9 @@ class Automate_S63:
                " origine=", self.etat_automate)
         self.etat_automate = Constantes.ETAT_APPEL_SORTANT
 
+    # Focntions diverses
+    # ------------------
+
     def verifieNumeroComposeValide(self):
         """
             pour l'instant compare le numeroCompose avec un numero Fixe
@@ -469,11 +540,18 @@ class Automate_S63:
             message.transition_automate = Constantes.TRANSITION_NUMERO_VALIDE
             self.message_queue.put(message)
 
+    # Focntions appelée sur fin d'execution
+    # -------------------------------------
+
     def OnSignal(self, signal, frame):
+        """ Appelée sur reception du signal de fin d'éxécution
+            CTRL + C
+            Termine proprement l'execution des modules
+        """
         print "[SIGNAL] Shutting down on %s" % signal
         self.combine.ArretVerificationDecroche()
         del self.tonalite
-        # del self.telephonie
+        del self.telephonie
         self.automate_actif = False
         sys.exit(0)
 
