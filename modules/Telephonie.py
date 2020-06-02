@@ -111,7 +111,7 @@ class Telephonie:
     def numeroterAppelSortant(self, number):
         """ appelé par le client (Automate)
         """
-        print "[Telephonie] numeroterAppelSortant"
+        #print "[Telephonie] numeroterAppelSortant"
         path = self.vcm.Dial(number, "default")
         print("appel sortant [ %s ] rejeté" % path)
         self.appelEnCours = path
