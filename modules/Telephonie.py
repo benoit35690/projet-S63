@@ -159,7 +159,6 @@ class Telephonie(Thread):
 
         manager.HangupAll()
 
-
     def nouvelAppel(self, signal_name, dbus_interface, bus_name):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
