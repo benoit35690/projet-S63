@@ -42,7 +42,7 @@ class Telephonie(Thread):
                                          dbus_interface=
                                          "org.ofono.VoiceCallManager",
                                          bus_name="org.ofono",
-                                         member_keyword="member",
+                                         #member_keyword="member",
                                          path_keyword="path",
                                          interface_keyword="interface")
             print("[Telephonie] __init__  add_signal_receiver 1 OK")
@@ -52,7 +52,7 @@ class Telephonie(Thread):
                                          dbus_interface=
                                          "org.ofono.VoiceCallManager",
                                          bus_name="org.ofono",
-                                         member_keyword="member",
+                                         #member_keyword="member",
                                          path_keyword="path",
                                          interface_keyword="interface")
             print("[Telephonie] __init__  add_signal_receiver 2 OK")
@@ -169,7 +169,8 @@ class Telephonie(Thread):
         manager.HangupAll()
 
     # def nouvelAppel(signal_name, dbus_interface, bus_name):
-    def nouvelAppel(name, value, member, path, interface):
+    #def nouvelAppel(name, value, member, path, interface):
+    def nouvelAppel(name, value, path, interface):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
@@ -188,7 +189,8 @@ class Telephonie(Thread):
             notificationAppelEntrant()
 
     # def appelSupprime(signal_name, dbus_interface, bus_name):
-    def appelSupprime(name, member, path, interface):
+    # def appelSupprime(name, member, path, interface):
+    def appelSupprime(name, path, interface):
         """notification envoyee par dbus sur suppression d'un appel
            (entrant ou sortant)
            actions realisees
