@@ -94,6 +94,10 @@ class Automate_S63:
                     notificationFinAppel=self.receptionFinAppel)
         print ("[Automate_S63 __init__] Telephonie registerCallback OK")
 
+        # demarrage du Thread du module Telephonie
+        self.telephonie.start()
+        print ("[Automate_S63 __init__] Telephonie start OK")
+
         raw_input("Waiting.\n")
 
     # fonctions permettant de recevoir les notifications des autres modules
