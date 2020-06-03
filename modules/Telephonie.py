@@ -206,9 +206,9 @@ class Telephonie(Thread):
         print "[Telephonie] nouvelAppel type param3= %s" % type(properties)
         print "[Telephonie] nouvelAppel path= %s" % path
         print "[Telephonie] nouvelAppel properties= %s" % self.dict_to_string(properties)
-        lineIdentification = properties.get(LineIdentification")
+        lineIdentification = properties.get("LineIdentification")
         print "[Telephonie] nouvelAppel lineIdentification= %s" % lineIdentification
-        state = properties.get(State")
+        state = properties.get("State")
         print "[Telephonie] nouvelAppel state= %s" % state
 
         if notificationAppelEntrant is not None:
