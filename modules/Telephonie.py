@@ -41,14 +41,20 @@ class Telephonie(Thread):
                                          signal_name="CallAdded",
                                          dbus_interface=
                                          "org.ofono.VoiceCallManager",
-                                         bus_name="org.ofono")
+                                         bus_name="org.ofono",
+                                         member_keyword="member",
+                                         path_keyword="path",
+                                         interface_keyword="interface")
             print("[Telephonie] __init__  add_signal_receiver 1 OK")
 
             self.bus.add_signal_receiver(handler_function=self.appelSupprime,
                                          signal_name="CallRemoved",
                                          dbus_interface=
                                          "org.ofono.VoiceCallManager",
-                                         bus_name="org.ofono")
+                                         bus_name="org.ofono",
+                                         member_keyword="member",
+                                         path_keyword="path",
+                                         interface_keyword="interface")
             print("[Telephonie] __init__  add_signal_receiver 2 OK")
 
             self.appelEnCours = False
@@ -162,8 +168,8 @@ class Telephonie(Thread):
 
         manager.HangupAll()
 
-    # def nouvelAppel(self, signal_name, dbus_interface, bus_name):
-    def nouvelAppel(signal_name, dbus_interface, bus_name):
+    # def nouvelAppel(signal_name, dbus_interface, bus_name):
+    def nouvelAppel(name, value, member, path, interface):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
@@ -171,13 +177,18 @@ class Telephonie(Thread):
               si un appel est déjà en cours alors rejeter l'appel
               sinon envoier d'une notification (a Automate)
         """
-        print "[Telephonie] nouvelAppel bus_name= {%s}" % bus_name
-        print "[Telephonie] nouvelAppel signal_name= [%s]" % signal_name
+        # print "[Telephonie] nouvelAppel bus_name= {%s}" % bus_name
+        # print "[Telephonie] nouvelAppel signal_name= [%s]" % signal_name
+        print "[Telephonie] nouvelAppel name= %s" % name
+        print "[Telephonie] nouvelAppel member= %s" % member
+        print "[Telephonie] nouvelAppel path= %s" % path
+        print "[Telephonie] nouvelAppel interface= %s" % interface
 
         if notificationAppelEntrant is not None:
             notificationAppelEntrant()
 
-    def appelSupprime(signal_name, dbus_interface, bus_name):
+    # def appelSupprime(signal_name, dbus_interface, bus_name):
+    def appelSupprime(name, member, path, interface):
         """notification envoyee par dbus sur suppression d'un appel
            (entrant ou sortant)
            actions realisees
@@ -185,8 +196,12 @@ class Telephonie(Thread):
               envoie d'une notification (a Automate)
         """
         print "[Telephonie] appelSupprime"
-        print "[Telephonie] appelSupprime bus_name= {%s}" % bus_name
-        print "[Telephonie] appelSupprime signal_name= [%s]" % signal_name
+        # print "[Telephonie] appelSupprime bus_name= {%s}" % bus_name
+        # print "[Telephonie] appelSupprime signal_name= [%s]" % signal_name
+        print "[Telephonie] appelSupprime name= %s" % name
+        print "[Telephonie] appelSupprime member= %s" % member
+        print "[Telephonie] appelSupprime path= %s" % path
+        print "[Telephonie] appelSupprime interface= %s" % interface
 
 #        print("appel en cours [ %s ] terminé" % self.appelEntrant)
         if notificationFinAppel is not None:
