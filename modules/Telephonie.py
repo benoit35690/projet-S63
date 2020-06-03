@@ -20,7 +20,8 @@ class Telephonie(Thread):
 
     def __init__(self):
         print "[Telephonie] __init__"
-
+        Thread.__init__(self)
+        
         try:
             dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
             self.bus = dbus.SystemBus()
