@@ -181,9 +181,9 @@ class Telephonie(Thread):
         # print "[Telephonie] nouvelAppel bus_name= {%s}" % bus_name
         # print "[Telephonie] nouvelAppel signal_name= [%s]" % signal_name
         print "[Telephonie] nouvelAppel name= %s" % name
-        #print "[Telephonie] nouvelAppel member= %s" % member
-        #print "[Telephonie] nouvelAppel path= %s" % path
-        #print "[Telephonie] nouvelAppel interface= %s" % interface
+        print "[Telephonie] nouvelAppel type param1= %s" % type(name)
+        print "[Telephonie] nouvelAppel type param2= %s" % type(value)
+        print "[Telephonie] nouvelAppel type param3= %s" % type(toto)
 
         if notificationAppelEntrant is not None:
             notificationAppelEntrant()
@@ -201,9 +201,8 @@ class Telephonie(Thread):
         # print "[Telephonie] appelSupprime bus_name= {%s}" % bus_name
         # print "[Telephonie] appelSupprime signal_name= [%s]" % signal_name
         print "[Telephonie] appelSupprime name= %s" % name
-        #print "[Telephonie] appelSupprime member= %s" % member
-        #print "[Telephonie] appelSupprime path= %s" % path
-        #print "[Telephonie] appelSupprime interface= %s" % interface
+        print "[Telephonie] appelSupprime type param1= %s" % type(name)
+        print "[Telephonie] appelSupprime type param2= %s" % type(toto)
 
 #        print("appel en cours [ %s ] terminé" % self.appelEntrant)
         if notificationFinAppel is not None:
