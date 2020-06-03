@@ -76,12 +76,11 @@ class Automate_S63:
         # initialisation du module Telephonie
 #        try:
         self.telephonie = Telephonie()
-#
-#        print ("[Automate_S63 __init__] Telephonie initialized")
-#        self.telephonie.registerCallback(
-#                    notificationAppelEntrant=self.receptionAppelEntrant,
-#                    notificationFinAppel=self.receptionFinAppel)
-#        print ("[Automate_S63 __init__] Telephonie registerCallback OK")
+        print ("[Automate_S63 __init__] Telephonie initialized")
+        self.telephonie.registerCallback(
+                    notificationAppelEntrant=self.receptionAppelEntrant,
+                    notificationFinAppel=self.receptionFinAppel)
+        print ("[Automate_S63 __init__] Telephonie registerCallback OK")
 
         # demarrage du Thread du module Telephonie
         self.telephonie.start()
@@ -274,8 +273,8 @@ class Automate_S63:
         self.timerInialisation.start()
 
     def TraiteTransitionRaccroche(self, message):
-        print ("[Automate TraiteTransitionRaccroche] etat_automate=",
-               self.etat_automate)
+        # print ("[Automate TraiteTransitionRaccroche] etat_automate=",
+        #        self.etat_automate)
         if self.etat_automate == Constantes.ETAT_REPOS:
             return
 

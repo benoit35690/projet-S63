@@ -14,7 +14,6 @@ notificationAppelEntrant = None
 notificationFinAppel = None
 
 
-
 class Telephonie(Thread):
     appelEnCours = None
     appelEntrant = None
@@ -83,11 +82,11 @@ class Telephonie(Thread):
         print "[Telephonie] __del__ fin procedure"
 
     def run(self):
-            self.mainloop = GLib.MainLoop()
-            print("[Telephonie] run mainloop initialized")
+        self.mainloop = GLib.MainLoop()
+        print("[Telephonie] run mainloop initialized")
 
-            self.mainloop.run()
-            print("[Telephonie] run  mainloop run OK")
+        self.mainloop.run()
+        print("[Telephonie] run  mainloop run OK")
 
     def registerCallback(self,
                          notificationAppelEntrant,
@@ -97,7 +96,7 @@ class Telephonie(Thread):
                 un nouvel appel entrant est reçu (il peut y en avoir plusieurs)
                 un appel est supprimé (fin d'appel entrant ou sortant)
         """
-
+        print("[Telephonie] registerCallback")
         notificationAppelEntrant = notificationAppelEntrant
         notificationFinAppel = notificationFinAppel
 
