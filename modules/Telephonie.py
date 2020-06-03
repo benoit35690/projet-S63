@@ -152,7 +152,18 @@ class Telephonie(Thread):
 
         print "[Telephonie] accepterAppelEntrant"\
               "appel entrant =", self.appelEntrant
-        calls = self.vcm.GetCalls()
+
+        manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
+                                 'org.ofono.Manager')
+        modems = manager.GetModems()
+        modem = modems[0][0]
+        print("[Telephonie] accepterAppelEntrant Using modem %s" % modem)
+
+        vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
+                                   'org.ofono.VoiceCallManager')
+        print("[Telephonie] accepterAppelEntrant vcm initialized ")
+
+        calls = vcm.GetCalls()
         for path, properties in calls:
             state = properties["State"]
             print("[ %s ] %s" % (path, state))
@@ -162,7 +173,7 @@ class Telephonie(Thread):
                                   'org.ofono.VoiceCall')
             call.Answer()
             print("appel entrant [ %s ] rejeté" % path)
-            self.appelEnCours = True
+            self.appelEnCours = False
             return
 
     def numeroterAppelSortant(self, number):
