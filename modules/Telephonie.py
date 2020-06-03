@@ -8,9 +8,10 @@ import dbus.mainloop.glib
 from gi.repository import GLib
 import dbus
 import time
+from threading import Thread
 
 
-class Telephonie:
+class Telephonie(Thread):
     appelEnCours = None
     appelEntrant = None
     bus = None
@@ -31,7 +32,6 @@ class Telephonie:
 
             self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
                                       'org.ofono.VoiceCallManager')
-
             print("[Telephonie] __init__ vcm initialized ")
 
             self.bus.add_signal_receiver(handler_function=self.nouvelAppel,
@@ -48,14 +48,9 @@ class Telephonie:
                                          bus_name="org.ofono")
             print("[Telephonie] __init__  add_signal_receiver 2 OK")
 
-            self.mainloop = GLib.MainLoop()
-            print("[Telephonie] __init__  mainloop initialized")
-
-            self.mainloop.run()
-            print("[Telephonie] __init__  mainloop run OK")
-
             self.appelEnCours = False
             print "[Telephonie] __init__ fin procedure"
+
         except Exception as inst:
             print "[Telephonie] __init__ Exception"
             print(type(inst))    # the exception instance
@@ -71,8 +66,16 @@ class Telephonie:
             return
 
     def __del__(self):
-        self.mainloop.quit()
+        if self.mainloop is not None:
+            self.mainloop.quit()
         print "[Telephonie] __del__ fin procedure"
+
+    def run(self):
+            self.mainloop = GLib.MainLoop()
+            print("[Telephonie] run mainloop initialized")
+
+            self.mainloop.run()
+            print("[Telephonie] run  mainloop run OK")
 
     def registerCallback(self,
                          notificationAppelEntrant,
@@ -133,7 +136,7 @@ class Telephonie:
     def numeroterAppelSortant(self, number):
         """ appelé par le client (Automate)
         """
-        #print "[Telephonie] numeroterAppelSortant"
+        # print "[Telephonie] numeroterAppelSortant"
         path = self.vcm.Dial(number, "default")
         print("appel sortant [ %s ] rejeté" % path)
         self.appelEnCours = path
@@ -156,7 +159,7 @@ class Telephonie:
             self.appelEnCours = False
             return
 
-    def nouvelAppel(self, name, value, member):
+    def nouvelAppel(self, signal_name, dbus_interface, bus_name):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
@@ -164,12 +167,12 @@ class Telephonie:
               si un appel est déjà en cours alors rejeter l'appel
               sinon envoier d'une notification (a Automate)
         """
-        print "[Telephonie] nouvelAppel"
-        print "value = ", value, "member = ", member
-        self.appelEntrant = value
+        print "[Telephonie] nouvelAppel bus_name= {%s}" % bus_name
+        print "[Telephonie] nouvelAppel signal_name= [%s]" % signal_name
+
         self.notificationAppelEntrant()
 
-    def appelSupprime(self, name, member):
+    def appelSupprime(self, signal_name, dbus_interface, bus_name):
         """notification envoyee par dbus sur suppression d'un appel
            (entrant ou sortant)
            actions realisees
@@ -177,6 +180,5 @@ class Telephonie:
               envoie d'une notification (a Automate)
         """
         print "[Telephonie] appelSupprime"
-        print "member = ", member
-        print("appel en cours [ %s ] terminé" % self.appelEntrant)
+#        print("appel en cours [ %s ] terminé" % self.appelEntrant)
         self.notificationFinAppel()
