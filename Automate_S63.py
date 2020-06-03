@@ -75,7 +75,7 @@ class Automate_S63:
 
         # initialisation du module Telephonie
 #        try:
-            self.telephonie = Telephonie()
+        self.telephonie = Telephonie()
 #
 #        print ("[Automate_S63 __init__] Telephonie initialized")
 #        self.telephonie.registerCallback(
