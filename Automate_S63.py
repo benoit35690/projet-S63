@@ -136,7 +136,7 @@ class Automate_S63:
             Tant que l'automate est en cours d'initialisation l'événement est
             ignoré
         """
-        print ("[Automate ReceptionVerifDecroche]", etat)
+        # print ("[Automate ReceptionVerifDecroche]", etat)
 
         message = Message()
         if etat == GPIO.HIGH:
