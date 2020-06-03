@@ -15,25 +15,25 @@ class Telephonie(Thread):
     appelEnCours = None
     appelEntrant = None
     bus = None
-    vcm = None
+    # vcm = None
     mainloop = None
 
     def __init__(self):
         print "[Telephonie] __init__"
         Thread.__init__(self)
-        
+
         try:
             dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
             self.bus = dbus.SystemBus()
-            manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
-                                     'org.ofono.Manager')
-            modems = manager.GetModems()
-            modem = modems[0][0]
-            print("[Telephonie] __init__ Using modem %s" % modem)
+            # manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
+            #                         'org.ofono.Manager')
+            # modems = manager.GetModems()
+            # modem = modems[0][0]
+            # print("[Telephonie] __init__ Using modem %s" % modem)
 
-            self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
-                                      'org.ofono.VoiceCallManager')
-            print("[Telephonie] __init__ vcm initialized ")
+            # self.vcm = dbus.Interface(self.bus.get_object('org.ofono', modem),
+            #                           'org.ofono.VoiceCallManager')
+            # print("[Telephonie] __init__ vcm initialized ")
 
             self.bus.add_signal_receiver(handler_function=self.nouvelAppel,
                                          signal_name="CallAdded",
@@ -147,7 +147,17 @@ class Telephonie(Thread):
         """
         print "[Telephonie] terminerAppel"
 
-        calls = self.vcm.GetCalls()
+        manager = dbus.Interface(self.bus.get_object('org.ofono', '/'),
+                                 'org.ofono.Manager')
+        modems = manager.GetModems()
+        modem = modems[0][0]
+        print("[Telephonie] terminerAppel Using modem %s" % modem)
+
+        manager = dbus.Interface(self.bus.get_object('org.ofono', modem),
+                                 'org.ofono.VoiceCallManager')
+        print("[Telephonie] terminerAppel manager initialized ")
+
+        calls = manager.GetCalls()
         for path, properties in calls:
             state = properties["State"]
             print("[ %s ] %s" % (path, state))
