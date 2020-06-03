@@ -10,16 +10,14 @@ import dbus
 import time
 from threading import Thread
 
-notificationAppelEntrant = None
-notificationFinAppel = None
-
-
 class Telephonie(Thread):
     appelEnCours = None
     appelEntrant = None
     bus = None
     # vcm = None
     mainloop = None
+    notificationAppelEntrant = None
+    notificationFinAppel = None
 
     def __init__(self):
         print "[Telephonie] __init__"
@@ -97,8 +95,8 @@ class Telephonie(Thread):
                 un appel est supprimé (fin d'appel entrant ou sortant)
         """
         print("[Telephonie] registerCallback")
-        notificationAppelEntrant = notificationAppelEntrant
-        notificationFinAppel = notificationFinAppel
+        self.notificationAppelEntrant = notificationAppelEntrant
+        self.notificationFinAppel = notificationFinAppel
 
     def dict_to_string(self, d):
         # Try to trivially translate a dictionary's elements into nice string
@@ -210,8 +208,10 @@ class Telephonie(Thread):
         state = properties.get("State")
         print "[Telephonie] nouvelAppel state= %s" % state
 
-        if notificationAppelEntrant is not None:
-            notificationAppelEntrant()
+        if self.notificationAppelEntrant is not None:
+            self.notificationAppelEntrant()
+        else:
+            print "[Telephonie] nouvelAppel notificationAppelEntrant is None"
 
     def appelSupprime(self, path):
         """notification envoyee par dbus sur suppression d'un appel
@@ -226,5 +226,7 @@ class Telephonie(Thread):
         print "[Telephonie] appelSupprime path= %s" % path
 
 #        print("appel en cours [ %s ] terminé" % self.appelEntrant)
-        if notificationFinAppel is not None:
-            notificationFinAppel()
+        if self.notificationFinAppel is not None:
+            self.notificationFinAppel()
+        else:
+            print "[Telephonie] appelSupprime notificationFinAppel is None"
