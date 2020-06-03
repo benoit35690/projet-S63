@@ -36,6 +36,7 @@ class Telephonie(Thread):
             # print("[Telephonie] __init__ vcm initialized ")
 
             self.bus.add_signal_receiver(handler_function=self.nouvelAppel,
+                                         self=self,
                                          signal_name="CallAdded",
                                          dbus_interface=
                                          "org.ofono.VoiceCallManager",
@@ -159,8 +160,8 @@ class Telephonie(Thread):
 
         manager.HangupAll()
 
-    # def nouvelAppel(self, signal_name, dbus_interface, bus_name):
-    def nouvelAppel(signal_name, dbus_interface, bus_name):
+    def nouvelAppel(self, signal_name, dbus_interface, bus_name):
+    # def nouvelAppel(signal_name, dbus_interface, bus_name):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
