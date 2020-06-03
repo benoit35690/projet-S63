@@ -13,6 +13,8 @@ from threading import Thread
 notificationAppelEntrant = None
 notificationFinAppel = None
 
+
+
 class Telephonie(Thread):
     appelEnCours = None
     appelEntrant = None
@@ -99,6 +101,29 @@ class Telephonie(Thread):
         notificationAppelEntrant = notificationAppelEntrant
         notificationFinAppel = notificationFinAppel
 
+def dict_to_string(self, d):
+        # Try to trivially translate a dictionary's elements into nice string
+        # formatting.
+        dstr=""
+        for key in d:
+            val=d[key]
+            str_val=""
+            add_string=True
+            if type(val)==type(dbus.Array([])):
+                for elt in val:
+                    if type(elt)==type(dbus.Byte(1)):
+                        str_val+="%s " % int(elt)
+                    elif type(elt)==type(dbus.String("")):
+                        str_val+="%s" % elt
+            elif type(val)==type(dbus.Dictionary({})):
+                dstr+=self.dict_to_string(val)
+                add_string=False
+            else:
+                str_val=val
+            if add_string:
+                dstr+="%s: %s\n" % ( key, str_val)
+        return dstr
+
     def refuserAppelEntrant(self):
         """ appelé par le client (Automate)
         """
@@ -170,7 +195,7 @@ class Telephonie(Thread):
 
     # def nouvelAppel(signal_name, dbus_interface, bus_name):
     #def nouvelAppel(name, value, member, path, interface):
-    def nouvelAppel(name, value, toto):
+    def nouvelAppel(self, path, properties):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
@@ -178,19 +203,18 @@ class Telephonie(Thread):
               si un appel est déjà en cours alors rejeter l'appel
               sinon envoier d'une notification (a Automate)
         """
-        # print "[Telephonie] nouvelAppel bus_name= {%s}" % bus_name
-        # print "[Telephonie] nouvelAppel signal_name= [%s]" % signal_name
-        print "[Telephonie] nouvelAppel name= %s" % name
-        print "[Telephonie] nouvelAppel type param1= %s" % type(name)
-        print "[Telephonie] nouvelAppel type param2= %s" % type(value)
-        print "[Telephonie] nouvelAppel type param3= %s" % type(toto)
+        print "[Telephonie] nouvelAppel type param1= %s" % type(self)
+        print "[Telephonie] nouvelAppel type param2= %s" % type(path)
+        print "[Telephonie] nouvelAppel type param3= %s" % type(properties)
+        print "[Telephonie] nouvelAppel path= %s" % path
+        print "[Telephonie] nouvelAppel properties= %s" % self.dict_to_string(properties)
 
         if notificationAppelEntrant is not None:
             notificationAppelEntrant()
 
     # def appelSupprime(signal_name, dbus_interface, bus_name):
     # def appelSupprime(name, member, path, interface):
-    def appelSupprime(name, toto):
+    def appelSupprime(self, path):
         """notification envoyee par dbus sur suppression d'un appel
            (entrant ou sortant)
            actions realisees
@@ -198,11 +222,9 @@ class Telephonie(Thread):
               envoie d'une notification (a Automate)
         """
         print "[Telephonie] appelSupprime"
-        # print "[Telephonie] appelSupprime bus_name= {%s}" % bus_name
-        # print "[Telephonie] appelSupprime signal_name= [%s]" % signal_name
-        print "[Telephonie] appelSupprime name= %s" % name
-        print "[Telephonie] appelSupprime type param1= %s" % type(name)
-        print "[Telephonie] appelSupprime type param2= %s" % type(toto)
+        print "[Telephonie] appelSupprime type param1= %s" % type(self)
+        print "[Telephonie] appelSupprime type param2= %s" % type(path)
+        print "[Telephonie] appelSupprime path= %s" % path
 
 #        print("appel en cours [ %s ] terminé" % self.appelEntrant)
         if notificationFinAppel is not None:
