@@ -159,7 +159,8 @@ class Telephonie(Thread):
 
         manager.HangupAll()
 
-    def nouvelAppel(self, signal_name, dbus_interface, bus_name):
+    # def nouvelAppel(self, signal_name, dbus_interface, bus_name):
+    def nouvelAppel(signal_name, dbus_interface, bus_name):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
@@ -170,7 +171,7 @@ class Telephonie(Thread):
         print "[Telephonie] nouvelAppel bus_name= {%s}" % bus_name
         print "[Telephonie] nouvelAppel signal_name= [%s]" % signal_name
 
-        self.notificationAppelEntrant()
+        # self.notificationAppelEntrant()
 
     def appelSupprime(self, signal_name, dbus_interface, bus_name):
         """notification envoyee par dbus sur suppression d'un appel
