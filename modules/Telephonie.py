@@ -170,7 +170,7 @@ class Telephonie(Thread):
 
     # def nouvelAppel(signal_name, dbus_interface, bus_name):
     #def nouvelAppel(name, value, member, path, interface):
-    def nouvelAppel(name, value):
+    def nouvelAppel(name, value, toto):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
            actions realisees
@@ -190,7 +190,7 @@ class Telephonie(Thread):
 
     # def appelSupprime(signal_name, dbus_interface, bus_name):
     # def appelSupprime(name, member, path, interface):
-    def appelSupprime(name):
+    def appelSupprime(name, toto):
         """notification envoyee par dbus sur suppression d'un appel
            (entrant ou sortant)
            actions realisees
