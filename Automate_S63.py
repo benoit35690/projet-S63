@@ -275,13 +275,13 @@ class Automate_S63:
     def TraiteTransitionRaccroche(self, message):
         # print ("[Automate TraiteTransitionRaccroche] etat_automate=",
         #        self.etat_automate)
-        if self.etat_automate == Constantes.ETAT_REPOS:
+        if self.etat_automate == Constantes.ETAT_REPOS or\
+           self.etat_automate == Constantes.ETAT_SONNERIE:
             return
 
         if self.etat_automate == Constantes.ETAT_INIT or \
            self.etat_automate == Constantes.ETAT_DECROCHE_REPOS or \
            self.etat_automate == Constantes.ETAT_DECROCHE_OUBLIE or \
-           self.etat_automate == Constantes.ETAT_SONNERIE or \
            self.etat_automate == Constantes.ETAT_NUMEROTATION or \
            self.etat_automate == Constantes.ETAT_APPEL_ENTRANT or \
            self.etat_automate == Constantes.ETAT_TONALITE_SORTANT or \
