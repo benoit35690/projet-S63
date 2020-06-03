@@ -193,8 +193,6 @@ class Telephonie(Thread):
 
         manager.HangupAll()
 
-    # def nouvelAppel(signal_name, dbus_interface, bus_name):
-    #def nouvelAppel(name, value, member, path, interface):
     def nouvelAppel(self, path, properties):
         """notification envoyee par dbus sur ajout d'un appel
            (entrant ou sortant)
@@ -208,12 +206,14 @@ class Telephonie(Thread):
         print "[Telephonie] nouvelAppel type param3= %s" % type(properties)
         print "[Telephonie] nouvelAppel path= %s" % path
         print "[Telephonie] nouvelAppel properties= %s" % self.dict_to_string(properties)
+        lineIdentification = properties.get(LineIdentification")
+        print "[Telephonie] nouvelAppel lineIdentification= %s" % lineIdentification
+        state = properties.get(State")
+        print "[Telephonie] nouvelAppel state= %s" % state
 
         if notificationAppelEntrant is not None:
             notificationAppelEntrant()
 
-    # def appelSupprime(signal_name, dbus_interface, bus_name):
-    # def appelSupprime(name, member, path, interface):
     def appelSupprime(self, path):
         """notification envoyee par dbus sur suppression d'un appel
            (entrant ou sortant)
