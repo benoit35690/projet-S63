@@ -157,18 +157,8 @@ class Telephonie(Thread):
                                  'org.ofono.VoiceCallManager')
         print("[Telephonie] terminerAppel manager initialized ")
 
-        calls = manager.GetCalls()
-        for path, properties in calls:
-            state = properties["State"]
-            print("[ %s ] %s" % (path, state))
-            if state != "active":
-                continue
-            call = dbus.Interface(self.bus.get_object('org.ofono', path),
-                                  'org.ofono.VoiceCall')
-            call.Hangup()
-            print("appel en cours [ %s ] terminé" % path)
-            self.appelEnCours = False
-            return
+        manager.HangupAll()
+
 
     def nouvelAppel(self, signal_name, dbus_interface, bus_name):
         """notification envoyee par dbus sur ajout d'un appel
