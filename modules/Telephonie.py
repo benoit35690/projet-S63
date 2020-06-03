@@ -101,28 +101,28 @@ class Telephonie(Thread):
         notificationAppelEntrant = notificationAppelEntrant
         notificationFinAppel = notificationFinAppel
 
-        def dict_to_string(self, d):
-            # Try to trivially translate a dictionary's elements into nice string
-            # formatting.
-            dstr = ""
-            for key in d:
-                val = d[key]
-                str_val = ""
-                add_string = True
-                if type(val) == type(dbus.Array([])):
-                    for elt in val:
-                        if type(elt) == type(dbus.Byte(1)):
-                            str_val += "%s " % int(elt)
-                        elif type(elt) == type(dbus.String("")):
-                            str_val += "%s" % elt
-                elif type(val) == type(dbus.Dictionary({})):
-                    dstr += self.dict_to_string(val)
-                    add_string = False
-                else:
-                    str_val = val
-                if add_string:
-                    dstr += "%s: %s\n" % (key, str_val)
-            return dstr
+    def dict_to_string(self, d):
+        # Try to trivially translate a dictionary's elements into nice string
+        # formatting.
+        dstr = ""
+        for key in d:
+            val = d[key]
+            str_val = ""
+            add_string = True
+            if type(val) == type(dbus.Array([])):
+                for elt in val:
+                    if type(elt) == type(dbus.Byte(1)):
+                        str_val += "%s " % int(elt)
+                    elif type(elt) == type(dbus.String("")):
+                        str_val += "%s" % elt
+            elif type(val) == type(dbus.Dictionary({})):
+                dstr += self.dict_to_string(val)
+                add_string = False
+            else:
+                str_val = val
+            if add_string:
+                dstr += "%s: %s\n" % (key, str_val)
+        return dstr
 
     def refuserAppelEntrant(self):
         """ appelé par le client (Automate)
